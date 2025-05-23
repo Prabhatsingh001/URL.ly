@@ -1,9 +1,17 @@
-from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.core.mail import send_mail
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from .tokens import account_activation_token
+from django.core.mail import EmailMessage
+
 
 # Create your views here.
 User = get_user_model()
@@ -25,27 +33,6 @@ def home(request):
     return render(request, "home.html")
 
 
-def login(request):
-    if request.method == "POST":
-        email = request.POST["email"]
-        password = request.POST["password"]
-        user = authenticate(request, username=email, password=password)
-        if user is not None:
-            messages.success(request, "Login Successful")
-            return redirect("home")
-        # if user is not None:
-        #     if user.check_password(password):
-        #         messages.success(request, "Login Successful")
-        #         return redirect("home")
-        #     else:
-        #         messages.error(request, "invalid password")
-        #         return redirect("login")
-        else:
-            messages.error(request, "user does not exist")
-            return redirect("login")
-    return render(request, "login.html")
-
-
 def signup(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -53,16 +40,16 @@ def signup(request):
         password = request.POST.get("password")
         password2 = request.POST.get("confirm-password")
 
-        if password != password2:
-            messages.error(request, "passwords do not match")
-            return redirect("signup")
-
         if User.objects.filter(email=email).exists():
             messages.error(request, "email already exists")
             return redirect("signup")
 
         if User.objects.filter(username=username).exists():
             messages.error(request, "username already exists")
+            return redirect("signup")
+
+        if password != password2:
+            messages.error(request, "passwords do not match")
             return redirect("signup")
 
         if len(password) < 8:
@@ -86,14 +73,89 @@ def signup(request):
             email=email,
             password=password,
         )
+        user.is_active = False
         user.save()
         messages.success(request, "User created successfully")
+
+        # welcome email
+        subject = "Welcome to UrlShortner"
+        message = f"hello {user.username} \n\n welcome to URL.ly. Your username is {user.username} and your email is {user.email} \n\n Thank you for signing up"
+        to_email = [user.email]
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(subject, message, from_email, to_email, fail_silently=True)
+
+        # account activation email
+        current_site = get_current_site(request)
+        email_subject = "Email Verification"
+        message2 = render_to_string(
+            "email_verification.html",
+            {
+                "user": user,
+                "domain": current_site.domain,
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": account_activation_token.make_token(user),
+            },
+        )
+
+        email = EmailMessage(
+            email_subject,
+            message2,
+            settings.EMAIL_HOST_USER,
+            [user.email],
+        )
+        email.send(fail_silently=True)
+
         return redirect("login")
     return render(request, "signup.html")
 
 
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, "Email verified successfully")
+        return redirect("login")
+    else:
+        messages.error(request, "Email verification failed")
+        return redirect("login")
+
+
 def logout(request):
     return render(request, "logout.html")
+
+
+def login(request):
+    if request.method == "POST":
+        email = request.POST["email"]
+        password = request.POST["password"]
+        user = authenticate(request, username=email, password=password)
+        if user and user.is_active:
+            messages.success(request, "Login Successful")
+            return redirect("home", {"user": user})
+        # if user is not None:
+        #     if user.check_password(password):
+        #         messages.success(request, "Login Successful")
+        #         return redirect("home")
+        #     else:
+        #         messages.error(request, "invalid password")
+        #         return redirect("login")
+        elif user is None:
+            messages.error(request, "user does not exist")
+            return redirect("login")
+        elif not user.is_active:
+            messages.error(
+                request,
+                """User Email Not Verified yet,
+                please verify your email from the link sent to your reqistered email""",
+            )
+            return redirect("login")
+    return render(request, "login.html")
 
 
 @login_required(login_url="login")
