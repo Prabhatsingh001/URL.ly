@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.mail import send_mail
@@ -128,34 +128,19 @@ def activate(request, uidb64, token):
 
 
 def logout(request):
-    return render(request, "logout.html")
-
-
-# def login_view(request):
-#     if request.method == "POST":
-#         email = request.POST["email"]
-#         password = request.POST["password"]
-#         user = authenticate(request, username=email, password=password)
-#         if user and user.is_active:
-#             messages.success(request, "Login Successful")
-#             return redirect("home", {"user": user})
-#         elif user is None:
-#             messages.error(request, "user does not exist")
-#             return redirect("login")
-#         elif not user.is_active:
-#             messages.error(
-#                 request,
-#                 """User Email Not Verified yet,
-#                 please verify your email from the link sent to your reqistered email""",
-#             )
-#             return redirect("login")
-#     return render(request, "login.html")
+    auth_logout(request)
+    messages.success(request, "Logged out successfully.")
+    return redirect("index")
 
 
 def login(request):
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
+
+        if not email or not password:
+            messages.error(request, "Email and password are required.")
+            return redirect("login")
 
         try:
             user = CusUser.objects.get(email=email)
@@ -172,9 +157,9 @@ def login(request):
             auth_login(request, user)
             messages.success(request, "Login successful.")
             return redirect("home")
-
-        messages.error(request, "Invalid credentials.")
-        return redirect("login")
+        else:
+            messages.error(request, "Invalid credentials.")
+            return redirect("login")
 
     return render(request, "login.html")
 
