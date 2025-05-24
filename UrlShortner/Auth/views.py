@@ -214,8 +214,8 @@ def reset_password(request, uidb64, token):
 
     if user is not None and password_reset_token.check_token(user, token):
         if request.method == "POST":
-            new_password = request.POST.get("new_password")
-            confirm_password = request.POST.get("confirm_password")
+            new_password = request.POST.get("password")
+            confirm_password = request.POST.get("confirm-password")
 
             if new_password != confirm_password:
                 messages.error(request, "Passwords do not match")
