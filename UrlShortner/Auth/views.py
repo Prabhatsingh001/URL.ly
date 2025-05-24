@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.mail import send_mail
@@ -14,7 +14,7 @@ from django.core.mail import EmailMessage
 
 
 # Create your views here.
-User = get_user_model()
+CusUser = get_user_model()
 
 
 def index(request):
@@ -40,11 +40,11 @@ def signup(request):
         password = request.POST.get("password")
         password2 = request.POST.get("confirm-password")
 
-        if User.objects.filter(email=email).exists():
+        if CusUser.objects.filter(email=email).exists():
             messages.error(request, "email already exists")
             return redirect("signup")
 
-        if User.objects.filter(username=username).exists():
+        if CusUser.objects.filter(username=username).exists():
             messages.error(request, "username already exists")
             return redirect("signup")
 
@@ -68,11 +68,12 @@ def signup(request):
             messages.error(request, "password must be at most 20 characters")
             return redirect("signup")
 
-        user = User.objects.create_user(
+        user = CusUser.objects.create_user(
             username=username,
             email=email,
             password=password,
         )
+        user.set_password(password)  # Hash the password
         user.is_active = False
         user.save()
         messages.success(request, "User created successfully")
@@ -112,8 +113,8 @@ def signup(request):
 def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = CusUser.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, CusUser.DoesNotExist):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
@@ -130,31 +131,51 @@ def logout(request):
     return render(request, "logout.html")
 
 
+# def login_view(request):
+#     if request.method == "POST":
+#         email = request.POST["email"]
+#         password = request.POST["password"]
+#         user = authenticate(request, username=email, password=password)
+#         if user and user.is_active:
+#             messages.success(request, "Login Successful")
+#             return redirect("home", {"user": user})
+#         elif user is None:
+#             messages.error(request, "user does not exist")
+#             return redirect("login")
+#         elif not user.is_active:
+#             messages.error(
+#                 request,
+#                 """User Email Not Verified yet,
+#                 please verify your email from the link sent to your reqistered email""",
+#             )
+#             return redirect("login")
+#     return render(request, "login.html")
+
+
 def login(request):
     if request.method == "POST":
-        email = request.POST["email"]
-        password = request.POST["password"]
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        try:
+            user = CusUser.objects.get(email=email)
+        except CusUser.DoesNotExist:
+            messages.error(request, "Invalid credentials.")
+            return redirect("login")
+
+        if not user.is_active:
+            messages.error(request, "Please verify your email before logging in.")
+            return redirect("login")
+
         user = authenticate(request, username=email, password=password)
-        if user and user.is_active:
-            messages.success(request, "Login Successful")
-            return redirect("home", {"user": user})
-        # if user is not None:
-        #     if user.check_password(password):
-        #         messages.success(request, "Login Successful")
-        #         return redirect("home")
-        #     else:
-        #         messages.error(request, "invalid password")
-        #         return redirect("login")
-        elif user is None:
-            messages.error(request, "user does not exist")
-            return redirect("login")
-        elif not user.is_active:
-            messages.error(
-                request,
-                """User Email Not Verified yet,
-                please verify your email from the link sent to your reqistered email""",
-            )
-            return redirect("login")
+        if user:
+            auth_login(request, user)
+            messages.success(request, "Login successful.")
+            return redirect("home")
+
+        messages.error(request, "Invalid credentials.")
+        return redirect("login")
+
     return render(request, "login.html")
 
 

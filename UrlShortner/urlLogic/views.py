@@ -9,9 +9,8 @@ from datetime import timedelta
 
 Slug = SlugGenerator()
 
+
 # Create your views here.
-
-
 @login_required(login_url="login")
 def list_urls(request):
     """

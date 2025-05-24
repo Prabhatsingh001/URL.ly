@@ -3,7 +3,7 @@
 
 
 {% block content %}
-<section class="bg-gray-50 dark:bg-gray-900">
+{% comment %} <section class="bg-gray-50 dark:bg-gray-900">
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
             <img class="w-8 h-8 mr-2" src="{%static "logo.png" %}" alt="logo">
@@ -22,14 +22,6 @@
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
                         <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your Email" required="">
                     </div>
-                    {% comment %} <div>
-                        <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
-                        <input type="text" name="fname" id="fname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="First Name" required="">
-                    </div>
-                    <div>
-                        <label for="" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
-                        <input type="text" name="lname" id="lname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Last Name" required="">
-                    </div>{% endcomment %}
                     <div> 
                         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
                         <input type="password" name="password" id="password" placeholder="Password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
@@ -54,19 +46,156 @@
             </div>
         </div>
     </div>
-</section>
-{% endblock %}
+</section> {% endcomment %}
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- source:https://codepen.io/owaiswiz/pen/jOPvEPB -->
+<div class="min-h-screen bg-gray-600 text-gray-900 flex justify-center">
+    <div class="max-w-screen-xl m-0 sm:m-10 bg-blue-200 shadow sm:rounded-lg flex justify-center flex-1">
+        <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
+            <div>
+                <a href="{% url "index" %}" class="flex items-center justify-center mb-4 text-3xl font-bold text-gray-900">
+                    <img class="w-10 h-10 mr-2" src="{%static "logo.png" %}" alt="logo">URL.LY    
+                </a>
+            </div>
+            <div class="mt-2 flex flex-col items-center">
+                <h1 class="text-xxl xl:text-2xl font-extrabold">
+                    Sign Up
+                </h1>
+                <div class="w-full flex-1 mt-8">
+                    <div class="flex flex-col items-center">
+                        <button
+                            class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
+                            <div class="bg-white p-2 rounded-full">
+                                <svg class="w-4" viewBox="0 0 533.5 544.3">
+                                    <path
+                                        d="M533.5 278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1 33.8-25.7 63.7-54.4 82.7v68h87.7c51.5-47.4 81.1-117.4 81.1-200.2z"
+                                        fill="#4285f4" />
+                                    <path
+                                        d="M272.1 544.3c73.4 0 135.3-24.1 180.4-65.7l-87.7-68c-24.4 16.6-55.9 26-92.6 26-71 0-131.2-47.9-152.8-112.3H28.9v70.1c46.2 91.9 140.3 149.9 243.2 149.9z"
+                                        fill="#34a853" />
+                                    <path
+                                        d="M119.3 324.3c-11.4-33.8-11.4-70.4 0-104.2V150H28.9c-38.6 76.9-38.6 167.5 0 244.4l90.4-70.1z"
+                                        fill="#fbbc04" />
+                                    <path
+                                        d="M272.1 107.7c38.8-.6 76.3 14 104.4 40.8l77.7-77.7C405 24.6 339.7-.8 272.1 0 169.2 0 75.1 58 28.9 150l90.4 70.1c21.5-64.5 81.8-112.4 152.8-112.4z"
+                                        fill="#ea4335" />
+                                </svg>
+                            </div>
+                            <span class="ml-4">
+                                Sign Up with Google
+                            </span>
+                        </button>
+
+                        <button
+                            class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5">
+                            <div class="bg-white p-1 rounded-full">
+                                <svg class="w-6" viewBox="0 0 32 32">
+                                    <path fill-rule="evenodd"
+                                        d="M16 4C9.371 4 4 9.371 4 16c0 5.3 3.438 9.8 8.207 11.387.602.11.82-.258.82-.578 0-.286-.011-1.04-.015-2.04-3.34.723-4.043-1.609-4.043-1.609-.547-1.387-1.332-1.758-1.332-1.758-1.09-.742.082-.726.082-.726 1.203.086 1.836 1.234 1.836 1.234 1.07 1.836 2.808 1.305 3.492 1 .11-.777.422-1.305.762-1.605-2.664-.301-5.465-1.332-5.465-5.93 0-1.313.469-2.383 1.234-3.223-.121-.3-.535-1.523.117-3.175 0 0 1.008-.32 3.301 1.23A11.487 11.487 0 0116 9.805c1.02.004 2.047.136 3.004.402 2.293-1.55 3.297-1.23 3.297-1.23.656 1.652.246 2.875.12 3.175.77.84 1.231 1.91 1.231 3.223 0 4.61-2.804 5.621-5.476 5.922.43.367.812 1.101.812 2.219 0 1.605-.011 2.898-.011 3.293 0 .32.214.695.824.578C24.566 25.797 28 21.3 28 16c0-6.629-5.371-12-12-12z" />
+                                </svg>
+                            </div>
+                            <span class="ml-4">
+                                Sign Up with GitHub
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="my-12 border-b text-center">
+                        <div
+                            class="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-blue-200 transform translate-y-1/2">
+                            Or sign up with e-mail
+                        </div>
+                    </div>
+
+                    <form class="mx-auto max-w-xs" method="post">
+                        {% csrf_token %}
+                        <input
+                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                            type="text" placeholder="Username" name="username"/>
+                        <input
+                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-2"
+                            type="email" placeholder="Email" name="email" />
+
+                        {% comment %} password fields {% endcomment %}
+                        <div class="relative">
+                            <input
+                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-2"
+                            type="password" placeholder="Password" name="password" id="password"/>
+                            <span class="absolute inset-y-0 right-4 flex items-center cursor-pointer mt-2" onclick="togglePasswordVisibility('password', this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                </svg>
+                            </span>
+                        </div>
+
+                        <div class="relative">
+                            <input
+                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-2"
+                            type="password" placeholder="Confirm Password" name="confirm-password" id="confirm-password" />
+                            <span class="absolute inset-y-0 right-4 flex items-center cursor-pointer mt-2" onclick="togglePasswordVisibility('confirm-password', this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                </svg>
+                            </span>
+                        </div>
+
+                        {% comment %} password field ends {% endcomment %}
+                        <button
+                            class="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                            <svg class="w-6 h-6 -ml-2" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                                <circle cx="8.5" cy="7" r="4" />
+                                <path d="M20 8v6M23 11h-6" />
+                            </svg>
+                            <span class="ml-3">
+                                Sign Up
+                            </span>
+                        </button>
+                        <p class="text-sm font-light text-gray-500 dark:text-gray-400 mt-2 text-center">
+                            Already have an account? <a href="{% url "login" %}" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>
+                        </p>
+                        <p class="mt-2 text-xs text-gray-600 text-center">
+                            I agree to abide by URLly's
+                            <a href="#" class="border-b border-gray-500 border-dotted">
+                                Terms of Service
+                            </a>
+                            and its
+                            <a href="#" class="border-b border-gray-500 border-dotted">
+                                Privacy Policy
+                            </a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="flex-1 bg-white text-center hidden lg:flex">
+            <div class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat sm:rounded-xl"
+                style="background-image: url('{% static "signup.jpg" %}');">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
 <script>
-  window.addEventListener('DOMContentLoaded', function () {
-    const message = document.querySelector('#popup-messages li');
-    if (message) {
-      Swal.fire({
-        text: message.textContent,
-        icon: message.classList.contains('success') ? 'success' : 'info',
-        confirmButtonText: 'OK'
-      });
-    }
-  });
+function togglePasswordVisibility(inputId, iconElement) {
+  const passwordInput = document.getElementById(inputId);
+  const isPassword = passwordInput.type === "password";
+  passwordInput.type = isPassword ? "text" : "password";
+
+  iconElement.innerHTML = isPassword
+    ? `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+      </svg>`
+    : `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+      </svg>`;
+}
 </script>
+{% endblock %}
+{% endblock %}
