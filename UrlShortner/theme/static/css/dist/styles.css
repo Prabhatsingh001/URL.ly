@@ -9,7 +9,6 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
     --color-blue-200: oklch(88.2% 0.059 254.128);
-    --color-blue-300: oklch(80.9% 0.105 251.813);
     --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-blue-600: oklch(54.6% 0.245 262.881);
     --color-blue-700: oklch(48.8% 0.243 264.376);
@@ -59,6 +58,8 @@
     --radius-md: 0.375rem;
     --radius-lg: 0.5rem;
     --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --radius-4xl: 2rem;
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --blur-md: 12px;
@@ -318,9 +319,6 @@
   .mt-5 {
     margin-top: calc(var(--spacing) * 5);
   }
-  .mt-6 {
-    margin-top: calc(var(--spacing) * 6);
-  }
   .mt-8 {
     margin-top: calc(var(--spacing) * 8);
   }
@@ -431,10 +429,6 @@
     --tw-translate-y: calc(1/2 * 100%);
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
-  .translate-y-\[-10px\] {
-    --tw-translate-y: -10px;
-    translate: var(--tw-translate-x) var(--tw-translate-y);
-  }
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
   }
@@ -481,6 +475,12 @@
   .rounded {
     border-radius: 0.25rem;
   }
+  .rounded-2xl {
+    border-radius: var(--radius-2xl);
+  }
+  .rounded-4xl {
+    border-radius: var(--radius-4xl);
+  }
   .rounded-full {
     border-radius: calc(infinity * 1px);
   }
@@ -520,17 +520,11 @@
   .bg-blue-200 {
     background-color: var(--color-blue-200);
   }
-  .bg-blue-300 {
-    background-color: var(--color-blue-300);
-  }
   .bg-blue-500 {
     background-color: var(--color-blue-500);
   }
   .bg-blue-600 {
     background-color: var(--color-blue-600);
-  }
-  .bg-blue-700 {
-    background-color: var(--color-blue-700);
   }
   .bg-gray-50 {
     background-color: var(--color-gray-50);
@@ -541,17 +535,14 @@
   .bg-gray-200 {
     background-color: var(--color-gray-200);
   }
-  .bg-gray-300 {
-    background-color: var(--color-gray-300);
-  }
   .bg-gray-600 {
     background-color: var(--color-gray-600);
   }
   .bg-gray-700 {
     background-color: var(--color-gray-700);
   }
-  .bg-gray-800 {
-    background-color: var(--color-gray-800);
+  .bg-gray-900 {
+    background-color: var(--color-gray-900);
   }
   .bg-indigo-100 {
     background-color: var(--color-indigo-100);
@@ -573,17 +564,11 @@
   .bg-contain {
     background-size: contain;
   }
-  .bg-cover {
-    background-size: cover;
-  }
   .bg-center {
     background-position: center;
   }
   .bg-no-repeat {
     background-repeat: no-repeat;
-  }
-  .object-contain {
-    object-fit: contain;
   }
   .p-1 {
     padding: calc(var(--spacing) * 1);
@@ -642,9 +627,6 @@
   .py-12 {
     padding-block: calc(var(--spacing) * 12);
   }
-  .py-14 {
-    padding-block: calc(var(--spacing) * 14);
-  }
   .py-16 {
     padding-block: calc(var(--spacing) * 16);
   }
@@ -653,12 +635,6 @@
   }
   .ps-10 {
     padding-inline-start: calc(var(--spacing) * 10);
-  }
-  .pt-4 {
-    padding-top: calc(var(--spacing) * 4);
-  }
-  .pt-16 {
-    padding-top: calc(var(--spacing) * 16);
   }
   .text-center {
     text-align: center;
@@ -826,6 +802,11 @@
     }
   }
   @media (hover: hover) {
+    .hover\:bg-blue-600:hover {
+      background-color: var(--color-blue-600);
+    }
+  }
+  @media (hover: hover) {
     .hover\:bg-blue-700:hover {
       background-color: var(--color-blue-700);
     }
@@ -838,11 +819,6 @@
   @media (hover: hover) {
     .hover\:bg-gray-200:hover {
       background-color: var(--color-gray-200);
-    }
-  }
-  @media (hover: hover) {
-    .hover\:bg-gray-300:hover {
-      background-color: var(--color-gray-300);
     }
   }
   @media (hover: hover) {
@@ -861,11 +837,6 @@
     }
   }
   @media (hover: hover) {
-    .hover\:text-gray-800:hover {
-      color: var(--color-gray-800);
-    }
-  }
-  @media (hover: hover) {
     .hover\:text-white:hover {
       color: var(--color-white);
     }
@@ -879,13 +850,6 @@
     .hover\:shadow:hover {
       --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    }
-  }
-  @media (hover: hover) {
-    .hover\:transition-transform:hover {
-      transition-property: transform, translate, scale, rotate;
-      transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-      transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
   }
   .focus\:border-blue-500:focus {
@@ -1050,11 +1014,6 @@
     }
   }
   @media (width >= 48rem) {
-    .md\:text-blue-700 {
-      color: var(--color-blue-700);
-    }
-  }
-  @media (width >= 48rem) {
     @media (hover: hover) {
       .md\:hover\:bg-transparent:hover {
         background-color: transparent;
@@ -1065,13 +1024,6 @@
     @media (hover: hover) {
       .md\:hover\:text-blue-500:hover {
         color: var(--color-blue-500);
-      }
-    }
-  }
-  @media (width >= 48rem) {
-    @media (hover: hover) {
-      .md\:hover\:text-blue-700:hover {
-        color: var(--color-blue-700);
       }
     }
   }
@@ -1148,11 +1100,6 @@
   @media (prefers-color-scheme: dark) {
     .dark\:bg-blue-500 {
       background-color: var(--color-blue-500);
-    }
-  }
-  @media (prefers-color-scheme: dark) {
-    .dark\:bg-gray-600 {
-      background-color: var(--color-gray-600);
     }
   }
   @media (prefers-color-scheme: dark) {
