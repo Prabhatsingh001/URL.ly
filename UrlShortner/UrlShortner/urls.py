@@ -17,9 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from Auth.views import index
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("Auth.urls")),
+    path("", index, name="index"),
+    path("accounts/", include(("Auth.urls", "Auth"), namespace="accounts")),
+    path("url/", include(("urlLogic.urls", "urlLogic"), namespace="url")),
     path("__reload__/", include("django_browser_reload.urls")),
 ]

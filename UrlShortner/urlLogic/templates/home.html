@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+    <h2>Your Shortened URLs</h2>
+    <ul>
+    {% for url in urls %}
+        <li>
+        Original: {{ url.original_url }} <br>
+        Short: <a href="{{ url.short_url }}">http://127.0.0.1:8000/url/{{ url.short_url }}</a> <br>
+        Created: {{ url.created_at }}
+        </li>
+    {% empty %}
+        <li>No URLs found.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

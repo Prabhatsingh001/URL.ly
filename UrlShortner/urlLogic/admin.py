@@ -14,6 +14,7 @@ class UrlModelAdmin(admin.ModelAdmin):
         "click_count",
         "user",
     )
+    list_display_links = ("user", "short_url", "original_url")
     search_fields = ("original_url", "short_url")
     list_filter = ("created_at", "expires_at")
     ordering = ("-created_at",)

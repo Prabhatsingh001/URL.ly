@@ -49,26 +49,32 @@
         <input type="text" id="search-navbar" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
       </div>
       <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+        {% if user.is_authenticated %}
         <li>
-          <a href="#" class="block py-2 px-3 text-white bg-blue-500 rounded-sm md:bg-transparent md:text-blue-500 md:p-0 md:dark:text-blue-500" aria-current="page">Home</a>
+          <a href="{% url 'url:home' %}" class="block py-2 px-3 text-white bg-blue-500 rounded-sm md:bg-transparent md:text-blue-500 md:p-0 md:dark:text-blue-500" aria-current="page">Home</a>
+        </li>
+        {% else %}
+        <li>
+          <a href="{% url 'index' %}" class="block py-2 px-3 text-white bg-blue-500 rounded-sm md:bg-transparent md:text-blue-500 md:p-0 md:dark:text-blue-500" aria-current="page">Home</a>
+        </li>
+        {% endif %}
+        <li>
+          <a href="{% url 'accounts:about' %}" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-500 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
         </li>
         <li>
-          <a href="{% url 'about' %}" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-500 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
-        </li>
-        <li>
-          <a href="{% url 'contact' %}" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-500 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact Us</a>
+          <a href="{% url 'accounts:contact' %}" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-500 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact Us</a>
         </li>
         {% if user.is_authenticated %}
         <li class="font-medium text-gray-600 mt-2 md:mt-0 hover:text-white transition ease-linear duration-300">Hello, {{user.username}}</li>
         <li>
-          <a href="{% url 'logout' %}" class="inline-block  bg-blue-600 text-white font-medium px-4 py-1 mt-2 md:mt-0 rounded-md hover:bg-blue-700 transition hover:-translate-y-1 ease-in-out duration-300 dark:bg-blue-500 dark:hover:bg-blue-600">Logout</a>
+          <a href="{% url 'accounts:logout' %}" class="inline-block  bg-blue-600 text-white font-medium px-4 py-1 mt-2 md:mt-0 rounded-md hover:bg-blue-700 transition hover:-translate-y-1 ease-in-out duration-300 dark:bg-blue-500 dark:hover:bg-blue-600">Logout</a>
         </li>
         {% else %}
         <li>
-          <a href="{% url 'signup' %}" class="inline-block bg-blue-600 text-white font-medium px-4 py-1 mt-2 md:mt-0 ml-1 md:ml-0 rounded-md hover:bg-blue-700 transition hover:-translate-y-1 ease-in-out duration-300 dark:bg-blue-500 dark:hover:bg-blue-600">Register</a>
+          <a href="{% url 'accounts:signup' %}" class="inline-block bg-blue-600 text-white font-medium px-4 py-1 mt-2 md:mt-0 ml-1 md:ml-0 rounded-md hover:bg-blue-700 transition hover:-translate-y-1 ease-in-out duration-300 dark:bg-blue-500 dark:hover:bg-blue-600">Register</a>
         </li>
         <li>
-          <a href="{% url 'login' %}" class="inline-block mt-2 md:mt-0 bg-blue-600 text-white font-medium px-4 py-1  ml-1 md:ml-0 rounded-md hover:bg-blue-700 transition hover:-translate-y-1 ease-in-out duration-300 dark:bg-blue-500 dark:hover:bg-blue-600">Log in</a>
+          <a href="{% url 'accounts:login' %}" class="inline-block mt-2 md:mt-0 bg-blue-600 text-white font-medium px-4 py-1  ml-1 md:ml-0 rounded-md hover:bg-blue-700 transition hover:-translate-y-1 ease-in-out duration-300 dark:bg-blue-500 dark:hover:bg-blue-600">Log in</a>
         </li>
         {% endif %}
       </ul>
@@ -96,7 +102,6 @@
     const closeBtn = document.getElementById("alert-close");
 
     if (alert) {
-      // Set initial state
       alert.style.transition = "all 0.3s ease-out";
       alert.style.transform = "translate(-50%, -20px)";
       alert.style.opacity = "0";
@@ -105,9 +110,8 @@
       setTimeout(() => {
         alert.style.transform = "translate(-50%, 0)";
         alert.style.opacity = "1";
-      }, 50); // slight delay to trigger transition properly
+      }, 50);
 
-      // Auto-dismiss after 3s
       setTimeout(() => {
         alert.style.transition = "all 0.3s ease";
         alert.style.opacity = "0";
@@ -115,7 +119,6 @@
         setTimeout(() => alert.remove(), 300); // remove after transition
       }, 3000);
 
-      // Manual dismiss
       if (closeBtn) {
         closeBtn.addEventListener("click", () => {
           alert.style.transition = "all 0.3s ease";

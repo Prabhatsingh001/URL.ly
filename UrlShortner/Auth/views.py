@@ -29,10 +29,6 @@ def contact(request):
     return render(request, "contact.html")
 
 
-def home(request):
-    return render(request, "home.html")
-
-
 def signup(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -42,31 +38,29 @@ def signup(request):
 
         if CusUser.objects.filter(email=email).exists():
             messages.error(request, "email already exists")
-            return redirect("signup")
+            return redirect("accounts:signup")
 
         if CusUser.objects.filter(username=username).exists():
             messages.error(request, "username already exists")
-            return redirect("signup")
+            return redirect("accounts:signup")
 
         if password != password2:
             messages.error(request, "passwords do not match")
-            return redirect("signup")
-
+            return redirect("accounts:signup")
         if len(password) < 8:
             messages.error(request, "password must be at least 8 characters")
-            return redirect("signup")
+            return redirect("accounts:signup")
 
         if len(username) < 4:
             messages.error(request, "username must be at least 4 characters")
-            return redirect("signup")
+            return redirect("accounts:signup")
 
         if len(username) > 20:
             messages.error(request, "username must be at most 20 characters")
-            return redirect("signup")
-
+            return redirect("accounts:signup")
         if len(password) > 20:
             messages.error(request, "password must be at most 20 characters")
-            return redirect("signup")
+            return redirect("accounts:signup")
 
         user = CusUser.objects.create_user(
             username=username,
@@ -89,7 +83,7 @@ def signup(request):
         current_site = get_current_site(request)
         email_subject = "Email Verification"
         message2 = render_to_string(
-            "email_verification.html",
+            "emails/email_verification.html",
             {
                 "user": user,
                 "domain": current_site.domain,
@@ -106,7 +100,7 @@ def signup(request):
         )
         email.send(fail_silently=True)
 
-        return redirect("login")
+        return redirect("accounts:login")
     return render(request, "signup.html")
 
 
@@ -121,10 +115,10 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         messages.success(request, "Email verified successfully")
-        return redirect("login")
+        return redirect("accounts:login")
     else:
         messages.error(request, "Email verification failed")
-        return redirect("login")
+        return redirect("accounts:login")
 
 
 def logout(request):
@@ -140,31 +134,31 @@ def login(request):
 
         if not email or not password:
             messages.error(request, "Email and password are required.")
-            return redirect("login")
+            return redirect("accounts:login")
 
         try:
             user = CusUser.objects.get(email=email)
         except CusUser.DoesNotExist:
             messages.error(request, "Invalid credentials.")
-            return redirect("login")
+            return redirect("accounts:login")
 
         if not user.is_active:
             messages.error(request, "Please verify your email before logging in.")
-            return redirect("login")
+            return redirect("accounts:login")
 
         user = authenticate(request, username=email, password=password)
         if user:
             auth_login(request, user)
             messages.success(request, "Login successful.")
-            return redirect("home")
+            return redirect("url:home")
         else:
             messages.error(request, "Invalid credentials.")
-            return redirect("login")
+            return redirect("accounts:login")
 
     return render(request, "login.html")
 
 
-@login_required(login_url="login")
+@login_required()
 def profile(request):
     return render(request, "profile.html")
 
@@ -181,7 +175,7 @@ def forgot_password(request):
             current_site = get_current_site(request)
             email_subject = "reset password"
             message2 = render_to_string(
-                "reset_password_email.html",
+                "emails/reset_password_email.html",
                 {
                     "user": user,
                     "domain": current_site.domain,
@@ -198,10 +192,10 @@ def forgot_password(request):
             )
             email.send(fail_silently=True)
             messages.success(request, "Password reset email sent successfully")
-            return redirect("login")
+            return redirect("accounts:login")
         except CusUser.DoesNotExist:
             messages.error(request, "User with this email does not exist")
-            return redirect("forgot_password")
+            return redirect("accounts:forgot_password")
     return render(request, "forgot_password.html")
 
 
@@ -219,13 +213,13 @@ def reset_password(request, uidb64, token):
 
             if new_password != confirm_password:
                 messages.error(request, "Passwords do not match")
-                return redirect("reset_password", uidb64=uidb64, token=token)
+                return redirect("accounts:reset_password", uidb64=uidb64, token=token)
 
             user.set_password(new_password)
             user.save()
             messages.success(request, "Password reset successfully")
-            return redirect("login")
+            return redirect("accounts:login")
         return render(request, "reset_password.html", {"user": user})
     else:
         messages.error(request, "Password reset link is invalid or has expired")
-        return redirect("login")
+        return redirect("accounts:login")
