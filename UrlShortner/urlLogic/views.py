@@ -12,6 +12,13 @@ Slug = SlugGenerator()
 qr = QrCode()
 
 
+def F404_page(request, excetipon):
+    """
+    This function renders a custom 404 page.
+    """
+    return render(request, "404_notF.html", status=404)
+
+
 # Create your views here.
 @login_required()
 def home(request):
@@ -30,6 +37,20 @@ def make_short_url(request):
     """
     if request.method == "POST":
         long_url = request.POST.get("long_url")
+        short_url = request.POST.get("short_url")
+        if short_url:
+            existing_url = UrlModel.objects.filter(short_url=short_url).first()
+            if existing_url:
+                messages.error(
+                    request,
+                    "this short url name already exists. please try another name.",
+                )
+                return render(request, "url_shortner.html")
+        if long_url:
+            existing_url = UrlModel.objects.filter(original_url=long_url).first()
+            if existing_url:
+                messages.error(request, "this long url has already exists")
+                return render(request, "url_shortner.html")
         if not long_url:
             messages.error(request, "Please enter a valid URL.")
             return render(request, "url_shortner.html")
@@ -42,14 +63,18 @@ def make_short_url(request):
         if existing_url:
             messages.error(request, "This URL has already been shortened.")
             return render(request, "url_shortner.html")
+
         expiry_time = timezone.now() + timedelta(days=7)
         url = UrlModel.objects.create(
             original_url=long_url, user=request.user, expires_at=expiry_time
         )
 
-        id = url.pk
-        slug = Slug.encode_url(id=id)
-        url.short_url = slug
+        if short_url:
+            url.short_url = short_url
+        else:
+            id = url.pk
+            slug = Slug.encode_url(id=id)
+            url.short_url = slug
         url.save()
         return redirect("url:home")
     return render(request, "url_shortner.html")
@@ -61,8 +86,7 @@ def redirect_url(request, slug):
     """
     url = get_object_or_404(UrlModel, short_url=slug)
     if url is None:
-        return render(request, "url_not_found.html")
-    # Check if the URL has expired
+        return render(request, "404_notF.html")
     elif url.expires_at and timezone.now() > url.expires_at:
         return render(request, "url_expired.html")
     url.click_count += 1
@@ -80,7 +104,7 @@ def delete_url(reuqest, id):
     return redirect("url:home")
 
 
-@login_required(login_url="login")
+@login_required()
 def update_url(request, id):
     """
     this function updates the url in the database
@@ -93,15 +117,40 @@ def update_url(request, id):
         url.expires_at = expiry_time
         url.save()
         return redirect("url:home")
-    return render(request, "url_update.html", {"url": url})
+    return render(request, "update_edit_url.html", {"url": url})
 
 
-@login_required(login_url="login")
+@login_required()
 def generate_qr(request):
     """
     This function generates a QR code for the short URL.
     """
-    url = get_object_or_404(UrlModel, id=request.GET.get("id"))
+    url = get_object_or_404(UrlModel, id=request.get("id"))
     qr_code = qr.generate_qr_code(url.short_url)
     context = {"qr_code": qr_code, "url": url}
     return render(request, "qr_code.html", context)
+
+
+@login_required()
+def download_qr(request, id):
+    """
+    This function allows the user to download the QR code for the short URL.
+    """
+    url = get_object_or_404(UrlModel, id=id)
+    qr_code = qr.generate_qr_code(url.short_url)
+    response = qr.download_qr_code(qr_code)
+    return redirect(
+        "url:home", {"response": response}
+    )  # adjust the home html for download
+
+
+@login_required()
+def delete_qr(request, id):
+    """
+    This function deletes the QR code for the short URL.
+    """
+    url = get_object_or_404(UrlModel, id=id)
+    url.qrcode.delete()
+    url.save()
+    messages.success(request, "QR code deleted successfully.")
+    return redirect("url:home")

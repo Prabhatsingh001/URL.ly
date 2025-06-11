@@ -1,16 +1,17 @@
 # accounts/admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import CustomUser, UserProfile
 
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
-    list_display = ["email", "username", "is_staff", "phone_number"]
+    list_display = ["id", "email", "username", "is_staff", "is_active"]
+    list_display_links = ["id", "email"]
     fieldsets = (
         (None, {"fields": ("username", "password")}),
-        ("Personal info", {"fields": ("first_name", "last_name", "email")}),
+        ("Personal info", {"fields": ("email",)}),
         (
             "Permissions",
             {
@@ -28,3 +29,10 @@ class CustomUserAdmin(UserAdmin):
 
     # Mark it read-only
     readonly_fields = ("last_login", "date_joined")
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    model = UserProfile
+    list_display = ["id", "first_name", "last_name", "phone_number"]
+    list_display_links = ["id", "first_name"]

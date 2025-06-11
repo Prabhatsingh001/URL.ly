@@ -15,14 +15,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from Auth.views import IndexView
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
-from Auth.views import index
+from django.urls import include, path
+
+handler404 = "urlLogic.views.F404_page"
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", index, name="index"),
+    path("admin/", admin.site.urls, name="admin"),
+    path("", IndexView.as_view(), name="index"),
     path("accounts/", include(("Auth.urls", "Auth"), namespace="accounts")),
     path("url/", include(("urlLogic.urls", "urlLogic"), namespace="url")),
+    # Tailwind CSS
     path("__reload__/", include("django_browser_reload.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

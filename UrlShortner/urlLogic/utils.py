@@ -29,3 +29,12 @@ class SlugGenerator:
 class QrCode:
     def generate_qr_code(self, short_url):
         pass
+
+    def download_qr_code(self, qr_code):
+        pass
+
+    def get_qr_code(self):
+        pass
+
+    def delete_qr_code(self):
+        pass

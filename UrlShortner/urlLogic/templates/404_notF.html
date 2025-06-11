@@ -1,0 +1,30 @@
+{% load static tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found</title>
+    {% tailwind_css %}
+</head>
+<body class="h-screen">
+    <div class="m-4">
+        <div class="flex flex-col md:flex-row items-center h-screen">
+            <div class="w-full md:w-1/2 h-1/2 md:h-screen">
+                <img src="{% static "dribbble_1.gif" %}" alt="404 NOT FOUND" class="w-full h-full object-contain mt-1 md:m-4">
+            </div>
+            <div>
+                <p class="text-2xl font-semibold mt-4 px-2 md:m-4">Uhoo!! Page You Were Looking for is No Longer Available</p>
+                <a href="{% url "url:home" %}" class="bg-yellow-600 text-white px-4 py-2 mt-4 ml-3 rounded hover:bg-yellow-700 md:m-6">Go Back</a>
+            </div>
+        </div>
+    </div>
+
+<!-- <div class="h-screen w-screen bg-[url('5203299.jpg')] bg-cover bg-center object-contain bg-opacity-50">
+  <div class="flex items-center justify-center h-full text-white text-2xl">
+    Page Not Found
+  </div>
+</div> -->
+</body>
+</html>

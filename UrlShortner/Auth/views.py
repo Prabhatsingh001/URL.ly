@@ -1,7 +1,12 @@
-from django.contrib.auth import get_user_model
+# from typing import Any
 from django.contrib import messages
-from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib.auth import (
+    authenticate,
+    login as auth_login,
+    logout as auth_logout,
+    get_user_model,
+)
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.mail import send_mail
@@ -12,21 +17,35 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token, password_reset_token
 from django.core.mail import EmailMessage
 
+from django.views.generic import TemplateView
+
 
 # Create your views here.
 CusUser = get_user_model()
 
 
-def index(request):
-    return render(request, "index.html")
+# def index(request):
+#     return render(request, "index.html")
 
 
-def about(request):
-    return render(request, "about.html")
+class IndexView(TemplateView):
+    template_name = "index.html"
 
 
-def contact(request):
-    return render(request, "contact.html")
+# def about(request):
+#     return render(request, "about.html")
+
+
+class AboutView(TemplateView):
+    template_name = "about.html"
+
+
+# def contact(request):
+#     return render(request, "contact.html")
+
+
+class ContactView(TemplateView):
+    template_name = "contact.html"
 
 
 def signup(request):
@@ -102,6 +121,39 @@ def signup(request):
 
         return redirect("accounts:login")
     return render(request, "signup.html")
+
+
+def resend_verification_email(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        user = get_object_or_404(CusUser, email=email)
+
+        if user.is_active:
+            messages.success(request, "user is already verified!!!")
+            return redirect("accounts:login")
+
+        current_site = get_current_site(request)
+        email_subject = "Email Verification"
+        message2 = render_to_string(
+            "emails/email_verification.html",
+            {
+                "user": user,
+                "domain": current_site.domain,
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": account_activation_token.make_token(user),
+            },
+        )
+
+        email = EmailMessage(
+            email_subject,
+            message2,
+            settings.EMAIL_HOST_USER,
+            [user.email],
+        )
+        email.send(fail_silently=True)
+
+        return redirect("accounts:login")
+    return render(request, "login.html")
 
 
 def activate(request, uidb64, token):
@@ -223,3 +275,21 @@ def reset_password(request, uidb64, token):
     else:
         messages.error(request, "Password reset link is invalid or has expired")
         return redirect("accounts:login")
+
+
+"""
+detailview
+-> used to create details of anything
+-> cannot be paginated
+->fetches one object using primary key or slug
+
+"""
+
+
+# class indexview(TemplateView):
+#     template_name = "index.html"
+
+#     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+#         context = super().get_context_data(**kwargs)
+#         context["books"] = books.objects.all()
+#         return context
