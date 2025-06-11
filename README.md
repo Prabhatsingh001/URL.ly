@@ -8,11 +8,10 @@ A simple URL shortener built with **Django**, **HTML**, **CSS**, and **JavaScrip
 - QR code generation (coming soon)
 - Dashboard of various information (coming soon)
 - barnded links (coming soon)
-- 
 
 ## Tech Stack
 - Django
-- HTML/CSS/JavaScript
+- HTML/TailwindCSS/JavaScript
 
 ## Setup
 ```bash
