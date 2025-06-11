@@ -13,9 +13,30 @@ A simple URL shortener built with **Django**, **HTML**, **CSS**, and **JavaScrip
 - Django
 - HTML/TailwindCSS/JavaScript
 
-## Setup
-```bash
-git clone https://github.com/Prabhatsingh001/URL-SHORTNER.git
-cd UrlShortner
-pip install -r requirements.txt
-python manage.py runserver
+## 🛠️ Setup
+
+1. **Create a virtual environment** (use Python 3.10 for better stability):
+   ```bash
+   python3.10 -m venv .venv
+   source .venv/bin/activate  # On Windows use .venv\Scripts\activate
+   ```
+
+2. **Clone the repository**:
+   ```bash
+   git clone https://github.com/Prabhatsingh001/URL-SHORTNER.git
+   ```
+
+3. **Change the working directory**:
+   ```bash
+   cd URL-SHORTNER
+   ```
+
+4. **Install the required dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. **Run the development server**:
+   ```bash
+   python manage.py runserver
+   ```
