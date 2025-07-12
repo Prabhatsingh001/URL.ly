@@ -1,9 +1,11 @@
 {% extends "layout.html" %}
 {% load static %}
 
+{% block title %}Login | URL.ly{% endblock %}
+
 {% block content %}
 <!-- https://play.tailwindcss.com/MIwj5Sp9pw -->
-<div class="py-16 bg-gray-600 mt-8">
+<div class="py-16 bg-gradient-to-br from-blue-100 via-white to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 mt-8">
     <div class="flex bg-white rounded-lg shadow-3xl overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
         <div class="hidden lg:block lg:w-1/2 bg-contain bg-center bg-no-repeat"
             style="background-image:url('{% static 'signin-image.webp' %}')">

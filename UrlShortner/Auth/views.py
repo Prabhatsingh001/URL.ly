@@ -15,6 +15,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token, password_reset_token
 from django.core.mail import EmailMessage
+from .models import Contact
+from .mail import send_conact_email
 
 from django.views.generic import TemplateView
 
@@ -39,12 +41,19 @@ class AboutView(TemplateView):
     template_name = "about.html"
 
 
-# def contact(request):
-#     return render(request, "contact.html")
+def contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        message = request.POST.get("message")
 
+        contact = Contact.objects.create(name=name, email=email, message=message)
 
-class ContactView(TemplateView):
-    template_name = "contact.html"
+        contact.save()
+        send_conact_email(contact)
+        messages.success(request, "mail sent successfully")
+        return redirect("accounts:contact")
+    return render(request, "contact.html")
 
 
 def signup(request):

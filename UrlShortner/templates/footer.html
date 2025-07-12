@@ -17,8 +17,9 @@
         <li><a href="#" class="hover:text-blue-400 transition">Features</a></li>
         {% if user.is_authenticated %}
         <li><a href="{% url 'url:home' %}" class="hover:text-blue-400 transition">Shorten URL</a></li>
-        {% endif %}
+        {% else %}
         <li><a href="{% url 'accounts:login' %}" class="hover:text-blue-400 transition">Shorten URL</a></li>
+        {% endif %}
       </ul>
     </div>
 
@@ -44,6 +45,6 @@
 
   <!-- Bottom divider -->
   <div class="border-t border-gray-700 mt-8 pt-4 text-center text-sm text-gray-500">
-    Made with ❤️ by the Prabhat singh
+    Made with ❤️ by Prabhat singh
   </div>
 </footer>

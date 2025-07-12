@@ -1,7 +1,7 @@
 # accounts/admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, UserProfile
+from .models import CustomUser, UserProfile, Contact
 
 
 @admin.register(CustomUser)
@@ -36,3 +36,10 @@ class UserProfileAdmin(admin.ModelAdmin):
     model = UserProfile
     list_display = ["id", "first_name", "last_name", "phone_number"]
     list_display_links = ["id", "first_name"]
+
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    model = Contact
+    list_display = ["id", "name", "email"]
+    list_display_links = ["id", "name"]

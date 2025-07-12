@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 
+{% block title %}Home | URL.LY {% endblock %}
+
 {% block content %}
-<h2 class="text-3xl font-bold text-center mt-15 text-gray-800 dark:text-white">Your Shortened <span class="font-bold text-blue-500">URLs </span></h2>
+<h2 class="text-3xl font-bold text-center mt-15 text-gray-800 dark:text-white">Your <span class="font-bold text-blue-500">URLs </span></h2>
 
 <div class="flex justify-center mb-10">
   <a href="{% url 'url:make_short_url' %}"
@@ -10,7 +12,7 @@
   </a>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6 mb-2 ">
   {% if urls %}
     {% for url in urls %}
       {% include "components/url_card.html" with url=url %}

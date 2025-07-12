@@ -37,3 +37,14 @@ def send_verification_mail(user):
         [user.email],
     )
     email.send(fail_silently=True)
+
+
+def send_conact_email(conact):
+    email_subject = f"New Notofication {conact.email}"
+    message = f"{conact.message}"
+    reciever_mail = settings.EMAIL_HOST_USER
+
+    email = EmailMessage(
+        email_subject, message, reciever_mail, [settings.EMAIL_HOST_USER]
+    )
+    email.send(fail_silently=False)

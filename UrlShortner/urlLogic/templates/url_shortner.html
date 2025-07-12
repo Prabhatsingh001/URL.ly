@@ -1,20 +1,52 @@
 {% extends "layout.html" %}
 
-{% block content %}
-    <div class="flex flex-col rounded-lg shadow-3xl overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
-        <form method="post" class="w-full p-6 bg-white mt-4 rounded-2xl shadow-lg">
-            {% csrf_token %}
-            <div class="mt-4">
-                <label class="block text-sm font-bold mb-2 text-gray-900">Url</label>
-                <input class="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="text" name="long_url" id="urlForm" placeholder="your url" required=""/>
-            </div>
-            <div class="mt-4">
-                <label class="block text-sm font-bold mb-2 text-gray-900">Url</label>
-                <input class="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="text" name="short_url" id="urlForm" placeholder="short url name"/>
-            </div>
-            <button type="submit" class="mt-2 p-4 bg-green-400 rounded-2xl hover:bg-green-600">Generate url</button>
-        </form>
-        <a href="{% url 'url:home' %}" class="mt-4 p-4 text-center bg-black text-white rounded-2xl hover:bg-gray-900 transition duration-200 ease-out w-full max-w-sm"> Go Back</a>
-    </div>
-{% endblock %}
+{% block title %}Add Url | URL.ly{% endblock %}
 
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+
+  <div class="max-w-md w-full space-y-8 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl ring-1 ring-gray-200 dark:ring-gray-700 transition-all">
+    <div class="text-center">
+      <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">🔗 Shorten Your URL</h2>
+      <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Paste a long URL and get a short one instantly</p>
+    </div>
+
+    <form method="post" class="mt-8 space-y-6">
+      {% csrf_token %}
+
+      <div class="space-y-4">
+        <!-- Long URL -->
+        <div>
+          <label for="long_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Original URL</label>
+          <input type="text" name="long_url" id="long_url" placeholder="https://example.com/long-link"
+            required
+            class="mt-1 block w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+        </div>
+
+        <!-- Short URL -->
+        <div>
+          <label for="short_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Custom short name (optional)</label>
+          <input type="text" name="short_url" id="short_url" placeholder="e.g. mylink123"
+            class="mt-1 block w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition" />
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <div>
+        <button type="submit"
+          class="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 shadow-lg transform hover:scale-105 transition-all duration-300">
+          Generate Short URL
+        </button>
+      </div>
+    </form>
+
+    <!-- Back Button -->
+    <div class="pt-6">
+      <a href="{% url 'url:home' %}"
+        class="w-full block text-center py-3 px-4 font-medium text-sm text-white bg-gray-900 rounded-xl hover:bg-gray-700 transition-all duration-300">
+        ← Go Back to Dashboard
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

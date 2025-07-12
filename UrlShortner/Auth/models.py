@@ -91,3 +91,11 @@ class UserProfile(models.Model):
 
     def __repr__(self):
         return f"this profile belongs to {self.user.email}"
+
+
+class Contact(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
+    name = models.CharField(max_length=50)
+    email = models.EmailField()
+    message = models.TextField(max_length=300)
+    created_at = models.DateTimeField(auto_now_add=True)
