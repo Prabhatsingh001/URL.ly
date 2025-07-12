@@ -1,4 +1,8 @@
 import uuid
+import qrcode
+from io import BytesIO
+from django.core.files import File
+# from PIL import Image
 
 BASE62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -27,8 +31,28 @@ class SlugGenerator:
 
 
 class QrCode:
-    def generate_qr_code(self, short_url):
-        pass
+    def __init__(self, url_instance, request):
+        self.url_instance = url_instance
+        self.request = request
+
+    def generate_qr_code(self):
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.ERROR_CORRECT_H,
+            box_size=10,
+            border=4,
+        )
+        full_url = f"{self.request.get_host()}/url/{self.url_instance.short_url}"
+        qr.add_data(full_url)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white").convert("RGB")  # type: ignore
+
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        buffer.seek(0)
+
+        filename = f"{self.url_instance.short_url}_qr.png"
+        self.url_instance.qrcode.save(filename, File(buffer), save=True)
 
     def download_qr_code(self, qr_code):
         pass

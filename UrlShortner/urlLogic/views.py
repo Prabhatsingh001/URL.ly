@@ -9,7 +9,6 @@ from .models import UrlModel
 from .utils import QrCode, SlugGenerator
 
 Slug = SlugGenerator()
-qr = QrCode()
 
 
 def F404_page(request, excetipon):
@@ -84,7 +83,7 @@ def redirect_url(request, slug):
     """
     this function takes the short url and redirects to the long url
     """
-    url = get_object_or_404(UrlModel, short_url=slug)
+    url = UrlModel.objects.filter(short_url=slug).first()
     if url is None:
         return render(request, "404_notF.html")
     elif url.expires_at and timezone.now() > url.expires_at:
@@ -125,32 +124,34 @@ def generate_qr(request):
     """
     This function generates a QR code for the short URL.
     """
-    url = get_object_or_404(UrlModel, id=request.get("id"))
-    qr_code = qr.generate_qr_code(url.short_url)
-    context = {"qr_code": qr_code, "url": url}
-    return render(request, "qr_code.html", context)
+    if request.method == "POST":
+        url_id = request.POST.get("id")
+        url = get_object_or_404(UrlModel, id=url_id, user=request.user)
+        if not url.qrcode:
+            urlservice = QrCode(url, request)
+            urlservice.generate_qr_code()
+        return redirect("url:home")
+    return render(request, "home.html")
 
 
-@login_required()
-def download_qr(request, id):
-    """
-    This function allows the user to download the QR code for the short URL.
-    """
-    url = get_object_or_404(UrlModel, id=id)
-    qr_code = qr.generate_qr_code(url.short_url)
-    response = qr.download_qr_code(qr_code)
-    return redirect(
-        "url:home", {"response": response}
-    )  # adjust the home html for download
+# @login_required()
+# def download_qr(request, id):
+#     """
+#     This function allows the user to download the QR code for the short URL.
+#     """
+#     response = qr.download_qr_code(qr_code)
+#     return redirect(
+#         "url:home", {"response": response}
+#     )  # adjust the home html for download
 
 
-@login_required()
-def delete_qr(request, id):
-    """
-    This function deletes the QR code for the short URL.
-    """
-    url = get_object_or_404(UrlModel, id=id)
-    url.qrcode.delete()
-    url.save()
-    messages.success(request, "QR code deleted successfully.")
-    return redirect("url:home")
+# @login_required()
+# def delete_qr(request, id):
+#     """
+#     This function deletes the QR code for the short URL.
+#     """
+#     url = get_object_or_404(UrlModel, id=id)
+#     url.qrcode.delete()
+#     url.save()
+#     messages.success(request, "QR code deleted successfully.")
+#     return redirect("url:home")

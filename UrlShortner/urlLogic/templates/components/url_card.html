@@ -22,8 +22,21 @@
         </svg>
       </button>
     </div>
-
     <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Created on: {{ url.created_at|date:"M d, Y" }}</p>
+  </div>
+
+  <div>
+  {% if url.qrcode %}
+      <a href="{{ url.qrcode.url }}" target="_blank">View QR</a>
+  {% else %}
+      <form method="post" action="{% url 'url:generate_qr' %}">
+      {% csrf_token %}
+      <input type="hidden" name="id" value="{{ url.id }}">
+      <button type="submit" class="text-indigo-600 hover:underline text-sm mt-4">
+        Generate QR Code
+      </button>
+    </form>
+  {% endif %}
   </div>
 
   <div class="mt-6 flex justify-end space-x-4">

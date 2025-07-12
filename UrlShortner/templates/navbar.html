@@ -30,8 +30,8 @@
           <span class="block text-sm text-gray-500 dark:text-gray-300">Hello, {{ user.username }}</span>
           <a href="{% url 'accounts:logout' %}" class="block w-full text-center px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold hover:scale-105 transition">Logout</a>
         {% else %}
-          <a href="{% url 'accounts:signup' %}" class="block w-full text-center px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold hover:scale-105 transition">Register</a>
-          <a href="{% url 'accounts:login' %}" class="block w-full text-center px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold hover:scale-105 transition">Login</a>
+          <a href="{% url 'accounts:signup' %}" class="block w-full text-center px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold hover:scale-105 transition">Sign Up</a>
+          <a href="{% url 'accounts:login' %}" class="block w-full text-center px-4 py-2 rounded-lg bg-gradient-to-rbg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold hover:scale-105 transition">Login</a>
         {% endif %}
       </div>
     </div>
@@ -49,8 +49,8 @@
         <span class="text-sm text-gray-500 dark:text-gray-300">Hello, {{ user.username }}</span>
         <a href="{% url 'accounts:logout' %}" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:scale-105 transition">Logout</a>
       {% else %}
-        <a href="{% url 'accounts:signup' %}" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:scale-105 transition">Register</a>
-        <a href="{% url 'accounts:login' %}" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-md hover:scale-105 transition">Login</a>
+        <a href="{% url 'accounts:signup' %}" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:scale-105 transition">Sign Up</a>
+        <a href="{% url 'accounts:login' %}" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:scale-105 transition">Login</a>
       {% endif %}
     </div>
   </div>

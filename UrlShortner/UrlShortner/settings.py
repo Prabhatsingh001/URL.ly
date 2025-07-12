@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-&$+_t=c9!t6y4zml_%)+hjdegh1*r%rtt=bjy5&(ypjbdpc09*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app", ".now.sh"]
 
 
 # Application definition
@@ -39,12 +39,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_extensions",
     "Auth",
     "urlLogic",
     "tailwind",
     "theme",
-    "django_browser_reload",
 ]
 
 MIDDLEWARE = [
@@ -55,8 +53,12 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
+
+if DEBUG:
+    INSTALLED_APPS += ["django_browser_reload", "django_extensions"]
+    MIDDLEWARE.insert(0, "django_browser_reload.middleware.BrowserReloadMiddleware")
+
 
 ROOT_URLCONF = "UrlShortner.urls"
 
@@ -81,10 +83,21 @@ WSGI_APPLICATION = "UrlShortner.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "railway",
+        "USER": "postgres",
+        "PASSWORD": "ErbYAvgoyGDpaAWKxWVjUJStsGwqGAhq",
+        "HOST": "caboose.proxy.rlwy.net",
+        "PORT": "11315",
     }
 }
 
