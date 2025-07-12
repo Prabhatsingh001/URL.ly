@@ -1,1 +1,57 @@
 {% extends "layout.html" %}
+{% load static %}
+
+{% block title %}About | URL.ly{% endblock %}
+
+{% block content %}
+<section class="relative bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800 py-24 px-6">
+  <div class="absolute inset-0 overflow-hidden">
+    <svg class="absolute -top-20 -left-20 w-[600px] h-[600px] text-blue-200 opacity-20 dark:text-blue-800" fill="none" viewBox="0 0 600 600">
+      <circle cx="300" cy="300" r="300" fill="currentColor" />
+    </svg>
+  </div>
+
+  <div class="relative max-w-5xl mx-auto text-center z-10">
+    <h1 class="text-5xl font-extrabold text-gray-900 dark:text-white mb-4">About <span class="text-blue-600">URL.ly</span></h1>
+    <p class="text-xl text-gray-700 dark:text-gray-300 mb-10">
+      Your trusted platform to simplify, manage, and track URLs with precision. Whether you're a developer, marketer, or creator — URL.ly empowers you with smart, secure link sharing.
+    </p>
+  </div>
+
+  <div class="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 mt-12 z-10">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+      <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">🚀 Our Mission</h2>
+      <p class="text-gray-700 dark:text-gray-300">
+        We aim to make link sharing effortless and insightful. With URL.ly, shorten URLs, generate QR codes, track engagement, and personalize your branding — all in one powerful tool.
+      </p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+      <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">✨ Why URL.ly?</h2>
+      <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
+        <li>Instant link shortening with no hassle</li>
+        <li>Real-time analytics and click tracking</li>
+        <li>Custom aliases and branded URLs</li>
+        <li>Encrypted and secure infrastructure</li>
+        <li>Built-in QR code generation</li>
+      </ul>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+      <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">👨‍💻 Meet the Developer</h2>
+      <p class="text-gray-700 dark:text-gray-300">
+        Crafted with ❤️ by <strong>Prabhat Singh</strong>, a dedicated software engineer passionate about building clean, user-friendly tools. Follow along on
+        <a href="https://github.com/Prabhatsingh001" target="_blank" class="text-blue-600 hover:underline">GitHub</a>.
+      </p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+      <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">📬 Get in Touch</h2>
+      <p class="text-gray-700 dark:text-gray-300">
+        Questions, feedback, or collaborations? Email us at
+        <a href="mailto:prabhatsingh1112004@gmail.com" class="text-blue-600 hover:underline">support@urly.io</a> — we'd love to hear from you!
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

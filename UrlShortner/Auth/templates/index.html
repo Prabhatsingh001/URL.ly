@@ -1,109 +1,43 @@
 {% extends "layout.html" %}
-{% load static tailwind_tags %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL.LY</title>
-    {% tailwind_css %}
-</head>
-<body>
-    {% block content %}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-full w-full mx-auto my-2 px-4 py-6 space-y-4">
-        {% comment %}card starts here {% endcomment %}
-        <div class="m-4">
-            <div class="w-full bg-white shadow-2xl rounded-lg overflow-hidden flex flex-row m-2">
-            <div class="w-1/2 backdrop-blur-2xl">
-                <img src="{% static 'qr.png' %}" alt="Card image" class="w-full h-full object-cover">
-            </div>
-            <div class="w-1/2 p-6 flex flex-col justify-center bg-blue-200">
-                <h3 class="text-xl font-bold mb-2 text-gray-900">Get QR</h3>
-                <p class="text-gray-700 mb-4">Get QR of your Short URL mailed to your inbox</p>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-max"><a href="{% url 'accounts:signup' %}">Get started</a></button>
-            </div>
-            </div>
-        </div>
-        {% comment %} card ends here {% endcomment %}
+{% block title %}Home | URL.ly{% endblock %}
 
-        {% comment %}card starts here {% endcomment %}
-        <div class="m-4">
-            <div class="w-full bg-white shadow-2xl rounded-lg overflow-hidden flex flex-row m-2">
-            <div class="w-1/2 backdrop-blur-2xl">
-                <img src="{% static 'qr.png' %}" alt="Card image" class="w-full h-full object-cover">
-            </div>
-            <div class="w-1/2 p-6 flex flex-col justify-center bg-blue-200">
-                <h3 class="text-xl font-bold mb-2 text-gray-900">Short URL</h3>
-                <p class="text-gray-700 mb-4">Get an instant short url easily within seconds</p>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-max"><a href="{% url 'accounts:signup' %}">Get started</a></button>
-            </div>
-            </div>
-        </div>
-        {% comment %} card ends here {% endcomment %}
+{% block content %}
+<section class="relative bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800 py-20 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-screen-xl mx-auto text-center">
+    <h1 class="text-5xl sm:text-6xl font-extrabold text-gray-900 dark:text-white mb-12">
+      What Can You Do with <span class="text-blue-600">URL.ly</span>?
+    </h1>
+  </div>
 
-        {% comment %}card starts here {% endcomment %}
-        <div class="m-4">
-            <div class="w-full bg-white shadow-2xl rounded-lg overflow-hidden flex flex-row m-2">
-            <div class="w-1/2 backdrop-blur-2xl">
-                <img src="{% static 'dribbble_1.gif' %}" alt="Card image" class="w-full h-full object-cover">
-            </div>
-            <div class="w-1/2 p-6 flex flex-col justify-center bg-blue-200">
-                <h3 class="text-xl font-bold mb-2 text-gray-900">Card Heading</h3>
-                <p class="text-gray-700 mb-4">This is a card with an image and some text content below.</p>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-max"><a href="{% url 'accounts:signup' %}">Get started</a></button>
-            </div>
-            </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto mt-10">
+    {% for i in "123456" %}
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-3xl overflow-hidden transform transition-transform duration-300 hover:scale-105 border border-gray-200 dark:border-gray-700">
+      <div class="flex flex-col sm:flex-row">
+        <div class="sm:w-1/2 w-full h-48 sm:h-auto overflow-hidden">
+          <img src="{% static 'dribbble_1.gif' %}" alt="Card image" class="object-cover h-full w-full" />
         </div>
-        {% comment %} card ends here {% endcomment %}
-
-        {% comment %}card starts here {% endcomment %}
-        <div class="m-4">
-            <div class="w-full bg-white shadow-2xl rounded-lg overflow-hidden flex flex-row m-2">
-            <div class="w-1/2 backdrop-blur-2xl">
-                <img src="{% static 'dribbble_1.gif' %}" alt="Card image" class="w-full h-full object-cover">
-            </div>
-            <div class="w-1/2 p-6 flex flex-col justify-center bg-blue-200">
-                <h3 class="text-xl font-bold mb-2 text-gray-900">Card Heading</h3>
-                <p class="text-gray-700 mb-4">This is a card with an image and some text content below.</p>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-max"><a href="{% url 'accounts:signup' %}">Get started</a></button>
-            </div>
-            </div>
+        <div class="sm:w-1/2 w-full p-6 flex flex-col justify-center bg-blue-50 dark:bg-gray-900">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+            {% if forloop.first %}Get QR Code{% elif forloop.counter == 2 %}Short URL{% else %}Track Your Links{% endif %}
+          </h3>
+          <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+            {% if forloop.first %}
+              Instantly receive a QR code for your short URL – right in your inbox.
+            {% elif forloop.counter == 2 %}
+              Generate short URLs in one click – no login required.
+            {% else %}
+              Easily manage, edit, and delete your short links from a central dashboard.
+            {% endif %}
+          </p>
+          <a href="{% url 'accounts:signup' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-2 rounded-lg shadow-md transition">
+            Get Started
+          </a>
         </div>
-        {% comment %} card ends here {% endcomment %}
-
-        {% comment %}card starts here {% endcomment %}
-        <div class="m-4">
-            <div class="w-full bg-white shadow-2xl rounded-lg overflow-hidden flex flex-row m-2">
-            <div class="w-1/2 backdrop-blur-2xl">
-                <img src="{% static 'dribbble_1.gif' %}" alt="Card image" class="w-full h-full object-cover">
-            </div>
-            <div class="w-1/2 p-6 flex flex-col justify-center bg-blue-200">
-                <h3 class="text-xl font-bold mb-2 text-gray-900">Card Heading</h3>
-                <p class="text-gray-700 mb-4">This is a card with an image and some text content below.</p>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-max"><a href="{% url 'accounts:signup' %}">Get started</a></button>
-            </div>
-            </div>
-        </div>
-        {% comment %} card ends here {% endcomment %}
-
-        {% comment %}card starts here {% endcomment %}
-        <div class="m-4">
-            <div class="w-full bg-white shadow-2xl rounded-lg overflow-hidden flex flex-row m-2">
-            <div class="w-1/2 backdrop-blur-2xl">
-                <img src="{% static 'dribbble_1.gif' %}" alt="Card image" class="w-full h-full object-cover">
-            </div>
-            <div class="w-1/2 p-6 flex flex-col justify-center bg-blue-200">
-                <h3 class="text-xl font-bold mb-2 text-gray-900">Card Heading</h3>
-                <p class="text-gray-700 mb-4">This is a card with an image and some text content below.</p>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-max"><a href="{% url 'accounts:signup' %}">Get started</a></button>
-            </div>
-            </div>
-        </div>
-        {% comment %} card ends here {% endcomment %}
-
+      </div>
     </div>
-    {% endblock %}
-</body>
-</html>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
