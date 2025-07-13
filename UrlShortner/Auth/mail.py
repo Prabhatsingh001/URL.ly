@@ -39,12 +39,17 @@ def send_verification_mail(user):
     email.send(fail_silently=True)
 
 
-def send_conact_email(conact):
-    email_subject = f"New Notofication {conact.email}"
-    message = f"{conact.message}"
-    reciever_mail = settings.EMAIL_HOST_USER
+def send_contact_email(contact):
+    email_subject = f"New Notofication {contact.email}"
+    message = f"""
+you have recieved a new message
 
-    email = EmailMessage(
-        email_subject, message, reciever_mail, [settings.EMAIL_HOST_USER]
-    )
+name: {contact.name}
+Email: {contact.email}
+
+message: {contact.message}
+    """
+    team_mail = ["ghostcoder420@gmail.com"]
+
+    email = EmailMessage(email_subject, message, settings.EMAIL_HOST_USER, team_mail)
     email.send(fail_silently=False)

@@ -2,7 +2,9 @@ import uuid
 import qrcode
 from io import BytesIO
 from django.core.files import File
-# from PIL import Image
+from PIL import Image
+import os
+from django.conf import settings
 
 BASE62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -42,10 +44,29 @@ class QrCode:
             box_size=10,
             border=4,
         )
-        full_url = f"{self.request.get_host()}/url/{self.url_instance.short_url}"
+
+        full_url = f"{self.request.scheme}://{self.request.get_host()}/url/{self.url_instance.short_url}"
         qr.add_data(full_url)
         qr.make(fit=True)
+
         img = qr.make_image(fill_color="black", back_color="white").convert("RGB")  # type: ignore
+        # logo_path = os.path.join(settings.STATIC_ROOT, "logo.png")
+        logo_path = os.path.join(settings.BASE_DIR, "static", "logo.png")
+        try:
+            logo = Image.open(logo_path)
+        except FileNotFoundError:
+            print("Logo not found at:", logo_path)
+            return
+
+        logo_size = 60
+        logo = logo.resize((logo_size, logo_size))
+        if logo.mode != "RGBA":
+            logo = logo.convert("RGBA")
+
+        mask = logo.split()[3] if logo.mode == "RGBA" else None
+        qr_width, qr_height = img.size
+        offset = ((qr_width - logo_size) // 2, (qr_height - logo_size) // 2)
+        img.paste(logo, offset, mask=mask)
 
         buffer = BytesIO()
         img.save(buffer, format="PNG")

@@ -71,6 +71,11 @@
                 <a href="{% url 'accounts:signup' %}" class="text-xs text-gray-500 uppercase">Sign Up</a>
                 <span class="border-b w-1/5 md:w-1/4"></span>
             </div>
+            {% comment %} <div class="mt-4 flex items-center justify-center">
+                <span class="text-xs text-gray-500">Didn't recieve verification email??
+                    <a href="{% url 'accounts:signup' %}" class="uppercase hover:underline">Resend!!</a>
+                </span>
+            </div> {% endcomment %}
           </form>
         </div>
     </div>

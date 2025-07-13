@@ -1,55 +1,64 @@
-{# templates/components/url_card.html #}
-<div class="bg-white/60 backdrop-blur-md shadow-xl rounded-2xl p-6 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 transition hover:scale-[1.015] duration-300 flex flex-col justify-between">
-  <div>
-    <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">Original URL:</p>
-    <p class="text-blue-700 dark:text-blue-300 break-words text-sm">{{ url.original_url }}</p>
-
-    <p class="mt-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Short URL:</p>
-    <div class="flex items-center justify-between gap-2 bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-lg mt-1">
-      <a href="http://{{ request.get_host }}/url/{{ url.short_url }}"
-         class="text-green-600 dark:text-green-400 underline break-all text-sm"
-         target="_blank">
-        {{ request.get_host }}/url/{{ url.short_url }}
-      </a>
-      <button
-        x-data
-        @click="navigator.clipboard.writeText('http://{{ request.get_host }}/url/{{ url.short_url }}')"
-        class="text-gray-500 hover:text-black dark:hover:text-white transition"
-        title="Copy">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12h6m-6 4h6m-3-10h.01M17 6v12a2 2 0 01-2 2H9a2 2 0 01-2-2V6a2 2 0 012-2h2l2 2h2a2 2 0 012 2z" />
-        </svg>
-      </button>
+<!-- CARD START -->
+<div class="bg-white/70 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl p-6 shadow-2xl backdrop-blur-lg transition-transform duration-300 hover:scale-[1.02] flex flex-col gap-6">
+  <div class="space-y-4">
+    <div>
+      <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Original URL</p>
+      <p class="text-blue-600 dark:text-blue-400 break-words text-sm">{{ url.original_url }}</p>
     </div>
-    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Created on: {{ url.created_at|date:"M d, Y" }}</p>
+
+    <div>
+      <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Short URL</p>
+      <div class="flex items-center justify-between gap-2 bg-gray-100 dark:bg-gray-800 px-4 py-2.5 rounded-xl mt-1 shadow-sm">
+        <a href="{{request.scheme}}://{{ request.get_host }}/url/{{ url.short_url }}"
+           class="text-emerald-600 dark:text-emerald-400 underline break-all text-sm"
+           target="_blank">
+          {{request.scheme}}://{{ request.get_host }}/url/{{ url.short_url }}
+        </a>
+        <button
+          onClick="copyUrl(this)"
+          class="text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white transition"
+          title="Copy"
+          data-url="{{request.scheme}}://{{ request.get_host }}/url/{{ url.short_url }}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12h6m-6 4h6m-3-10h.01M17 6v12a2 2 0 01-2 2H9a2 2 0 01-2-2V6a2 2 0 012-2h2l2 2h2a2 2 0 012 2z" />
+          </svg>
+        </button>
+      </div>
+      <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Created on: {{ url.created_at|date:"M d, Y" }}</p>
+    </div>
+    <div id="toast" class="hidden opacity-0 translate-y-2 fixed bottom-6 right-6 z-50 px-4 py-2 rounded-lg shadow-lg text-sm transition duration-500 ease-in-out bg-gray-800 text-white"></div>
   </div>
 
-  <div>
-  {% if url.qrcode %}
-      <a href="{{ url.qrcode.url }}" target="_blank">View QR</a>
-  {% else %}
-      <form method="post" action="{% url 'url:generate_qr' %}">
+{% if url.qrcode %}
+  <div class="text-center mt-2">
+    <img src="{{ url.qrcode.url }}" alt="QR Code" class="w-52 h-52 mx-auto rounded-xl border border-gray-300 dark:border-gray-700 shadow-md">
+  </div>
+{% else %}
+  <div class="flex justify-center">
+    <form method="post" action="{% url 'url:generate_qr' %}">
       {% csrf_token %}
       <input type="hidden" name="id" value="{{ url.id }}">
-      <button type="submit" class="text-indigo-600 hover:underline text-sm mt-4">
+      <button type="submit"
+              class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 transition text-sm font-medium">
         Generate QR Code
       </button>
     </form>
-  {% endif %}
   </div>
+{% endif %}
 
-  <div class="mt-6 flex justify-end space-x-4">
-    <a href="{% url 'url:edit_url' url.id %}" class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-300 transition" title="Edit">
+
+  <div class="flex justify-end gap-4 border-t pt-4 border-gray-200 dark:border-gray-700">
+    <a href="{% url 'url:edit_url' url.id %}" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition" title="Edit">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M11 4h2M5 20l7-7 7-7M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
       </svg>
     </a>
 
-    <form method="post" action="{% url 'url:delete_url' url.id %}" class="inline hover:cursor-pointer">
+    <form method="post" action="{% url 'url:delete_url' url.id %}" class="inline-block">
       {% csrf_token %}
-      <button type="submit" class="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition" title="Delete">
+      <button type="submit" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition" title="Delete">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4m-4 0a1 1 0 00-1 1v1h6V4a1 1 0 00-1-1m-4 0h4" />
@@ -58,3 +67,38 @@
     </form>
   </div>
 </div>
+<!-- CARD END -->
+
+{% block scripts %}
+<script>
+  function copyUrl(button) {
+    const url = button.getAttribute("data-url");
+    navigator.clipboard.writeText(url).then(() => {
+      showToast("Copied to clipboard!");
+    }).catch(err => {
+      console.error("Failed to copy: ", err);
+      showToast("Failed to copy!", true);
+    });
+  }
+
+  function showToast(message, isError = false) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.className = `fixed bottom-6 right-6 z-50 px-4 py-2 rounded-lg shadow-lg text-sm transition duration-500 ease-in-out ${
+      isError ? "bg-red-600 text-white" : "bg-gray-800 text-white"
+    }`;
+
+    toast.classList.remove("hidden");
+    toast.classList.remove("opacity-0", "translate-y-2");
+    toast.classList.add("opacity-100");
+
+    setTimeout(() => {
+      toast.classList.add("opacity-0", "translate-y-2");
+    }, 2000);
+
+    setTimeout(() => {
+      toast.classList.add("hidden");
+    }, 2500);
+  }
+</script>
+{% endblock %}

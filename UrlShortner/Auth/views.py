@@ -16,7 +16,7 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token, password_reset_token
 from django.core.mail import EmailMessage
 from .models import Contact
-from .mail import send_conact_email
+from .mail import send_contact_email
 
 from django.views.generic import TemplateView
 
@@ -25,16 +25,8 @@ from django.views.generic import TemplateView
 CusUser = get_user_model()
 
 
-# def index(request):
-#     return render(request, "index.html")
-
-
 class IndexView(TemplateView):
     template_name = "index.html"
-
-
-# def about(request):
-#     return render(request, "about.html")
 
 
 class AboutView(TemplateView):
@@ -46,13 +38,13 @@ def contact(request):
         name = request.POST.get("name")
         email = request.POST.get("email")
         message = request.POST.get("message")
-
-        contact = Contact.objects.create(name=name, email=email, message=message)
-
-        contact.save()
-        send_conact_email(contact)
-        messages.success(request, "mail sent successfully")
-        return redirect("accounts:contact")
+        if name and email and message:
+            contact = Contact.objects.create(name=name, email=email, message=message)
+            send_contact_email(contact)
+            messages.success(request, "Thank you! Your message has been sent.")
+            return redirect("accounts:contact")
+        else:
+            messages.error(request, "All fields are required.")
     return render(request, "contact.html")
 
 

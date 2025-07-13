@@ -13,7 +13,7 @@
   </div>
 
   <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
-    <form method="post" action="#" class="space-y-6">
+    <form method="post" class="space-y-6">
       {% csrf_token %}
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
@@ -31,9 +31,9 @@
       </div>
 
       <div class="text-center">
-        <span class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition">
-          <a href="{% url 'accounts:contact' %}">Send Message</a>
-        </span>
+        <button type="submit" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition">
+          Send Message
+        </button>
       </div>
     </form>
   </div>
