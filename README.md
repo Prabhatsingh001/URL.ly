@@ -13,6 +13,10 @@ A simple URL shortener built with **Django**, **HTML**, **CSS**, and **JavaScrip
 - Django
 - HTML/TailwindCSS/JavaScript
 
+## Deployment
+check the deployed website here 
+[Click Here](https://url-shortner-if03.onrender.com/)
+
 ## 🛠️ Setup
 
 1. **Create a virtual environment** (use Python 3.10 for better stability):
