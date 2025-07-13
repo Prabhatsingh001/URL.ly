@@ -14,8 +14,7 @@ A simple URL shortener built with **Django**, **HTML**, **CSS**, and **JavaScrip
 - HTML/TailwindCSS/JavaScript
 
 ## Deployment
-check the deployed website here 
-[Click Here](https://url-shortner-if03.onrender.com/)
+   check the deployed website here [Click Here](https://url-shortner-if03.onrender.com/)
 
 ## 🛠️ Setup
 
