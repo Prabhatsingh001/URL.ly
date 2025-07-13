@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-&$+_t=c9!t6y4zml_%)+hjdegh1*r%rtt=bjy5&(ypjbdpc09*"
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -41,12 +41,19 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "Auth",
     "urlLogic",
-    "tailwind",
-    "theme",
 ]
+
+if DEBUG:
+    INSTALLED_APPS += [
+        "tailwind",
+        "theme",
+        "django_browser_reload",
+        "django_extensions",
+    ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -56,9 +63,7 @@ MIDDLEWARE = [
 ]
 
 if DEBUG:
-    INSTALLED_APPS += ["django_browser_reload", "django_extensions"]
     MIDDLEWARE.insert(0, "django_browser_reload.middleware.BrowserReloadMiddleware")
-
 
 ROOT_URLCONF = "UrlShortner.urls"
 
@@ -139,14 +144,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles_build", "static")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Media files (User-uploaded files)
-# https://docs.djangoproject.com/en/5.2/topics/files/
-
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -154,10 +157,12 @@ MEDIA_URL = "/media/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-TAILWIND_APP_NAME = "theme"
-INTERNAL_IPS = ["127.0.0.1"]
+# TAILWIND_APP_NAME = "theme"
+# INTERNAL_IPS = ["127.0.0.1"]
 
-NPM_BIN_PATH = "C:\\Program Files\\nodejs\\npm.cmd"
+if DEBUG:
+    TAILWIND_APP_NAME = "theme"
+    NPM_BIN_PATH = "C:\\Program Files\\nodejs\\npm.cmd"
 
 # email settings
 # https://docs.djangoproject.com/en/5.2/topics/email/
