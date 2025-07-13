@@ -2,10 +2,9 @@
   "version": 2,
   "builds": [
     {
-      "src": "UrlShortner/wsgi.py",
+      "src": "manage.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "15mb",
         "runtime": "python3.10"
       }
     },
@@ -24,11 +23,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "UrlShortner/wsgi.py"
+      "dest": "manage.py"
     }
-  ],
-  "env": {
-    "DJANGO_SETTINGS_MODULE": "UrlShortner.settings",
-    "PYTHON_VERSION": "3.10"
-  }
+  ]
 }
