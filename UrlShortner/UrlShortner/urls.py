@@ -29,7 +29,7 @@ urlpatterns = [
     path("accounts/", include(("Auth.urls", "Auth"), namespace="accounts")),
     path("url/", include(("urlLogic.urls", "urlLogic"), namespace="url")),
     # Tailwind CSS
-    path("__reload__/", include("django_browser_reload.urls")),
+    # path("__reload__/", include("django_browser_reload.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
