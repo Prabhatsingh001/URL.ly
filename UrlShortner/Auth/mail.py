@@ -19,11 +19,13 @@ def send_welcome_email(user):
 
 def send_verification_mail(user):
     current_site = settings.SITE_DOMAIN
+    protocol = settings.PROTOCOL
     email_subject = "Email Verification"
     message2 = render_to_string(
         "emails/email_verification.html",
         {
             "user": user,
+            "protocol": protocol,
             "domain": current_site,
             "uid": urlsafe_base64_encode(force_bytes(user.pk)),
             "token": account_activation_token.make_token(user),

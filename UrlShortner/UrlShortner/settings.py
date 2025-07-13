@@ -176,4 +176,5 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
 
 LOGIN_URL = "accounts:login"
-SITE_DOMAIN = "127.0.0.1:8000"
+SITE_DOMAIN = "url-shortner-if03.onrender.com"
+PROTOCOL = "https"

@@ -108,13 +108,15 @@ def resend_verification_email(request):
             messages.success(request, "user is already verified!!!")
             return redirect("accounts:login")
 
-        current_site = get_current_site(request)
+        current_site = get_current_site(request).domain
+        protocol = "https" if request.is_secure() else "http"
         email_subject = "Email Verification"
         message2 = render_to_string(
             "emails/email_verification.html",
             {
                 "user": user,
-                "domain": current_site.domain,
+                "domain": current_site,
+                "protocol": protocol,
                 "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                 "token": account_activation_token.make_token(user),
             },
@@ -200,12 +202,14 @@ def forgot_password(request):
 
         try:
             user = CusUser.objects.get(email=email)
+            protocol = "https" if request.is_secure() else "http"
             current_site = get_current_site(request)
             email_subject = "reset password"
             message2 = render_to_string(
                 "emails/reset_password_email.html",
                 {
                     "user": user,
+                    "protocol": protocol,
                     "domain": current_site.domain,
                     "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                     "token": password_reset_token.make_token(user),
