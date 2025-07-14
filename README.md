@@ -65,15 +65,19 @@ After cloning the repo chnage the debug to True in settings.py file
 
 # 📂 Project Structure
 
-<details><summary>Click to view the basic structure</summary>
+<details>
+<summary>Click to view the basic structure</summary>
+
+```text
 URL-SHORTNER/
 ├── Auth/                  # User authentication app
-├── urlLogic/             # URL handling logic (shortening, tracking, etc.)
-├── static/               # Static files (CSS, JS)
-├── templates/            # HTML templates
+├── urlLogic/              # URL handling logic (shortening, tracking, etc.)
+├── static/                # Static files (CSS, JS)
+├── templates/             # HTML templates
 ├── manage.py
 ├── requirements.txt
 └── ...
+```
 </details>
 
 # 💡Contributions
