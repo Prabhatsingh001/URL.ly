@@ -9,7 +9,7 @@ User = get_user_model()
 class UrlModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     original_url = models.URLField(unique=True)
-    short_url = models.CharField(max_length=10)
+    short_url = models.CharField(max_length=10, unique=True, null=True, blank=True)
     qrcode = models.ImageField(upload_to="qr_code/", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField(null=True, blank=True)
