@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from .models import UrlModel
 from .utils import QrCode, SlugGenerator
+from django.db import transaction
 
 Slug = SlugGenerator()
 
@@ -32,9 +33,7 @@ def home(request):
 @login_required
 def make_short_url(request):
     if request.method == "POST":
-        long_url = request.POST.get(
-            "long_url", ""
-        ).strip()  # added this strip part to remove any unwanted space
+        long_url = request.POST.get("long_url", "").strip()
         short_url = request.POST.get("short_url", "").strip()
 
         if not long_url:
@@ -45,29 +44,35 @@ def make_short_url(request):
             long_url = "http://" + long_url
 
         # Check if this URL was already shortened by this user
-        existing_url = UrlModel.objects.filter(
-            original_url=long_url, user=request.user
-        ).first()
-        if existing_url:
+        if UrlModel.objects.filter(original_url=long_url, user=request.user).exists():
             messages.error(request, "This URL has already been shortened.")
             return render(request, "url_shortner.html")
 
-        # Check if short URL is already taken
-        if short_url:
-            if UrlModel.objects.filter(short_url=short_url).exists():
-                messages.error(
-                    request, "This short URL already exists. Try another name."
-                )
-                return render(request, "url_shortner.html")
+        # Check if custom short URL is already taken
+        if short_url and UrlModel.objects.filter(short_url=short_url).exists():
+            messages.error(request, "This short URL already exists. Try another name.")
+            return render(request, "url_shortner.html")
 
-        # Create new short URL
         expiry_time = timezone.now() + timedelta(days=7)
-        url = UrlModel.objects.create(
-            original_url=long_url, user=request.user, expires_at=expiry_time
-        )
 
-        url.short_url = short_url if short_url else Slug.encode_url(id=url.pk)
-        url.save()
+        try:
+            with transaction.atomic():
+                url = UrlModel.objects.create(
+                    original_url=long_url,
+                    user=request.user,
+                    expires_at=expiry_time,
+                )
+
+                slug = short_url or Slug.encode_url(id=url.pk)
+                if not slug:
+                    raise ValueError("Slug generation failed")
+
+                url.short_url = slug
+                url.save()
+
+        except Exception as e:
+            messages.error(request, f"Error: {str(e)}")
+            return render(request, "url_shortner.html")
 
         return redirect("url:home")
 
