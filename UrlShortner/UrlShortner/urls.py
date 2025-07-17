@@ -28,9 +28,13 @@ urlpatterns = [
     path("", IndexView.as_view(), name="index"),
     path("accounts/", include(("Auth.urls", "Auth"), namespace="accounts")),
     path("url/", include(("urlLogic.urls", "urlLogic"), namespace="url")),
-    # Tailwind CSS
-    # path("__reload__/", include("django_browser_reload.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# hot reaload for tailwind css
+if settings.DEBUG:
+    urlpatterns += [
+        path("__reload__/", include("django_browser_reload.urls")),
+    ]

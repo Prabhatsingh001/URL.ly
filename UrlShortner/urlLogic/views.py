@@ -19,43 +19,20 @@ def F404_page(request, excetipon):
 
 
 # Create your views here.
-@login_required()
-def home(request):
-    """
-    This function retrieves all the URLs from the database and renders them in a template.
-    """
-    urls = UrlModel.objects.filter(user=request.user).order_by("-created_at")
-    context = {"urls": urls}
-    return render(request, "home.html", context)
-
-
-@login_required()
+@login_required
 def make_short_url(request):
-    """
-    this function takes long url from the user and generates a short url for it
-    """
     if request.method == "POST":
-        long_url = request.POST.get("long_url")
-        short_url = request.POST.get("short_url")
-        if short_url:
-            existing_url = UrlModel.objects.filter(short_url=short_url).first()
-            if existing_url:
-                messages.error(
-                    request,
-                    "this short url name already exists. please try another name.",
-                )
-                return render(request, "url_shortner.html")
-        if long_url:
-            existing_url = UrlModel.objects.filter(original_url=long_url).first()
-            if existing_url:
-                messages.error(request, "this long url has already exists")
-                return render(request, "url_shortner.html")
+        long_url = request.POST.get("long_url", "").strip()
+        short_url = request.POST.get("short_url", "").strip()
+
         if not long_url:
             messages.error(request, "Please enter a valid URL.")
             return render(request, "url_shortner.html")
+
         if not long_url.startswith(("http://", "https://")):
             long_url = "http://" + long_url
 
+        # Check if this URL was already shortened by this user
         existing_url = UrlModel.objects.filter(
             original_url=long_url, user=request.user
         ).first()
@@ -63,19 +40,25 @@ def make_short_url(request):
             messages.error(request, "This URL has already been shortened.")
             return render(request, "url_shortner.html")
 
+        # Check if short URL is already taken
+        if short_url:
+            if UrlModel.objects.filter(short_url=short_url).exists():
+                messages.error(
+                    request, "This short URL already exists. Try another name."
+                )
+                return render(request, "url_shortner.html")
+
+        # Create new short URL
         expiry_time = timezone.now() + timedelta(days=7)
         url = UrlModel.objects.create(
             original_url=long_url, user=request.user, expires_at=expiry_time
         )
 
-        if short_url:
-            url.short_url = short_url
-        else:
-            id = url.pk
-            slug = Slug.encode_url(id=id)
-            url.short_url = slug
+        url.short_url = short_url if short_url else Slug.encode_url(id=url.pk)
         url.save()
+
         return redirect("url:home")
+
     return render(request, "url_shortner.html")
 
 
