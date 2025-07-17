@@ -19,14 +19,18 @@ from .models import Contact
 from .mail import send_contact_email
 
 from django.views.generic import TemplateView
+from django.views import View
 
 
 # Create your views here.
 CusUser = get_user_model()
 
 
-class IndexView(TemplateView):
-    template_name = "index.html"
+class IndexView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect("url:home")
+        return render(request, "index.html")
 
 
 class AboutView(TemplateView):
@@ -158,7 +162,9 @@ def logout(request):
 
 
 def login(request):
-    if request.method == "POST":
+    if request.user.is_authenticated:
+        return redirect("url:home")
+    elif request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
 

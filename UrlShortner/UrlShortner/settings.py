@@ -27,6 +27,8 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+APPEND_SLASH = True
+
 ALLOWED_HOSTS = ["127.0.0.1", ".onrender.com"]
 
 
@@ -178,3 +180,7 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 LOGIN_URL = "accounts:login"
 SITE_DOMAIN = "url-shortner-if03.onrender.com"
 PROTOCOL = "https"
+
+
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
