@@ -19,10 +19,22 @@ def F404_page(request, excetipon):
 
 
 # Create your views here.
+@login_required()
+def home(request):
+    """
+    This function retrieves all the URLs from the database and renders them in a template.
+    """
+    urls = UrlModel.objects.filter(user=request.user).order_by("-created_at")
+    context = {"urls": urls}
+    return render(request, "home.html", context)
+
+
 @login_required
 def make_short_url(request):
     if request.method == "POST":
-        long_url = request.POST.get("long_url", "").strip()
+        long_url = request.POST.get(
+            "long_url", ""
+        ).strip()  # added this strip part to remove any unwanted space
         short_url = request.POST.get("short_url", "").strip()
 
         if not long_url:
