@@ -4,40 +4,87 @@
 {% block title %}Home | URL.ly{% endblock %}
 
 {% block content %}
-<section class="relative bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800 py-20 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-screen-xl mx-auto text-center">
-    <h1 class="text-5xl sm:text-6xl font-extrabold text-gray-900 dark:text-white mb-12">
-      What Can You Do with <span class="text-blue-600">URL.ly</span>?
-    </h1>
-  </div>
+<section class="text-white">
+  <div class="w-full mx-auto min-h-screen">
+    <div class="mt-16 px-6 py-10 font-sans w-full text-center mx-auto">
+      
+      <!-- Hero Section -->
+      <section class="mx-auto text-center space-y-6">
+        <div class="flex justify-center">
+          <!-- Replace with inline SVG or icon font if using Django -->
+           <img src={% static "logo.png" %} alt="logo" class="w-18 h-18">
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold leading-tight">
+          Shorten URLs. <span class="text-blue-500">Fast.</span> Smart. Simple.
+        </h1>
+        <p class="text-gray-400 max-w-xl mx-auto text-lg">
+          Paste your long, messy URLs and transform them into clean, shareable links in seconds.
+        </p>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto mt-10">
-    {% for i in "123456" %}
-    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-3xl overflow-hidden transform transition-transform duration-300 hover:scale-105 border border-gray-200 dark:border-gray-700">
-      <div class="flex flex-col sm:flex-row">
-        <div class="sm:w-1/2 w-full h-48 sm:h-auto overflow-hidden">
-          <img src="{% static 'dribbble_1.gif' %}" alt="Card image" class="object-cover h-full w-full" />
+        <!-- Input Section -->
+        <form action="{% url 'url:make_short_url' %}" method="POST" class="mt-6 flex flex-col sm:flex-row items-center gap-4 max-w-xl mx-auto">
+          {% csrf_token %}
+          <input
+            type="url"
+            name="original_url"
+            placeholder="Paste your long URL here..."
+            required
+            class="w-full px-4 py-3 rounded-lg text-gray-900 bg-white/20 outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button type="submit" class="bg-blue-600 hover:bg-blue-700 transition px-6 py-3 rounded-lg font-medium flex items-center gap-2">
+            Shorten 
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </button>
+        </form>
+      </section>
+
+      <!-- Features Section -->
+      <section class="mt-24 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto text-left">
+        <div class="bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-md shadow hover:shadow-lg transition">
+          <div class="mb-4">
+            <svg class="text-purple-400 w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Blazing Fast</h3>
+          <p class="text-gray-400 text-sm">Your links are shortened and ready to use instantly.</p>
         </div>
-        <div class="sm:w-1/2 w-full p-6 flex flex-col justify-center bg-blue-50 dark:bg-gray-900">
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-            {% if forloop.first %}Get QR Code{% elif forloop.counter == 2 %}Short URL{% else %}Track Your Links{% endif %}
-          </h3>
-          <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
-            {% if forloop.first %}
-              Instantly receive a QR code for your short URL – right in your inbox.
-            {% elif forloop.counter == 2 %}
-              Generate short URLs in one click – no login required.
-            {% else %}
-              Easily manage, edit, and delete your short links from a central dashboard.
-            {% endif %}
-          </p>
-          <a href="{% url 'accounts:signup' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-2 rounded-lg shadow-md transition">
-            Get Started
-          </a>
+        <div class="bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-md shadow hover:shadow-lg transition">
+          <div class="mb-4">
+            <svg class="text-green-400 w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M3 10h11M9 21V3M16 17l5-5-5-5" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Analytics</h3>
+          <p class="text-gray-400 text-sm">Track click rates and locations in real-time.</p>
         </div>
-      </div>
+        <div class="bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-md shadow hover:shadow-lg transition">
+          <div class="mb-4">
+            <svg class="text-yellow-400 w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M17 8h2a2 2 0 012 2v10a2 2 0 01-2 2h-2M7 8H5a2 2 0 00-2 2v10a2 2 0 002 2h2" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Custom Slugs</h3>
+          <p class="text-gray-400 text-sm">Choose your own link ending for brand consistency.</p>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="mt-24 text-center">
+        <h2 class="text-3xl font-bold mb-4">Ready to shorten your first URL?</h2>
+        <a href="#"
+          class="inline-block mt-2 bg-blue-600 hover:bg-blue-700 transition px-8 py-4 rounded-lg text-lg font-semibold shadow-md">
+          Get Started Now
+        </a>
+      </section>
+
+      <!-- Footer -->
+      <footer class="mt-32 text-center text-gray-500 text-sm">
+        &copy; {{ now|date:"Y" }} URL.ly — All rights reserved.
+      </footer>
     </div>
-    {% endfor %}
   </div>
 </section>
 {% endblock %}
