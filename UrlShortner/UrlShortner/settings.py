@@ -182,7 +182,7 @@ LOGIN_URL = "accounts:login"
 if DEBUG:
     SITE_DOMAIN = "127.0.0.1:8000"
 else:
-    SITE_DOMAIN = "url-shortner-if03.onrender.com"
+    SITE_DOMAIN = "url-ly.onrender.com"
 
 if DEBUG:
     PROTOCOL = "http"
