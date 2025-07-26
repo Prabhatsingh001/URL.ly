@@ -19,7 +19,7 @@ A sleek and simple URL shortener built using **Django**, **TailwindCSS**, and **
 ## 🌍 Live Demo
 
 Check out the deployed version here:  
-🔗 [https://url-shortner-if03.onrender.com/](https://url-shortner-if03.onrender.com/)
+🔗 [https://url-ly.onrender.com/](https://url-ly.onrender.com/)
 
 ## 🛠️ Getting Started (Local Setup)
 
