@@ -179,9 +179,18 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
 
 LOGIN_URL = "accounts:login"
-SITE_DOMAIN = "url-shortner-if03.onrender.com"
-PROTOCOL = "https"
+if DEBUG:
+    SITE_DOMAIN = "127.0.0.1:8000"
+else:
+    SITE_DOMAIN = "url-shortner-if03.onrender.com"
+
+if DEBUG:
+    PROTOCOL = "http"
+else:
+    PROTOCOL = "https"
 
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+SALT = config("SALT", cast=str)
