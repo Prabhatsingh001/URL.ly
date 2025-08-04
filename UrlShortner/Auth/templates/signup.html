@@ -6,18 +6,15 @@
 {% block content %}
 <!-- source:https://codepen.io/owaiswiz/pen/jOPvEPB -->
 <div class="w-full bg-gradient-to-br from-blue-100 via-white to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex justify-center items-center py-5 pt-10 mt-2">
-    <div class="max-w-screen-xl m-0 sm:m-10 bg-blue-200 shadow sm:rounded-lg flex justify-center flex-1">
+    <div class="max-w-screen-lg m-10 md:m-4 bg-blue-200 shadow sm:rounded-lg flex justify-center flex-1">
         <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
-            <div>
+            <div class="my-1">
                 <a href="{% url "index" %}" class="flex items-center justify-center mb-4 text-3xl font-bold text-gray-900">
                     <img class="w-10 h-10 mr-2" src="{%static "logo.png" %}" alt="logo">URL.LY    
                 </a>
             </div>
             <div class="mt-2 flex flex-col items-center">
-                <h1 class="text-xxl xl:text-2xl font-extrabold">
-                    Sign Up
-                </h1>
-                <div class="w-full flex-1 mt-8">
+                <div class="w-full flex-1">
                     <div class="flex flex-col items-center">
                         <button
                             class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
@@ -56,7 +53,7 @@
                         </button>
                     </div>
 
-                    <div class="my-12 border-b text-center">
+                    <div class="mt-2 mb-6 border-b text-center">
                         <div
                             class="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-blue-200 transform translate-y-1/2">
                             Or sign up with e-mail
@@ -115,11 +112,11 @@
                         </p>
                         <p class="mt-2 text-xs text-gray-600 text-center">
                             I agree to abide by URLly's
-                            <a href="#" class="border-b border-gray-500 border-dotted">
+                            <a href="{% url "accounts:about" %}" class="border-b border-gray-500 border-dotted">
                                 Terms of Service
                             </a>
                             and its
-                            <a href="#" class="border-b border-gray-500 border-dotted">
+                            <a href="{% url "accounts:about" %}" class="border-b border-gray-500 border-dotted">
                                 Privacy Policy
                             </a>
                         </p>
@@ -127,8 +124,8 @@
                 </div>
             </div>
         </div>
-        <div class="flex-1 bg-white text-center hidden lg:flex">
-            <div class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat sm:rounded-xl"
+        <div class="flex-1 bg-white text-center hidden lg:flex roounded-xl">
+            <div class="m-10 xl:m-10 w-full bg-contain bg-center bg-no-repeat sm:rounded-xl"
                 style="background-image: url('{% static "signup.jpg" %}');">
             </div>
         </div>

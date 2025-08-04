@@ -5,9 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from .models import UrlModel
+from .models import UrlModel, UrlVisit
 from .utils import QrCode, SlugGenerator
 from django.db import transaction
+from django.utils.timezone import now
+import user_agents
+from .utils import get_client_ip
 
 Slug = SlugGenerator()
 
@@ -90,6 +93,19 @@ def redirect_url(request, slug):
         return render(request, "url_expired.html")
     url.click_count += 1
     url.save()
+    ua_string = request.META.get("HTTP_USER_AGENT", "")
+    ip = get_client_ip(request)  # Defined below
+    ua = user_agents.parse(ua_string)
+
+    # Create a new visit entry
+    UrlVisit.objects.create(
+        url=url,
+        timestamp=now(),
+        ip_address=ip,
+        browser=ua.browser.family,
+        os=ua.os.family,
+        device=ua.device.family,
+    )
     return redirect(url.original_url)
 
 
@@ -106,16 +122,31 @@ def delete_url(reuqest, id):
 @login_required()
 def update_url(request, id):
     """
-    this function updates the url in the database
+    Show URL details and allow editing of original_url and expiry.
     """
     url = get_object_or_404(UrlModel, id=id)
+
     if request.method == "POST":
         long_url = request.POST.get("long_url")
-        expiry_time = timezone.now() + timedelta(days=7)
-        url.original_url = long_url
-        url.expires_at = expiry_time
+        expiry_time = request.POST.get("expires_at")
+
+        if long_url:
+            url.original_url = long_url
+
+        if expiry_time:
+            # Convert input datetime-local to Python datetime
+            from datetime import datetime
+            from django.utils import timezone
+
+            try:
+                expiry_dt = datetime.strptime(expiry_time, "%Y-%m-%dT%H:%M")
+                url.expires_at = timezone.make_aware(expiry_dt)
+            except ValueError:
+                pass  # optionally handle invalid input
+
         url.save()
-        return redirect("url:home")
+        return redirect("url:home")  # Or show a success message
+
     return render(request, "update_edit_url.html", {"url": url})
 
 
