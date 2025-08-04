@@ -114,9 +114,9 @@ def redirect_url(request, slug):
 @require_POST
 def delete_url(request, id):
     """
-    This function deletes the URL from the database.
+    Only allow the user to delete their own URL.
     """
-    url = get_object_or_404(UrlModel, id=id)
+    url = get_object_or_404(UrlModel, id=id, user=request.user)
     url.delete()
     return redirect("url:home")
 
@@ -126,7 +126,7 @@ def update_url(request, id):
     """
     Show URL details and allow editing of original_url and expiry.
     """
-    url = get_object_or_404(UrlModel, id=id)
+    url = get_object_or_404(UrlModel, id=id, user=request.user)
 
     if request.method == "POST":
         long_url = request.POST.get("long_url")
