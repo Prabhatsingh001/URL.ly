@@ -1,27 +1,39 @@
 {% extends "layout.html" %}
 
-{% block title %}Home | URL.LY {% endblock %}
+{% block title %}Home | URL.LY{% endblock %}
 
 {% block content %}
-<h2 class="text-3xl font-bold text-center mt-15 text-gray-800 dark:text-white">Your <span class="font-bold text-blue-500">URLs </span></h2>
+<!-- Page Heading -->
+<h2 class="text-3xl font-bold text-center mt-16 text-gray-800 dark:text-white">
+  Your <span class="text-blue-500">URLs</span>
+</h2>
+<p class="text-center mt-2 mb-6 text-gray-600 dark:text-gray-400 text-lg">
+  All your shortened links in one place.
+</p>
 
+<!-- CTA Button -->
 <div class="flex justify-center mb-10">
   <a href="{% url 'url:make_short_url' %}"
      class="mt-4 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:scale-105 hover:shadow-lg transition duration-300">
-    {% if urls %}➕ New URL{% else %}🚀 Get Started{% endif %}
+    {% if urls %} New URL{% else %}Get Started{% endif %}
   </a>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6 mb-2 ">
+<!-- URL Cards or Empty State -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 sm:px-6 lg:px-8 mb-2">
   {% if urls %}
     {% for url in urls %}
-      {% include "components/url_card.html" with url=url %}
+      <div class="transition transform hover:-translate-y-1 hover:shadow-xl duration-300">
+        {% include "components/url_card.html" with url=url %}
+      </div>
     {% endfor %}
   {% else %}
-    <div class="col-span-full text-center text-gray-500 dark:text-gray-400">
-      <p class="text-lg">You haven't shortened any URLs yet.</p>
-      <p class="mt-2">Click the button above to get started!</p>
+    <div class="col-span-full text-center text-gray-500 dark:text-gray-400 mt-8">
+      <div class="text-4xl mb-2">🔗</div>
+      <p class="text-lg font-medium">You haven't shortened any URLs yet.</p>
+      <p class="mt-1">Click the button above to get started!</p>
     </div>
   {% endif %}
 </div>
 {% endblock %}
+

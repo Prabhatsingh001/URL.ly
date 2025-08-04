@@ -2,54 +2,84 @@
 {% load static %}
 
 {% block content %}
-<section class="min-h-screen flex items-center justify-center w-full reltive mt-16">
-    <div class=" absolute max-w-7xl mx-auto bg-white/20 shadow p-6 rounded space-y-6 text-white">
-    <h2 class="text-2xl font-semibold">Update Shortened URL</h2>
+<div class="min-h-screen flex flex-col lg:flex-row w-full px-4 py-12 bg-gray-50 dark:bg-gray-950">
+  
+  <!-- Main Form Section -->
+  <section class="flex-1 flex items-center justify-center">
+    <div class="w-full max-w-3xl bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 space-y-8 border border-gray-200 dark:border-gray-800 backdrop-blur-sm">
 
-    <!-- Details Section -->
-    <div class="space-y-2 text-sm text-gray-700">
-        <p><strong>Short URL:</strong> {{ url.short_url }}</p>
-        <p><strong>Original URL:</strong> {{ url.original_url }}</p>
-        <p><strong>Created At:</strong> {{ url.created_at }}</p>
-        <p><strong>Expires At:</strong> {{ url.expires_at|default:"Never" }}</p>
-        <p><strong>Click Count:</strong> {{ url.click_count }}</p>
-        {% if url.qrcode %}
-        <div class="mt-3">
-            <p><strong>QR Code:</strong></p>
-            <img src="{{ url.qrcode.url }}" alt="QR Code" class="w-32 h-32" />
+      <!-- Header -->
+      <div class="text-center">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Edit Shortened URL</h2>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">You can update the destination or expiry settings here.</p>
+      </div>
+
+      <!-- Details -->
+      <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {% for label, value in url_details %}
+            <div>
+            <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">{{ label }}:</span>
+            <span class="block mt-1 break-all text-blue-600 dark:text-blue-400">{{ value }}</span>
+            </div>
+        {% endfor %}
         </div>
-        {% endif %}
+      </div>
+
+      <!-- Edit Form -->
+      <form method="POST" class="space-y-6" aria-label="Edit URL Form">
+        {% csrf_token %}
+        
+        <div>
+          <label for="long_url" class="block text-sm font-medium text-gray-700 dark:text-gray-200">New Original URL (optional)</label>
+          <input
+            type="url"
+            id="long_url"
+            name="long_url"
+            placeholder="Leave blank to keep unchanged"
+            class="mt-1 w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Enter a new URL or leave blank to retain the current destination.</p>
+        </div>
+
+        <div>
+          <label for="expires_at" class="block text-sm font-medium text-gray-700 dark:text-gray-200">New Expiry Date (optional)</label>
+          <input
+            type="datetime-local"
+            id="expires_at"
+            name="expires_at"
+            class="mt-1 w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Leave blank to keep the current expiry date.</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-end space-x-4">
+          <a href="{% url 'url:home' %}" class="px-6 py-3 text-gray-700 dark:text-gray-300 font-medium rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+            Cancel
+          </a>
+          <button
+            type="submit"
+            class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition"
+          >
+            Save Changes
+          </button>
+        </div>
+      </form>
     </div>
+  </section>
 
-    <hr class="my-4">
-
-    <!-- Edit Form -->
-        <form method="POST" class="space-y-4">
-            {% csrf_token %}
-            <div>
-            <label class="block font-medium mb-1">Edit Original URL:</label>
-            <input
-                type="url"
-                name="long_url"
-                placeholder="Leave blank to keep the same"
-                class="w-full border px-3 py-2 rounded"
-            />
-            </div>
-
-            <div>
-            <label class="block font-medium mb-1">Set New Expiry Date:</label>
-            <input
-                type="datetime-local"
-                name="expires_at"
-                class="w-full border px-3 py-2 rounded"
-            />
-            </div>
-
-            <button type="submit" class="bg-gradient-to-br from-green-800 to-green-600 text-white px-6 py-2 rounded hover:bg-green-500">
-                Save Changes
-            </button>
-        </form>
-    </div>  
-</section>
-
+  <!-- QR Code Sidebar -->
+  {% if url.qrcode %}
+    <aside class="lg:w-80 w-full mt-10 lg:mt-0 lg:ml-4 flex-shrink-0">
+      <div class="sticky top-24 bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6 border border-gray-200 dark:border-gray-800 backdrop-blur-sm">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white text-center">QR Code</h3>
+        <div class="mt-4 flex justify-center">
+          <img src="{{ url.qrcode.url }}" alt="QR Code for {{ url.short_url }}" class="w-48 h-48 rounded-lg border border-gray-300 dark:border-gray-700 shadow-md hover:scale-105 transition-transform" />
+        </div>
+        <p class="mt-4 text-xs text-center text-gray-500 dark:text-gray-400">Scan to access: <code class="text-blue-600 dark:text-blue-400">{{ url.short_url }}</code></p>
+      </div>
+    </aside>
+  {% endif %}
+</div>
 {% endblock %}

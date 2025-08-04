@@ -147,7 +147,17 @@ def update_url(request, id):
         url.save()
         return redirect("url:home")  # Or show a success message
 
-    return render(request, "update_edit_url.html", {"url": url})
+    url_details = [
+        ("Short URL", url.short_url),
+        ("Original URL", url.original_url),
+        ("Created At", url.created_at),
+        ("Expires At", url.expires_at if url.expires_at else "Never"),
+        ("Click Count", url.click_count),
+    ]
+
+    return render(
+        request, "update_edit_url.html", {"url": url, "url_details": url_details}
+    )
 
 
 @login_required()
