@@ -11,6 +11,7 @@ from django.db import transaction
 from django.utils.timezone import now
 import user_agents
 from .utils import get_client_ip
+from django.views.decorators.http import require_POST
 
 Slug = SlugGenerator()
 
@@ -110,11 +111,12 @@ def redirect_url(request, slug):
 
 
 @login_required()
-def delete_url(reuqest, id):
+@require_POST
+def delete_url(request, id):
     """
-    this function deletes the url from the database
+    This function deletes the URL from the database.
     """
-    url = UrlModel.objects.get(id=id)
+    url = get_object_or_404(UrlModel, id=id)
     url.delete()
     return redirect("url:home")
 
