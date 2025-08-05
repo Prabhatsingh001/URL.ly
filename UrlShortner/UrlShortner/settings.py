@@ -181,7 +181,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
-    CONN_MAX_AGE = None
+    CONN_MAX_AGE = 60
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # TAILWIND_APP_NAME = "theme"
 # INTERNAL_IPS = ["127.0.0.1"]

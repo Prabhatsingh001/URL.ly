@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 import uuid
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import BaseUserManager
+from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 
@@ -71,7 +72,7 @@ class UserProfile(models.Model):
     )
     first_name = models.CharField(max_length=30, editable=True, null=True, blank=True)
     last_name = models.CharField(max_length=20, editable=True, null=True, blank=True)
-    phone_number = models.IntegerField(editable=True, null=True, blank=True)
+    phone_number = PhoneNumberField(null=True, blank=True)
     profile_image = models.ImageField(
         upload_to="profile_pictures/",
         null=True,

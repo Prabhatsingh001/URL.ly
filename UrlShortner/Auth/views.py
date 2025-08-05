@@ -211,16 +211,35 @@ def profile(request, id):
     return render(request, "profile.html", context)
 
 
-@login_required()
+@login_required
 def update_profile(request, id):
-    user_obj = get_object_or_404(CusUser, id=id)
-    profile = user_obj.user_profile_link  # type: ignore
-    context = {
-        "user_obj": user_obj,
-        "profile": profile,  # type: ignore
-    }
-    # issue 2 to implement profile update logic
-    return render(request, "profile_setting.html", context)
+    profile = request.user.user_profile_link
+
+    if request.method == "POST":
+        full_name = request.POST.get("full_name", "").strip()
+        gender = request.POST.get("gender")
+        phone_number = request.POST.get("phone_number")
+        image = request.FILES.get("profile_image")
+
+        first_name = last_name = ""
+        if full_name:
+            parts = full_name.split()
+            first_name = parts[0]
+            last_name = " ".join(parts[1:]) if len(parts) > 1 else ""
+
+        profile.first_name = first_name
+        profile.last_name = last_name
+        profile.gender = gender
+        profile.phone_number = phone_number
+        if image:
+            profile.profile_image = image
+
+        profile.save()
+        return redirect("accounts:profile", id=id)
+
+    return render(
+        request, "profile_setting.html", {"profile": profile, "user_obj": request.user}
+    )
 
 
 @login_required
