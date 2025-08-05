@@ -13,7 +13,7 @@
       <button id="mobile-menu-toggle">
         {% if user.is_authenticated %}
           <div class="flex items-center gap-1">
-            {% if user.user_profile_link.profile_image.url %}
+            {% if user.user_profile_link.profile_image %}
               <img src="{{ user.user_profile_link.profile_image.url }}" alt="Profile image"
                 class="w-10 h-10 object-cover rounded-full shadow-md hover:shadow-lg transition-transform duration-300 transform hover:scale-105" />
             {% else %}
@@ -65,7 +65,7 @@
       {% if user.is_authenticated %}
         <div class="relative">
           <div class="flex items-center gap-1" id="profile-menu-toggle">
-            {% if user.user_profile_link.profile_image.url %}
+            {% if user.user_profile_link.profile_image %}
               <img src="{{ user.user_profile_link.profile_image.url }}" alt="Profile image"
                 class="w-10 h-10 object-cover rounded-full shadow-md hover:shadow-lg transition-transform duration-300 transform hover:scale-105" />
             {% else %}
