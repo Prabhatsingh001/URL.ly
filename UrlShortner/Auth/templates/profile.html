@@ -5,7 +5,7 @@
   <div class="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-lg space-y-6">
     <div class="flex items-center space-x-6 bg-gray-100 p-6 rounded-lg transition-all duration-300 hover:shadow-md">
       <div class="relative group">
-        {% if profile.profile_image.url %}
+        {% if profile.profile_image %}
           <img src="{{ profile.profile_image.url }}" alt="Profile Avatar"
                class="w-24 h-24 rounded-full object-cover border-2 border-gray-200 shadow-md group-hover:scale-110 transition-transform duration-300">
         {% else %}
