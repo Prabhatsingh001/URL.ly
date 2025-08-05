@@ -217,17 +217,3 @@ SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 SALT = config("SALT", cast=str)
-
-
-LOGGING = {
-    "version": 1,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "DEBUG",
-    },
-}
