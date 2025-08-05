@@ -15,11 +15,12 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token, password_reset_token
 from django.core.mail import EmailMessage
-from .models import Contact
+from .models import Contact, UserProfile
 from .mail import send_contact_email
 
 from django.views.generic import TemplateView
 from django.views import View
+from django.contrib.auth import update_session_auth_hash
 
 
 # Create your views here.
@@ -195,13 +196,58 @@ def login(request):
 
 
 @login_required()
-def profile(request):
-    return render(request, "profile.html")
+def profile(request, id):
+    user_obj = get_object_or_404(CusUser, id=id)
+
+    try:
+        profile = user_obj.user_profile_link  # type: ignore
+    except UserProfile.DoesNotExist:
+        messages.error(request, "user profile does not exist")
+
+    context = {
+        "user_obj": user_obj,
+        "profile": profile,  # type: ignore
+    }
+    return render(request, "profile.html", context)
 
 
 @login_required()
-def update_profile(request):
-    return render(request, "profile_setting.html")
+def update_profile(request, id):
+    user_obj = get_object_or_404(CusUser, id=id)
+    profile = user_obj.user_profile_link  # type: ignore
+    context = {
+        "user_obj": user_obj,
+        "profile": profile,  # type: ignore
+    }
+    # issue 2 to implement profile update logic
+    return render(request, "profile_setting.html", context)
+
+
+@login_required
+def update_password(request, id):
+    user = get_object_or_404(CusUser, id=id)
+    profile = user.user_profile_link  # type: ignore
+    context = {
+        "user_obj": user,
+        "profile": profile,  # type: ignore
+    }
+    if request.method == "POST":
+        new_password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm-password")
+
+        if new_password != confirm_password:
+            messages.error(request, "Passwords do not match")
+            return redirect("accounts:profile", id=id)
+
+        user.set_password(new_password)
+        user.save()
+
+        update_session_auth_hash(request, user)
+        messages.success(request, "Password reset successfully")
+
+        return redirect("accounts:profile", id=id)
+
+    return render(request, "profile_update_password.html", context)
 
 
 def forgot_password(request):

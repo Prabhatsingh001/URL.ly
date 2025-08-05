@@ -28,6 +28,7 @@ urlpatterns = [
     path("", IndexView.as_view(), name="index"),
     path("accounts/", include(("Auth.urls", "Auth"), namespace="accounts")),
     path("url/", include(("urlLogic.urls", "urlLogic"), namespace="url")),
+    # i have to remove the namespace for urllogic to make it more shorter issue 1
 ]
 
 if settings.DEBUG:

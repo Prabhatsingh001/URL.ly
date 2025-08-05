@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Profile | URL.LY{% endblock %}
+
+{% block content %}
+<style>
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+</style>
+
+<section class="bg-transparent min-h-screen px-4 py-4 mt-16 animate-fade-in">
+  <div class="max-w-6xl mx-auto rounded-2xl shadow-lg overflow-hidden md:flex transition duration-300 hover:shadow-xl">
+
+    <!-- Sidebar: Navigation -->
+    <div class="w-full md:w-1/3 bg-gradient-to-b from-blue-200 to-violet-300 p-8 border-r border-gray-200 backdrop-blur-lg">
+      <h2 class="text-2xl font-bold text-gray-800 mb-8">Profile Menu</h2>
+      <nav class="flex flex-col space-y-2">
+        <a href="{% url "accounts:profile" user.id %}"
+           class="{% if request.path == 'accounts/profile/<uuid:id>/' %}bg-blue-50 text-blue-600 font-semibold {% else %}text-gray-700{% endif %} hover:bg-blue-50 hover:text-blue-600 transition duration-200 px-3 py-2 focus:ring-2 focus:ring-blue-300 focus:outline-none rounded-lg"
+           {% if request.path == 'accounts/profile/<uuid:id>/' %}aria-current="page"{% endif %}>
+          <span class="inline-flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Overview icon">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            Overview
+          </span>
+        </a>
+        <a href="{% url "accounts:edit_profile" user.id %}"
+           class="{% if request.path == '/accounts/profile-edit/<uuid:id>/' %}bg-blue-50 text-blue-600 font-semibold {% else %}text-gray-700{% endif %} hover:bg-blue-50 hover:text-blue-600 transition duration-200 px-3 py-2 focus:ring-2 focus:ring-blue-300 focus:outline-none rounded-lg"
+           {% if request.path == '/accounts/profile-edit/<uuid:id>/' %}aria-current="page"{% endif %}>
+          <span class="inline-flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Edit Profile icon">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+            Edit Profile
+          </span>
+        </a>
+        <a href="{% url "accounts:update_password" user.id%}"
+           class="{% if request.path == 'accounts/profile-password/<uuid:id>/' %}bg-blue-50 text-blue-600 font-semibold {% else %}text-gray-700{% endif %} hover:bg-blue-50 hover:text-blue-600 transition duration-200 px-3 py-2 focus:ring-2 focus:ring-blue-300 focus:outline-none rounded-lg"
+           {% if request.path == 'accounts/profile-password/<uuid:id>/' %}aria-current="page"{% endif %}>
+          <span class="inline-flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Security icon">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.7-3 4v1m0-5v5m-9-7h18M5 11V7a5 5 0 0110 0v4"></path>
+            </svg>
+            Security
+          </span>
+        </a>
+        <a href="{% url 'accounts:logout' %}"
+           class="text-red-600 hover:bg-red-100 hover:text-red-800 transition duration-200 px-3 py-2 rounded-lg focus:ring-2 focus:ring-red-300 focus:outline-none">
+          <span class="inline-flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Logout icon">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h3a3 3 0 013 3v1"></path>
+            </svg>
+            Logout
+          </span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Main Content: Profile Details -->
+    <div class="w-full md:w-2/3 p-8 bg-gradient-to-b from-gray-50 to-gray-100">
+      <h2 class="text-3xl font-bold text-gray-800 mb-8">Profile Details</h2>
+
+      {% block profile_content %}
+        profile content goes here
+      {% endblock %}
+
+  </div>
+</section>
+{% endblock %}

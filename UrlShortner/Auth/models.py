@@ -48,7 +48,6 @@ class CustomUser(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    last_login = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
@@ -93,6 +92,7 @@ class UserProfile(models.Model):
         return f"this profile belongs to {self.user.email}"
 
 
+# this model is for the contact us page
 class Contact(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     name = models.CharField(max_length=50)

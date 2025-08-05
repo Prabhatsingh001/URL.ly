@@ -58,8 +58,8 @@
 
           <!-- Profile Dropdown -->
           <div id="profile-menu" class="hidden absolute right-0 mt-4 w-56 bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-xl ring-1 ring-gray-200 dark:ring-gray-700 z-50 space-y-3 p-4 text-sm">
-            <a href="{% url "accounts:profile" %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Profile</a>
-            <a href="{% url "accounts:profileSetting" %}" class="block hover:text-blue-600 transition text-gray-700 dark:text-white">Settings</a>
+            <a href="{% url "accounts:profile"  user.id %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Profile</a>
+            <a href="{% url "accounts:edit_profile" user.id %}" class="block hover:text-blue-600 transition text-gray-700 dark:text-white">Settings</a>
             <div class="border-t border-gray-300 dark:border-gray-700 pt-2 text-sm text-gray-500 dark:text-gray-400">
               Hello, {{ user.username }}
             </div>
