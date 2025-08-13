@@ -34,7 +34,7 @@
       <!-- Mobile Dropdown Popup -->
       <div id="mobile-menu" class="hidden italic absolute right-0 top-full mt-4 w-56 bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-xl ring-1 ring-gray-200 dark:ring-gray-700 z-50 space-y-3 p-4 text-sm">
         {% if user.is_authenticated %}
-          <a href="{% url 'url:home' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Home</a>
+          <a href="{% url 'u:home' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Home</a>
           <a href="{% url 'accounts:about' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">About</a>
           <a href="{% url 'accounts:contact' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Contact</a>
           <a href="{% url "accounts:profile"  user.id %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Profile</a>
@@ -55,7 +55,7 @@
     <!-- Desktop Navigation -->
     <div class="hidden lg:flex items-center gap-6 text-gray-700 dark:text-gray-200 font-light italic">
       {% if user.is_authenticated %}
-      <a href="{% url 'url:home' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Home</a>
+      <a href="{% url 'u:home' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Home</a>
       {% else %}
       <a href="{% url 'index' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Home</a>
       {% endif %}

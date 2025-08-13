@@ -20,6 +20,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from Biolink.views import (
+    Getlinks,
+    Addlink,
+    my_biolink_page,
+    Deletelink,
+    public_biolink_by_slug,
+    public_biolink_by_uuid,
+    enable_public_link,
+)
 
 handler404 = "urlLogic.views.F404_page"
 
@@ -27,8 +36,15 @@ urlpatterns = [
     path("admin/", admin.site.urls, name="admin"),
     path("", IndexView.as_view(), name="index"),
     path("accounts/", include(("Auth.urls", "Auth"), namespace="accounts")),
-    path("url/", include(("urlLogic.urls", "urlLogic"), namespace="url")),
+    path("u/", include(("urlLogic.urls", "urlLogic"), namespace="u")),
     # i have to remove the namespace for urllogic to make it more shorter issue 1
+    path("my-bio-link-page/", my_biolink_page, name="my_biolink_page"),
+    path("biolink-page/<uuid:id>/", Getlinks, name="biolinkpage"),
+    path("addlink/<uuid:id>/", Addlink, name="addlink"),
+    path("deletelink/<uuid:id>/", Deletelink, name="deletelink"),
+    path("p/<slug:slug>/", public_biolink_by_slug, name="public_biolink_slug"),
+    path("u/<uuid:public_id>/", public_biolink_by_uuid, name="public_biolink_uuid"),
+    path("enable/", enable_public_link, name="enablepubliclink"),
 ]
 
 if settings.DEBUG:

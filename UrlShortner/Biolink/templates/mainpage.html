@@ -1,0 +1,116 @@
+{% load static tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.first_name|default:user.username }} | Bio Link</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 min-h-screen flex flex-col items-center px-4 py-8 text-white">
+
+    <!-- Card Container -->
+    <div class="w-full max-w-lg bg-white/10 backdrop-blur-lg rounded-2xl p-6 shadow-2xl mt-8 border border-white/20">
+
+        <!-- Profile Section -->
+        <div class="text-center">
+            <div class="relative w-28 h-28 mx-auto">
+                <img src="{{ user.profile_image.url|default:'https://via.placeholder.com/150' }}"
+                     alt="{{ user.username }}"
+                     class="w-28 h-28 rounded-full border-4 border-white shadow-lg object-cover">
+                <span class="absolute bottom-1 right-1 bg-green-500 w-4 h-4 rounded-full border-2 border-white"></span>
+            </div>
+            <h1 class="text-2xl font-bold mt-4">{{ user.first_name|default:user.username }}</h1>
+            <p class="text-gray-300 text-sm mt-1">{{ user.bio|default:"Welcome to my links!" }}</p>
+        </div>
+
+        <!-- Links Section -->
+        <div class="mt-8 space-y-4">
+            {% for link in links %}
+                <div class="flex items-center gap-3 bg-transparent backdrop-blur-md text-gray-900 py-3 px-4 rounded-lg shadow-lg hover:scale-105 hover:shadow-pink-500/50 transition-all duration-300 ease-out">
+                    <!-- Icon Placeholder -->
+                    <span class="w-5 h-5 bg-gray-300 rounded-full"></span>
+
+                    <!-- Link -->
+                    <a href="{{ link.url }}" target="_blank" class="flex-1 font-semibold hover:text-pink-500">
+                        {{ link.title }}
+                    </a>
+
+                    <!-- Delete Button -->
+                    <form action="{% url 'deletelink' link.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-red-500 text-black px-3 py-1 rounded hover:bg-red-600 transition">
+                            ✕
+                        </button>
+                    </form>
+                </div>
+            {% empty %}
+                <p class="text-center text-gray-400">No links added yet.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Social Icons -->
+        <div class="flex justify-center gap-5 mt-8">
+            <a href="#" class="hover:scale-110 transition-transform duration-300">
+                <img src="{% static 'icons/instagram.svg' %}" alt="Instagram" class="w-6 h-6">
+            </a>
+            <a href="#" class="hover:scale-110 transition-transform duration-300">
+                <img src="{% static 'icons/twitter.svg' %}" alt="Twitter" class="w-6 h-6">
+            </a>
+            <a href="#" class="hover:scale-110 transition-transform duration-300">
+                <img src="{% static 'icons/github.svg' %}" alt="GitHub" class="w-6 h-6">
+            </a>
+        </div>
+
+        <button id="new-link" type="button" 
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+            Add
+        </button>
+
+        <!-- Generate Public Link -->
+        <p class="mt-2">
+            Share your biolink: 
+            <a href="{% url 'public_biolink_slug' request.user.profile.public_slug %}" 
+            class="text-blue-500 underline">
+            {{ request.build_absolute_uri|slice:":-1" }}{% url 'public_biolink_slug' request.user.profile.public_slug %}
+            </a>
+        </p>
+
+
+
+        <form id="link-form" action="{% url 'addlink' user.id %}" method="post" class="hidden mt-4">
+            {% csrf_token %}
+            <div class="flex flex-col gap-2">
+                <input type="text" name="title" placeholder="Enter title" required
+                    class="px-3 py-2 rounded border border-gray-300 text-black">
+                <input type="url" name="url" placeholder="Enter a valid link" required
+                    class="px-3 py-2 rounded border border-gray-300 text-black">
+                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                    Save
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-6 text-xs text-gray-400">
+        <p>© {{ now|date:"Y" }} {{ user.username }} | Powered by URL.ly</p>
+    </div>
+
+<script>
+    const addBtn = document.getElementById("new-link");
+    const linkForm = document.getElementById("link-form");
+
+    addBtn.addEventListener("click", () => {
+        addBtn.innerText = "add";
+        linkForm.classList.toggle("hidden"); // Show/Hide form
+    });
+
+    linkForm.addEventListener("submit", () => {
+        linkForm.classList.add("hidden"); // Hide form after submit
+    });
+</script>
+</body>
+</html>

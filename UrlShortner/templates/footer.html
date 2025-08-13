@@ -16,9 +16,11 @@
       <ul class="space-y-2 text-sm text-gray-400">
         <li><a href="#" class="hover:text-blue-400 transition">Features</a></li>
         {% if user.is_authenticated %}
-        <li><a href="{% url 'url:home' %}" class="hover:text-blue-400 transition">Shorten URL</a></li>
+          <li><a href="{% url 'u:home' %}">Shorten URL</a></li>
+          <li><a href="{% url 'biolinkpage' user.id %}">Bio Link Page</a></li>
         {% else %}
-        <li><a href="{% url 'accounts:login' %}" class="hover:text-blue-400 transition">Shorten URL</a></li>
+          <li><a href="{% url 'accounts:login' %}?next={% url 'u:home' %}">Shorten URL</a></li>
+          <li><a href="{% url 'accounts:login' %}?next={% url 'my_biolink_page' %}">Bio Link Page</a></li>
         {% endif %}
       </ul>
     </div>

@@ -78,7 +78,7 @@ def make_short_url(request):
             messages.error(request, f"Error: {str(e)}")
             return render(request, "url_shortner.html")
 
-        return redirect("url:home")
+        return redirect("u:home")
 
     return render(request, "url_shortner.html")
 
@@ -118,7 +118,7 @@ def delete_url(request, id):
     """
     url = get_object_or_404(UrlModel, id=id, user=request.user)
     url.delete()
-    return redirect("url:home")
+    return redirect("u:home")
 
 
 @login_required()
@@ -147,7 +147,7 @@ def update_url(request, id):
                 pass  # optionally handle invalid input
 
         url.save()
-        return redirect("url:home")  # Or show a success message
+        return redirect("u:home")
 
     url_details = [
         ("Short URL", url.short_url),
@@ -173,7 +173,7 @@ def generate_qr(request):
         if not url.qrcode:
             urlservice = QrCode(url, request)
             urlservice.generate_qr_code()
-        return redirect("url:home")
+        return redirect("u:home")
     return render(request, "home.html")
 
 

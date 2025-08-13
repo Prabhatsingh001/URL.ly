@@ -1,0 +1,81 @@
+{% load static %}
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ profile.display_name|default:owner.username }} | Bio</title>
+  <meta name="description" content="{{ profile.bio|default:'My links' }}">
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+  {% tailwind_css %}
+</head>
+<body class="bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 min-h-screen flex flex-col items-center px-4 py-10 text-white">
+
+  <!-- Card -->
+  <div class="w-full max-w-lg bg-white/10 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-white/20">
+
+    <!-- Profile -->
+    <div class="text-center">
+      <div class="relative w-24 h-24 mx-auto">
+        <img src="{{ profile.profile_image |default:'https://via.placeholder.com/150' }}"
+             alt="{{ owner.username }}"
+             class="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover">
+      </div>
+      <h1 class="text-2xl font-bold mt-4">
+        {{ profile.display_name|default:owner.username }}
+      </h1>
+      {% if profile.bio %}
+        <p class="text-gray-300 text-sm mt-1">{{ profile.bio }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Links -->
+    <div class="mt-8 space-y-4">
+      {% for link in links %}
+        <a href="{{ link.url }}" target="_blank" rel="noopener"
+           class="flex items-center justify-center gap-3 bg-white text-gray-900 py-3 px-4 rounded-xl font-semibold shadow-lg
+                  hover:scale-[1.02] hover:shadow-pink-500/40 hover:bg-gradient-to-r hover:from-pink-500 hover:to-yellow-500 hover:text-white
+                  transition-all duration-300 ease-out">
+          {{ link.title }}
+        </a>
+      {% empty %}
+        <p class="text-center text-gray-400">No public links yet.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Share row (optional) -->
+    <div class="mt-6 flex items-center gap-2">
+      <input id="shareLink" type="text" readonly
+             class="flex-1 bg-white/20 text-white placeholder-gray-300 px-3 py-2 rounded-lg border border-white/20"
+             value="{{ request.build_absolute_uri }}">
+      <button id="copyBtn"
+              class="px-3 py-2 bg-emerald-500 rounded-lg font-medium hover:bg-emerald-600 transition">
+        Copy
+      </button>
+    </div>
+    <p id="copiedToast" class="opacity-0 text-xs text-emerald-300 mt-2 transition">Link copied!</p>
+  </div>
+
+  <!-- Footer -->
+  <div class="mt-6 text-xs text-gray-400">
+    <p>© {{ now|date:"Y" }} {{ owner.username }} · Public Bio</p>
+  </div>
+
+  <script>
+    const copyBtn = document.getElementById('copyBtn');
+    const shareLink = document.getElementById('shareLink');
+    const toast = document.getElementById('copiedToast');
+    copyBtn?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(shareLink.value);
+        toast.classList.remove('opacity-0');
+        setTimeout(() => toast.classList.add('opacity-0'), 1200);
+      } catch (e) {
+        shareLink.select();
+        document.execCommand('copy');
+      }
+    });
+  </script>
+</body>
+</html>

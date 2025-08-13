@@ -30,7 +30,7 @@ CusUser = get_user_model()
 class IndexView(View):
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect("url:home")
+            return redirect("u:home")
         return render(request, "index.html")
 
 
@@ -187,7 +187,7 @@ def login(request):
         if user:
             auth_login(request, user)
             messages.success(request, "Login successful.")
-            return redirect("url:home")
+            return redirect("u:home")
         else:
             messages.error(request, "Invalid credentials.")
             return redirect("accounts:login")

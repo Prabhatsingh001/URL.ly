@@ -1,0 +1,82 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from .models import BioLinkProfile as Profile, Link
+from django.utils.text import slugify
+from django.contrib import messages
+
+
+User = get_user_model()
+
+# Create your views here.
+
+
+@login_required
+def my_biolink_page(request):
+    return redirect("biolinkpage", id=request.user.id)
+
+
+@login_required()
+def Getlinks(request, id):
+    links = Link.objects.filter(user_id=id).order_by("-created_at")
+    context = {"links": links}
+    return render(request, "mainpage.html", context)
+
+
+@login_required
+def Addlink(request, id):
+    if request.method == "POST":
+        url = request.POST.get("url")
+        title = request.POST.get("title")
+        user_instance = User.objects.get(id=id)  # Get actual user object
+        Link.objects.create(user=user_instance, title=title, url=url)
+        return redirect("biolinkpage", id=request.user.id)
+    return render(request, "mainpage.html")
+
+
+@login_required()
+def Deletelink(request, id):
+    url = get_object_or_404(Link, id=id, user=request.user)
+    if request.method == "POST":
+        url.delete()
+    return redirect("biolinkpage", id=request.user.id)
+
+
+@login_required
+def enable_public_link(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+
+    if not profile.public_slug:
+        profile.public_slug = slugify(request.user.username)
+    profile.save()
+
+    messages.success(request, "Public link generated successfully!")
+    return redirect("biolinkpage", id=request.user.id)
+
+
+def public_biolink_by_slug(request, slug):
+    profile = get_object_or_404(Profile, public_slug=slug)
+    links = Link.objects.filter(user=profile.user, is_public=True)
+    return render(
+        request,
+        "public_page.html",
+        {
+            "owner": profile.user,
+            "profile": profile,
+            "links": links,
+        },
+    )
+
+
+def public_biolink_by_uuid(request, public_id):
+    profile = get_object_or_404(Profile, public_id=public_id)
+    links = Link.objects.filter(user=profile.user, is_public=True)
+    return render(
+        request,
+        "public_page.html",
+        {
+            "owner": profile.user,
+            "profile": profile,
+            "links": links,
+        },
+    )

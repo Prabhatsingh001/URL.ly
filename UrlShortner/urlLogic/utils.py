@@ -8,7 +8,7 @@ from hashids import Hashids
 
 BASE62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-hashid = Hashids(min_length=8, salt=settings.SALT)
+hashid = Hashids(min_length=4, salt=settings.SALT)
 
 
 class SlugGenerator:

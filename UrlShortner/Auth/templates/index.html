@@ -21,7 +21,7 @@
         </p>
 
         <!-- Input Section -->
-        <form action="{% url 'url:make_short_url' %}" method="POST" class="mt-6 flex flex-col sm:flex-row items-center gap-4 max-w-xl mx-auto">
+        <form action="{% url 'u:make_short_url' %}" method="POST" class="mt-6 flex flex-col sm:flex-row items-center gap-4 max-w-xl mx-auto">
           {% csrf_token %}
           <input
             type="url"
