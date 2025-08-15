@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "Auth",
     "urlLogic",
     "Biolink",
+    "Brandlink",
     "storages",
 ]
 
