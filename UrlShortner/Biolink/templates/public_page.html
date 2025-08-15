@@ -1,5 +1,5 @@
 {% load static %}
-{% load static tailwind_tags %}
+{% comment %} {% load static tailwind_tags %} {% endcomment %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +8,7 @@
   <title>{{ profile.display_name|default:owner.username }} | Bio</title>
   <meta name="description" content="{{ profile.bio|default:'My links' }}">
   <link rel="canonical" href="{{ request.build_absolute_uri }}">
-  {% tailwind_css %}
+  {% comment %} {% tailwind_css %} {% endcomment %}
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-x-hidden">
   

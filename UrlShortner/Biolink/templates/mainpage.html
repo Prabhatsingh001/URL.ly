@@ -1,12 +1,16 @@
-{% load static tailwind_tags %}
+{% comment %} {% load static tailwind_tags %} {% endcomment %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ user.biolinkprofile.display_name|default:user.username }} | Bio Link</title>
-    {% tailwind_css %}
+    {% if user.biolinkprofile.display_name %}
+        <title>{{ user.biolinkprofile.display_name }} | Bio Link</title>
+    {% else %}
+        <title>{{ user.username }} | Bio Link</title>
+    {% endif %}
+    {% comment %} {% tailwind_css %} {% endcomment %}
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
