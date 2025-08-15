@@ -10,6 +10,8 @@
     {% else %}
         <title>{{ user.username }} | Bio Link</title>
     {% endif %}
+    <link rel="icon" type="image/png" href="{% static 'logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
     {% comment %} {% tailwind_css %} {% endcomment %}
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');

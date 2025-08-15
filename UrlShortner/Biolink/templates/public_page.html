@@ -8,6 +8,8 @@
   <title>{{ profile.display_name|default:owner.username }} | Bio</title>
   <meta name="description" content="{{ profile.bio|default:'My links' }}">
   <link rel="canonical" href="{{ request.build_absolute_uri }}">
+  <link rel="icon" type="image/png" href="{% static 'logo.png' %}">
+  <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
   {% comment %} {% tailwind_css %} {% endcomment %}
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-x-hidden">
