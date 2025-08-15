@@ -43,15 +43,44 @@ def Deletelink(request, id):
 
 
 @login_required
+def editprofile(request):
+    profile = get_object_or_404(Profile, user=request.user)
+
+    if request.method == "POST":
+        name = request.POST.get("display_name")
+        bio = request.POST.get("bio")
+        profile_image = request.FILES.get("profile_image")
+
+        if name and name != profile.display_name:
+            profile.display_name = name
+            profile.public_slug = ""
+
+        if bio and bio != profile.bio:
+            profile.bio = bio
+
+        if profile_image:
+            profile.profile_image = profile_image
+
+        profile.save()
+        return redirect("biolinkpage", id=request.user.id)
+
+    return render(request, "mainpage.html")
+
+
+@login_required
 def enable_public_link(request):
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    if request.method == "POST":
+        profile = get_object_or_404(Profile, user=request.user)
 
-    if not profile.public_slug:
-        profile.public_slug = slugify(request.user.username)
-    profile.save()
+        if not profile.display_name:
+            profile.public_slug = slugify(profile.user.username)
+        else:
+            profile.public_slug = slugify(profile.display_name)
 
-    messages.success(request, "Public link generated successfully!")
-    return redirect("biolinkpage", id=request.user.id)
+        profile.save()
+        messages.success(request, "Public link generated successfully!")
+        return redirect("biolinkpage", id=request.user.id)
+    return render(request, "mainpage.html")
 
 
 def public_biolink_by_slug(request, slug):

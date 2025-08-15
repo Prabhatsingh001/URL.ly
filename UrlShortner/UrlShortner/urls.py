@@ -25,6 +25,7 @@ from Biolink.views import (
     Addlink,
     my_biolink_page,
     Deletelink,
+    editprofile,
     public_biolink_by_slug,
     public_biolink_by_uuid,
     enable_public_link,
@@ -42,9 +43,12 @@ urlpatterns = [
     path("biolink-page/<uuid:id>/", Getlinks, name="biolinkpage"),
     path("addlink/<uuid:id>/", Addlink, name="addlink"),
     path("deletelink/<uuid:id>/", Deletelink, name="deletelink"),
+    # path for generating a url
+    path("editprofile/", editprofile, name="editprofile"),
+    path("enable/", enable_public_link, name="enablepubliclink"),
+    # path for visiting the public profile
     path("p/<slug:slug>/", public_biolink_by_slug, name="public_biolink_slug"),
     path("u/<uuid:public_id>/", public_biolink_by_uuid, name="public_biolink_uuid"),
-    path("enable/", enable_public_link, name="enablepubliclink"),
 ]
 
 if settings.DEBUG:

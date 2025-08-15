@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Link
+from .models import Link, BioLinkProfile
 # Register your models here.
 
 
@@ -8,3 +8,10 @@ class LinkAdmin(admin.ModelAdmin):
     list_display = ("title", "url", "user")
     list_filter = ("user",)
     search_fields = ("title", "url")
+
+
+@admin.register(BioLinkProfile)
+class BioLinkProfileAdmin(admin.ModelAdmin):
+    list_display = ("id", "display_name", "user")
+    list_display_links = ("id", "display_name")
+    search_fields = ("display_name", "user")

@@ -5,112 +5,435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ user.first_name|default:user.username }} | Bio Link</title>
+    <title>{{ user.biolinkprofile.display_name|default:user.username }} | Bio Link</title>
     {% tailwind_css %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .link-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .link-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .form-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .form-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .edit-icon {
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .group:hover .edit-icon {
+            opacity: 1;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .status-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 min-h-screen flex flex-col items-center px-4 py-8 text-white">
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-x-hidden">
+    
+    <!-- Animated Background -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" style="animation-delay: 2s;"></div>
+        <div class="absolute top-40 left-1/2 transform -translate-x-1/2 w-80 h-80 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" style="animation-delay: 4s;"></div>
+    </div>
 
-    <!-- Card Container -->
-    <div class="w-full max-w-lg bg-white/10 backdrop-blur-lg rounded-2xl p-6 shadow-2xl mt-8 border border-white/20">
+    <div class="relative z-10 flex flex-col items-center px-4 py-6 sm:py-12 min-h-screen">
+        <div class="w-full max-w-md mx-auto">
+            
+            <!-- Main Card -->
+            <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl">
+                
+                <!-- Profile Section -->
+                <div class="text-center group">
+                    <!-- Profile Image -->
+                    <div class="relative inline-block mb-6">
+                        <div class="relative w-24 h-24 sm:w-32 sm:h-32 mx-auto">
+                            {% if user.biolinkprofile.profile_image %}
+                                <img src="{{ user.biolinkprofile.profile_image.url }}"
+                                    alt="{{ user.username }}"
+                                    class="w-full h-full rounded-full border-3 border-white/20 shadow-2xl object-cover">
+                            {% else %}
+                                <img src="{% static "profile_image.png" %}"
+                                    alt="{{ user.username }}"
+                                    class="w-full h-full rounded-full border-3 border-white/20 shadow-2xl object-cover">
+                            {% endif %}
+                            
+                            <!-- Status Indicator -->
+                            <div class="absolute bottom-2 right-2 w-4 h-4 bg-green-400 rounded-full border-2 border-white status-dot shadow-lg"></div>
+                            
+                            <!-- Edit Button -->
+                            <button class="absolute -top-2 -right-2 w-8 h-8 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-200 edit-icon group-hover:opacity-100" 
+                                    onclick="toggleEdit('image')">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Edit Image Form -->
+                        <form id="edit-image" class="hidden mt-4 slide-in" action="{% url "editprofile" %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="flex flex-col sm:flex-row gap-3 items-center">
+                                <input type="file" name="profile_image" accept="image/*" 
+                                       class="form-input text-white text-sm p-3 rounded-xl flex-1 w-full">
+                                <button type="submit" 
+                                        class="bg-green-500 hover:bg-green-600 px-4 py-3 rounded-xl text-white text-sm font-medium transition-all">
+                                    Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
 
-        <!-- Profile Section -->
-        <div class="text-center">
-            <div class="relative w-28 h-28 mx-auto">
-                <img src="{{ user.profile_image.url|default:'https://via.placeholder.com/150' }}"
-                     alt="{{ user.username }}"
-                     class="w-28 h-28 rounded-full border-4 border-white shadow-lg object-cover">
-                <span class="absolute bottom-1 right-1 bg-green-500 w-4 h-4 rounded-full border-2 border-white"></span>
-            </div>
-            <h1 class="text-2xl font-bold mt-4">{{ user.first_name|default:user.username }}</h1>
-            <p class="text-gray-300 text-sm mt-1">{{ user.bio|default:"Welcome to my links!" }}</p>
-        </div>
+                    <!-- Display Name -->
+                    <div class="mb-3 group relative">
+                        <div class="flex items-center justify-center gap-2">
+                            <h1 id="display-name" class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                                {{ user.biolinkprofile.display_name|default:user.username }}
+                            </h1>
+                            <button class="w-6 h-6 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-200 edit-icon" 
+                                    onclick="toggleEdit('name')">
+                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Edit Name Form -->
+                        <form id="edit-name" class="hidden mt-3 slide-in" action="{% url "editprofile" %}" method="post">
+                            {% csrf_token %}
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <input type="text" name="display_name" value="{{ user.biolinkprofile.display_name }}" 
+                                       class="form-input p-3 rounded-xl text-white placeholder-gray-400 flex-1" 
+                                       placeholder="Display name">
+                                <button type="submit" 
+                                        class="bg-green-500 hover:bg-green-600 px-4 py-3 rounded-xl text-white text-sm font-medium transition-all">
+                                    Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
 
-        <!-- Links Section -->
-        <div class="mt-8 space-y-4">
-            {% for link in links %}
-                <div class="flex items-center gap-3 bg-transparent backdrop-blur-md text-gray-900 py-3 px-4 rounded-lg shadow-lg hover:scale-105 hover:shadow-pink-500/50 transition-all duration-300 ease-out">
-                    <!-- Icon Placeholder -->
-                    <span class="w-5 h-5 bg-gray-300 rounded-full"></span>
+                    <!-- Bio -->
+                    <div class="mb-8 group relative">
+                        <div class="flex items-center justify-center gap-2">
+                            <p id="display-bio" class="text-gray-300 text-sm sm:text-base font-medium max-w-xs">
+                                {{ user.biolinkprofile.bio|default:"Welcome to my links!" }}
+                            </p>
+                            <button class="w-6 h-6 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-200 edit-icon" 
+                                    onclick="toggleEdit('bio')">
+                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Edit Bio Form -->
+                        <form id="edit-bio" class="hidden mt-3 slide-in" action="{% url "editprofile" %}" method="post">
+                            {% csrf_token %}
+                            <div class="flex flex-col gap-3">
+                                <textarea name="bio" rows="3" 
+                                          class="form-input px-3 py-2 rounded-xl text-white placeholder-gray-400 resize-none" 
+                                          placeholder="Tell people about yourself...">{{ user.biolinkprofile.bio }}</textarea>
+                                <button type="submit" 
+                                        class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-xl text-white text-sm font-medium transition-all self-end">
+                                    Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
-                    <!-- Link -->
-                    <a href="{{ link.url }}" target="_blank" class="flex-1 font-semibold hover:text-pink-500">
-                        {{ link.title }}
-                    </a>
+                <!-- Links Section -->
+                <div class="space-y-4">
+                    {% if links %}
+                        <!-- Existing Links -->
+                        {% for link in links %}
+                            <div class="link-card rounded-2xl p-4 group">
+                                <div id="display-link-{{ link.id }}" class="flex items-center gap-4">
+                                    <div class="w-3 h-3 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg"></div>
+                                    <a href="{{ link.url }}" target="_blank" 
+                                       class="flex-1 font-medium text-white hover:text-purple-300 transition-colors truncate">
+                                        {{ link.title }}
+                                    </a>
+                                    <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <form action="{% url 'deletelink' link.id %}" method="post" class="inline">
+                                            {% csrf_token %}
+                                            <button type="submit" 
+                                                    class="w-8 h-8 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white rounded-full flex items-center justify-center transition-all">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Empty State -->
+                        <div class="text-center py-8">
+                            <div class="w-16 h-16 mx-auto mb-4 bg-white/5 rounded-full flex items-center justify-center">
+                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                </svg>
+                            </div>
+                            <p class="text-gray-400 font-medium">No links added yet</p>
+                            <p class="text-gray-500 text-sm mt-1">Add your first link to get started</p>
+                        </div>
+                    {% endif %}
 
-                    <!-- Delete Button -->
-                    <form action="{% url 'deletelink' link.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-red-500 text-black px-3 py-1 rounded hover:bg-red-600 transition">
-                            ✕
+                    <!-- Add Link Button -->
+                    <div class="text-center pt-4">
+                        <button type="button" 
+                                onclick="document.getElementById('addLinkForm').classList.toggle('hidden')"
+                                class="btn-primary w-full sm:w-auto px-8 py-3 rounded-2xl font-medium text-white shadow-lg hover:shadow-xl transition-all duration-300">
+                            <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            {% if links %}Add Another Link{% else %}Add Your First Link{% endif %}
                         </button>
+                    </div>
+
+                    <!-- Add Link Form -->
+                    <form id="addLinkForm" action="{% url 'addlink' user.id %}" method="post" 
+                          class="hidden mt-6 space-y-4 slide-in"
+                          onsubmit="hideFormAfterSubmit()">
+                        {% csrf_token %}
+                        
+                        <div class="space-y-4">
+                            <!-- Title Input -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Link Title</label>
+                                <input type="text" name="title" placeholder="e.g., My Website, Instagram, etc." 
+                                       class="form-input w-full px-4 py-3 rounded-xl text-white placeholder-gray-400"
+                                       required>
+                            </div>
+
+                            <!-- URL Input -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Link URL</label>
+                                <input type="url" name="url" placeholder="https://example.com" 
+                                       class="form-input w-full px-4 py-3 rounded-xl text-white placeholder-gray-400"
+                                       required>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="flex gap-3 pt-2">
+                                <button type="submit" 
+                                        class="btn-primary flex-1 py-3 rounded-xl font-medium text-white shadow-lg hover:shadow-xl transition-all">
+                                    Add Link
+                                </button>
+                                <button type="button" 
+                                        onclick="document.getElementById('addLinkForm').classList.add('hidden')"
+                                        class="px-6 py-3 bg-white/5 hover:bg-white/10 rounded-xl font-medium text-gray-300 transition-all">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
                     </form>
                 </div>
-            {% empty %}
-                <p class="text-center text-gray-400">No links added yet.</p>
-            {% endfor %}
-        </div>
-
-        <!-- Social Icons -->
-        <div class="flex justify-center gap-5 mt-8">
-            <a href="#" class="hover:scale-110 transition-transform duration-300">
-                <img src="{% static 'icons/instagram.svg' %}" alt="Instagram" class="w-6 h-6">
-            </a>
-            <a href="#" class="hover:scale-110 transition-transform duration-300">
-                <img src="{% static 'icons/twitter.svg' %}" alt="Twitter" class="w-6 h-6">
-            </a>
-            <a href="#" class="hover:scale-110 transition-transform duration-300">
-                <img src="{% static 'icons/github.svg' %}" alt="GitHub" class="w-6 h-6">
-            </a>
-        </div>
-
-        <button id="new-link" type="button" 
-            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
-            Add
-        </button>
-
-        <!-- Generate Public Link -->
-        <p class="mt-2">
-            Share your biolink: 
-            <a href="{% url 'public_biolink_slug' request.user.profile.public_slug %}" 
-            class="text-blue-500 underline">
-            {{ request.build_absolute_uri|slice:":-1" }}{% url 'public_biolink_slug' request.user.profile.public_slug %}
-            </a>
-        </p>
-
-
-
-        <form id="link-form" action="{% url 'addlink' user.id %}" method="post" class="hidden mt-4">
-            {% csrf_token %}
-            <div class="flex flex-col gap-2">
-                <input type="text" name="title" placeholder="Enter title" required
-                    class="px-3 py-2 rounded border border-gray-300 text-black">
-                <input type="url" name="url" placeholder="Enter a valid link" required
-                    class="px-3 py-2 rounded border border-gray-300 text-black">
-                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-                    Save
-                </button>
             </div>
-        </form>
 
+            <!-- Shareable Link Section -->
+            {% if user.biolinkprofile.public_slug %}
+                <div class="glass-card rounded-3xl p-6 mt-6 shadow-2xl">
+                    <div class="text-center">
+                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                            </svg>
+                            Share Your Bio
+                        </h3>
+                        <div class="flex gap-2">
+                            <input id="shareLink" type="text" readonly
+                                   class="form-input flex-1 px-4 py-3 rounded-xl text-white text-sm"
+                                   value="{{ request.scheme }}://{{ request.get_host }}/p/{{ user.biolinkprofile.public_slug }}/">
+                            <button id="copyBtn"
+                                    class="px-6 py-3 bg-green-500 hover:bg-green-600 rounded-xl font-medium text-white transition-all shadow-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p id="copiedToast" class="opacity-0 text-sm text-green-400 mt-3 transition-all font-medium">
+                            ✓ Link copied to clipboard!
+                        </p>
+                    </div>
+                </div>
+            {% else %}
+                <!-- Generate Link Button -->
+                <div class="text-center mt-8">
+                    <form action="{% url 'enable_public_link' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit"
+                                class="btn-primary px-8 py-4 rounded-2xl font-semibold text-white shadow-2xl transform hover:scale-105 transition-all duration-300">
+                            <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                            Generate Shareable Link
+                        </button>
+                    </form>
+                    <p class="mt-4 text-gray-400 text-sm max-w-sm mx-auto">
+                        Create a public link to share your bio with anyone across the web
+                    </p>
+                </div>
+            {% endif %}
+        </div>
     </div>
 
-    <!-- Footer -->
-    <div class="mt-6 text-xs text-gray-400">
-        <p>© {{ now|date:"Y" }} {{ user.username }} | Powered by URL.ly</p>
-    </div>
+    <script>
+        function toggleEdit(field) {
+            const editForm = document.getElementById(`edit-${field}`);
+            const displayEl = document.getElementById(`display-${field}`);
+            
+            editForm.classList.toggle('hidden');
+            if (displayEl) {
+                displayEl.classList.toggle('hidden');
+            }
+            
+            // Focus the first input when showing the form
+            if (!editForm.classList.contains('hidden')) {
+                const input = editForm.querySelector('input, textarea');
+                if (input) input.focus();
+            }
+        }
 
-<script>
-    const addBtn = document.getElementById("new-link");
-    const linkForm = document.getElementById("link-form");
+        function hideFormAfterSubmit() {
+            setTimeout(() => {
+                document.getElementById('addLinkForm').classList.add('hidden');
+            }, 100);
+        }
 
-    addBtn.addEventListener("click", () => {
-        addBtn.innerText = "add";
-        linkForm.classList.toggle("hidden"); // Show/Hide form
-    });
+        // Copy functionality with enhanced UX
+        const copyBtn = document.getElementById('copyBtn');
+        const shareLink = document.getElementById('shareLink');
+        const toast = document.getElementById('copiedToast');
+        
+        if (copyBtn && shareLink && toast) {
+            copyBtn.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(shareLink.value);
+                    showToast();
+                } catch (e) {
+                    // Fallback for older browsers
+                    shareLink.select();
+                    document.execCommand('copy');
+                    showToast();
+                }
+            });
+            
+            function showToast() {
+                toast.classList.remove('opacity-0');
+                toast.classList.add('opacity-100');
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100');
+                    toast.classList.add('opacity-0');
+                }, 2000);
+            }
+        }
 
-    linkForm.addEventListener("submit", () => {
-        linkForm.classList.add("hidden"); // Hide form after submit
-    });
-</script>
+        // Enhanced form interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-hide edit forms when clicking outside
+            document.addEventListener('click', function(e) {
+                const editForms = document.querySelectorAll('[id^="edit-"]');
+                editForms.forEach(form => {
+                    if (!form.contains(e.target) && !e.target.closest('button[onclick*="toggleEdit"]')) {
+                        form.classList.add('hidden');
+                        const field = form.id.replace('edit-', '');
+                        const displayEl = document.getElementById(`display-${field}`);
+                        if (displayEl) displayEl.classList.remove('hidden');
+                    }
+                });
+            });
+            
+            // Add slide-in animation to new elements
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.nodeType === 1 && node.classList && node.classList.contains('slide-in')) {
+                            node.style.animation = 'slideIn 0.3s ease-out';
+                        }
+                    });
+                });
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    </script>
 </body>
 </html>
