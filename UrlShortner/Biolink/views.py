@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from .models import BioLinkProfile as Profile, Link
 from django.utils.text import slugify
 from django.contrib import messages
+from django.http import Http404
 
 
 User = get_user_model()
@@ -84,7 +85,12 @@ def enable_public_link(request):
 
 
 def public_biolink_by_slug(request, slug):
-    profile = get_object_or_404(Profile, public_slug=slug)
+    try:
+        profile = Profile.objects.select_related("user").get(public_slug=slug)
+    except Profile.DoesNotExist:
+        raise Http404("Profile not found")
+    except Profile.user.RelatedObjectDoesNotExist:
+        raise Http404("User not found")
     links = Link.objects.filter(user=profile.user, is_public=True)
     return render(
         request,
