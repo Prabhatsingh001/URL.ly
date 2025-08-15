@@ -1,30 +1,30 @@
 
-# 🔗 URL.ly - Django URL Shortener
+# URL.ly - Django URL Shortener
 
 A modern, full-featured URL shortener built with **Django**, **TailwindCSS**, and **JavaScript**. URL.ly lets you shorten links, track analytics, manage user a, and more—all with a clean, responsive UI.
 
-## 🚀 Features
+##  Features
 
-- 🔗 Shorten long URLs instantly
-- 📊 Track click analytics for each short URL
-- 📸 Generate QR codes for every shortened link
-- 👤 User authentication (signup, login, password reset)
-- 🖼️ Upload and manage profile pictures
-- 🛡️ Secure password reset via email
-- � User dashboard for managing links (coming soon)
-- 🌐 Branded/custom domain links (coming soon)
+-  Shorten long URLs instantly
+-  Track click analytics for each short URL
+-  Generate QR codes for every shortened link
+-  User authentication (signup, login, password reset)
+-  Upload and manage profile pictures
+-  Secure password reset via email
+-  User dashboard for managing links (coming soon)
+-  Branded/custom domain links (coming soon)
 
-## 🧰 Tech Stack
+## Tech Stack
 
 - **Backend:** Django (Python)
 - **Frontend:** HTML, TailwindCSS, JavaScript
 - **Database:** SQLite (default, easy to switch)
 
-## 🌍 Live Demo
+## Live Demo
 
 Try the app live: [https://url-ly.onrender.com/](https://url-ly.onrender.com/)
 
-## 🛠️ Getting Started (Local Setup)
+## Getting Started (Local Setup)
 
 Follow these steps to set up the project locally:
 
@@ -114,7 +114,7 @@ Below are all the main URLs exposed by the project, grouped by app/module:
 ---
 
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 UrlShortner/
@@ -257,6 +257,6 @@ UrlShortner/
 
 ---
 
-## 💡 Contributions
+##  Contributions
 
 Pull requests and feedback are welcome! Feel free to fork the repo and submit improvements or report issues.
