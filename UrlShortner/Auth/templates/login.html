@@ -51,7 +51,7 @@
             <div class="mt-4">
                 <div class="flex justify-between">
                     <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                    <a href="{% url 'accounts:forgot_password' %}" class="text-xs text-gray-500">Forgot Password?</a>
+                    <a href="{% url 'a:forgot_password' %}" class="text-xs text-gray-500">Forgot Password?</a>
                 </div>
                 <div class="relative">
                 <input class="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="password" name="password" id="password" placeholder="Password"/>
@@ -68,14 +68,9 @@
             </div>
             <div class="mt-4 flex items-center justify-between">
                 <span class="border-b w-1/5 md:w-1/4"></span>
-                <a href="{% url 'accounts:signup' %}" class="text-xs text-gray-500 uppercase">Sign Up</a>
+                <a href="{% url 'a:signup' %}" class="text-xs text-gray-500 uppercase">Sign Up</a>
                 <span class="border-b w-1/5 md:w-1/4"></span>
             </div>
-            {% comment %} <div class="mt-4 flex items-center justify-center">
-                <span class="text-xs text-gray-500">Didn't recieve verification email??
-                    <a href="{% url 'accounts:signup' %}" class="uppercase hover:underline">Resend!!</a>
-                </span>
-            </div> {% endcomment %}
           </form>
         </div>
     </div>

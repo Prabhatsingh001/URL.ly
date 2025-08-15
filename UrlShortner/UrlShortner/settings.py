@@ -205,7 +205,7 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
 
-LOGIN_URL = "accounts:login"
+LOGIN_URL = "a:login"
 if DEBUG:
     SITE_DOMAIN = "127.0.0.1:8000"
 else:

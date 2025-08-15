@@ -10,7 +10,7 @@ from django.core.mail import EmailMessage
 
 
 def send_welcome_email(user):
-    subject = "Welcome to UrlShortner"
+    subject = "Welcome to URL.LY"
     message = f"hello {user.username} \n\n welcome to URL.ly. Your username is {user.username} and your email is {user.email} \n\n Thank you for signing up"
     to_email = [user.email]
     from_email = settings.EMAIL_HOST_USER

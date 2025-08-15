@@ -39,9 +39,9 @@ class ContactModelTest(TestCase):
 class AuthViewsTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.signup_url = reverse("accounts:signup")
-        self.login_url = reverse("accounts:login")
-        self.contact_url = reverse("accounts:contact")
+        self.signup_url = reverse("a:signup")
+        self.login_url = reverse("a:login")
+        self.contact_url = reverse("a:contact")
 
     def test_signup_view_get(self):
         response = self.client.get(self.signup_url)

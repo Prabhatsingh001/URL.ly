@@ -47,7 +47,7 @@ def contact(request):
             contact = Contact.objects.create(name=name, email=email, message=message)
             send_contact_email(contact)
             messages.success(request, "Thank you! Your message has been sent.")
-            return redirect("accounts:contact")
+            return redirect("a:contact")
         else:
             messages.error(request, "All fields are required.")
     return render(request, "contact.html")
@@ -62,29 +62,29 @@ def signup(request):
 
         if CusUser.objects.filter(email=email).exists():
             messages.error(request, "email already exists")
-            return redirect("accounts:signup")
+            return redirect("a:signup")
 
         if CusUser.objects.filter(username=username).exists():
             messages.error(request, "username already exists")
-            return redirect("accounts:signup")
+            return redirect("a:signup")
 
         if password != password2:
             messages.error(request, "passwords do not match")
-            return redirect("accounts:signup")
+            return redirect("a:signup")
         if len(password) < 8:
             messages.error(request, "password must be at least 8 characters")
-            return redirect("accounts:signup")
+            return redirect("a:signup")
 
         if len(username) < 4:
             messages.error(request, "username must be at least 4 characters")
-            return redirect("accounts:signup")
+            return redirect("a:signup")
 
         if len(username) > 20:
             messages.error(request, "username must be at most 20 characters")
-            return redirect("accounts:signup")
+            return redirect("a:signup")
         if len(password) > 20:
             messages.error(request, "password must be at most 20 characters")
-            return redirect("accounts:signup")
+            return redirect("a:signup")
 
         user = CusUser.objects.create_user(
             username=username,
@@ -100,7 +100,7 @@ def signup(request):
         """
         email sending functionality handled by signals now
         """
-        return redirect("accounts:login")
+        return redirect("a:login")
     return render(request, "signup.html")
 
 
@@ -111,7 +111,7 @@ def resend_verification_email(request):
 
         if user.is_active:
             messages.success(request, "user is already verified!!!")
-            return redirect("accounts:login")
+            return redirect("a:login")
 
         current_site = get_current_site(request).domain
         protocol = "https" if request.is_secure() else "http"
@@ -135,7 +135,7 @@ def resend_verification_email(request):
         )
         email.send(fail_silently=True)
 
-        return redirect("accounts:login")
+        return redirect("a:login")
     return render(request, "login.html")
 
 
@@ -150,10 +150,10 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         messages.success(request, "Email verified successfully")
-        return redirect("accounts:login")
+        return redirect("a:login")
     else:
         messages.error(request, "Email verification failed")
-        return redirect("accounts:login")
+        return redirect("a:login")
 
 
 def logout(request):
@@ -171,17 +171,17 @@ def login(request):
 
         if not email or not password:
             messages.error(request, "Email and password are required.")
-            return redirect("accounts:login")
+            return redirect("a:login")
 
         try:
             user = CusUser.objects.get(email=email)
         except CusUser.DoesNotExist:
             messages.error(request, "Invalid credentials.")
-            return redirect("accounts:login")
+            return redirect("a:login")
 
         if not user.is_active:
             messages.error(request, "Please verify your email before logging in.")
-            return redirect("accounts:login")
+            return redirect("a:login")
 
         user = authenticate(request, username=email, password=password)
         if user:
@@ -190,7 +190,7 @@ def login(request):
             return redirect("u:home")
         else:
             messages.error(request, "Invalid credentials.")
-            return redirect("accounts:login")
+            return redirect("a:login")
 
     return render(request, "login.html")
 
@@ -235,7 +235,7 @@ def update_profile(request, id):
             profile.profile_image = image
 
         profile.save()
-        return redirect("accounts:profile", id=id)
+        return redirect("a:profile", id=id)
 
     return render(
         request, "profile_setting.html", {"profile": profile, "user_obj": request.user}
@@ -256,7 +256,7 @@ def update_password(request, id):
 
         if new_password != confirm_password:
             messages.error(request, "Passwords do not match")
-            return redirect("accounts:profile", id=id)
+            return redirect("a:profile", id=id)
 
         user.set_password(new_password)
         user.save()
@@ -264,7 +264,7 @@ def update_password(request, id):
         update_session_auth_hash(request, user)
         messages.success(request, "Password reset successfully")
 
-        return redirect("accounts:profile", id=id)
+        return redirect("a:profile", id=id)
 
     return render(request, "profile_update_password.html", context)
 
@@ -300,10 +300,10 @@ def forgot_password(request):
             )
             email.send(fail_silently=True)
             messages.success(request, "Password reset email sent successfully")
-            return redirect("accounts:login")
+            return redirect("a:login")
         except CusUser.DoesNotExist:
             messages.error(request, "User with this email does not exist")
-            return redirect("accounts:forgot_password")
+            return redirect("a:forgot_password")
     return render(request, "forgot_password.html")
 
 
@@ -321,16 +321,16 @@ def reset_password(request, uidb64, token):
 
             if new_password != confirm_password:
                 messages.error(request, "Passwords do not match")
-                return redirect("accounts:reset_password", uidb64=uidb64, token=token)
+                return redirect("a:reset_password", uidb64=uidb64, token=token)
 
             user.set_password(new_password)
             user.save()
             messages.success(request, "Password reset successfully")
-            return redirect("accounts:login")
+            return redirect("a:login")
         return render(request, "reset_password.html", {"user": user})
     else:
         messages.error(request, "Password reset link is invalid or has expired")
-        return redirect("accounts:login")
+        return redirect("a:login")
 
 
 """

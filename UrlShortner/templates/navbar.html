@@ -35,19 +35,19 @@
       <div id="mobile-menu" class="hidden italic absolute right-0 top-full mt-4 w-56 bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-xl ring-1 ring-gray-200 dark:ring-gray-700 z-50 space-y-3 p-4 text-sm">
         {% if user.is_authenticated %}
           <a href="{% url 'u:home' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Home</a>
-          <a href="{% url 'accounts:about' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">About</a>
-          <a href="{% url 'accounts:contact' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Contact</a>
-          <a href="{% url "accounts:profile"  user.id %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Profile</a>
-          <a href="{% url "accounts:edit_profile" user.id %}" class="block hover:text-blue-600 transition text-gray-700 dark:text-white">Settings</a>
+          <a href="{% url 'a:about' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">About</a>
+          <a href="{% url 'a:contact' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Contact</a>
+          <a href="{% url "a:profile"  user.id %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Profile</a>
+          <a href="{% url "a:edit_profile" user.id %}" class="block hover:text-blue-600 transition text-gray-700 dark:text-white">Settings</a>
           <div class="border-t border-gray-300 dark:border-gray-700 pt-2 text-sm text-gray-500 dark:text-gray-400">
             Hello, {{ user.username }}
           </div>
-          <a href="{% url 'accounts:logout' %}" class="block text-center mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold hover:scale-105 transition">Logout</a>
+          <a href="{% url 'a:logout' %}" class="block text-center mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold hover:scale-105 transition">Logout</a>
         {% else %}
           <a href="{% url 'index' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Home</a>
-          <a href="{% url 'accounts:about' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">About</a>
-          <a href="{% url 'accounts:contact' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Contact</a>
-          <a href="{% url 'accounts:login' %}" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:scale-105 transition">Get Started</a>
+          <a href="{% url 'a:about' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">About</a>
+          <a href="{% url 'a:contact' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Contact</a>
+          <a href="{% url 'a:login' %}" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:scale-105 transition">Get Started</a>
         {% endif %}
       </div>
     </div>
@@ -59,8 +59,8 @@
       {% else %}
       <a href="{% url 'index' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Home</a>
       {% endif %}
-      <a href="{% url 'accounts:about' %}" class="hover:text-blue-600 transition">About</a>
-      <a href="{% url 'accounts:contact' %}" class="hover:text-blue-600 transition">Contact</a>
+      <a href="{% url 'a:about' %}" class="hover:text-blue-600 transition">About</a>
+      <a href="{% url 'a:contact' %}" class="hover:text-blue-600 transition">Contact</a>
 
       {% if user.is_authenticated %}
         <div class="relative">
@@ -79,16 +79,16 @@
 
           <!-- Profile Dropdown -->
           <div id="profile-menu" class="hidden absolute right-0 mt-4 w-56 bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-xl ring-1 ring-gray-200 dark:ring-gray-700 z-50 space-y-3 p-4 text-sm">
-            <a href="{% url "accounts:profile"  user.id %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Profile</a>
-            <a href="{% url "accounts:edit_profile" user.id %}" class="block hover:text-blue-600 transition text-gray-700 dark:text-white">Settings</a>
+            <a href="{% url "a:profile"  user.id %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Profile</a>
+            <a href="{% url "a:edit_profile" user.id %}" class="block hover:text-blue-600 transition text-gray-700 dark:text-white">Settings</a>
             <div class="border-t border-gray-300 dark:border-gray-700 pt-2 text-sm text-gray-500 dark:text-gray-400">
               Hello, {{ user.username }}
             </div>
-            <a href="{% url 'accounts:logout' %}" class="block text-center mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold hover:scale-105 transition">Logout</a>
+            <a href="{% url 'a:logout' %}" class="block text-center mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold hover:scale-105 transition">Logout</a>
           </div>
         </div>
       {% else %}
-        <a href="{% url 'accounts:login' %}" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:scale-105 transition">Get Started</a>
+        <a href="{% url 'a:login' %}" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:scale-105 transition">Get Started</a>
       {% endif %}
     </div>
   </div>

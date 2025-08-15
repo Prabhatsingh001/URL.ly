@@ -7,7 +7,7 @@ Hello, {{ user.username }}!
 Please confirm your email by clicking on the following link:
 
 Confirmation Link:
-{{ protocol }}://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}
+{{ protocol }}://{{ domain }}{% url 'a:activate' uidb64=uid token=token %}
 
 If you did not sign up for this account, you can ignore this email.
 

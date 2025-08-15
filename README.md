@@ -1,7 +1,7 @@
 
 # 🔗 URL.ly - Django URL Shortener
 
-A modern, full-featured URL shortener built with **Django**, **TailwindCSS**, and **JavaScript**. URL.ly lets you shorten links, track analytics, manage user accounts, and more—all with a clean, responsive UI.
+A modern, full-featured URL shortener built with **Django**, **TailwindCSS**, and **JavaScript**. URL.ly lets you shorten links, track analytics, manage user a, and more—all with a clean, responsive UI.
 
 ## 🚀 Features
 
@@ -77,17 +77,17 @@ Below are all the main URLs exposed by the project, grouped by app/module:
 
 ### Auth App
 
-- `/accounts/about/` — About page
-- `/accounts/contact/` — Contact page
-- `/accounts/signup/` — User signup
-- `/accounts/login/` — User login
-- `/accounts/logout/` — User logout
-- `/accounts/profile/<uuid:id>/` — User profile
-- `/accounts/profile-edit/<uuid:id>/` — Edit profile
-- `/accounts/profile-password/<uuid:id>/` — Change password
-- `/accounts/activate/<uidb64>/<token>/` — Activate account
-- `/accounts/forgot_password/` — Forgot password
-- `/accounts/reset_password/<uidb64>/<token>/` — Reset password
+- `/a/about/` — About page
+- `/a/contact/` — Contact page
+- `/a/signup/` — User signup
+- `/a/login/` — User login
+- `/a/logout/` — User logout
+- `/a/profile/<uuid:id>/` — User profile
+- `/a/profile-edit/<uuid:id>/` — Edit profile
+- `/a/profile-password/<uuid:id>/` — Change password
+- `/a/activate/<uidb64>/<token>/` — Activate account
+- `/a/forgot_password/` — Forgot password
+- `/a/reset_password/<uidb64>/<token>/` — Reset password
 
 ### urlLogic App
 

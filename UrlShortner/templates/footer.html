@@ -19,8 +19,8 @@
           <li><a href="{% url 'u:home' %}">Shorten URL</a></li>
           <li><a href="{% url 'biolinkpage' user.id %}">Bio Link Page</a></li>
         {% else %}
-          <li><a href="{% url 'accounts:login' %}?next={% url 'u:home' %}">Shorten URL</a></li>
-          <li><a href="{% url 'accounts:login' %}?next={% url 'my_biolink_page' %}">Bio Link Page</a></li>
+          <li><a href="{% url 'a:login' %}?next={% url 'u:home' %}">Shorten URL</a></li>
+          <li><a href="{% url 'a:login' %}?next={% url 'my_biolink_page' %}">Bio Link Page</a></li>
         {% endif %}
       </ul>
     </div>
@@ -29,7 +29,7 @@
     <div>
       <h3 class="font-bold text-lg mb-3 text-white">Company</h3>
       <ul class="space-y-2 text-sm text-gray-400">
-        <li><a href="{% url 'accounts:about' %}" class="hover:text-blue-400 transition">About Us</a></li>
+        <li><a href="{% url 'a:about' %}" class="hover:text-blue-400 transition">About Us</a></li>
         <li><a href="#" class="hover:text-blue-400 transition">Blog</a></li>
       </ul>
     </div>
@@ -38,7 +38,7 @@
     <div>
       <h3 class="font-bold text-lg mb-3 text-white">Support</h3>
       <ul class="space-y-2 text-sm text-gray-400">
-        <li><a href="{% url 'accounts:contact' %}" class="hover:text-blue-400 transition">Contact Us</a></li>
+        <li><a href="{% url 'a:contact' %}" class="hover:text-blue-400 transition">Contact Us</a></li>
         <li><a href="#" class="hover:text-blue-400 transition">FAQs</a></li>
         <li><a href="#" class="hover:text-blue-400 transition">Privacy Policy</a></li>
       </ul>
