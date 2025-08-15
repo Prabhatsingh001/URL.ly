@@ -48,11 +48,6 @@ urlpatterns = [
     # path for visiting the public profile
     path("p/<slug:slug>/", public_biolink_by_slug, name="public_biolink_slug"),
     path("u/<uuid:public_id>/", public_biolink_by_uuid, name="public_biolink_uuid"),
-    """
-    known issues:-
-    1. fix the shareable to old value while changinf name and only update the link if the user askes it
-    2. make links more modular
-    """,
 ]
 
 if settings.DEBUG:
