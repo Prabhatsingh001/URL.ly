@@ -23,16 +23,34 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY")
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("GOOGLE_CLIENT_ID")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("GOOGLE_CLIENT_SECRET")
+EMAIL_BACKEND = config("EMAIL_BACKEND")
+EMAIL_HOST = config("EMAIL_HOST")
+EMAIL_PORT = config("EMAIL_PORT", cast=int)
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+SALT = config("SALT", cast=str)
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+if DEBUG:
+    SOCIAL_AUTH_RAISE_EXCEPTIONS = True
+    SITE_DOMAIN = "127.0.0.1:8000"
+    PROTOCOL = "http"
+    TAILWIND_APP_NAME = "theme"
+    NPM_BIN_PATH = "C:\\Program Files\\nodejs\\npm.cmd"
+else:
+    SITE_DOMAIN = "url-ly.onrender.com"
+    PROTOCOL = "https"
+
+
 APPEND_SLASH = True
-
 ALLOWED_HOSTS = ["127.0.0.1", ".onrender.com"]
-
-
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -41,6 +59,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "social_django",
     "Auth",
     "urlLogic",
     "Biolink",
@@ -64,6 +83,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "social_django.middleware.SocialAuthExceptionMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
@@ -136,16 +156,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = "Auth.CustomUser"
 
+AUTHENTICATION_BACKENDS = (
+    "social_core.backends.google.GoogleOAuth2",  # Google backend
+    "django.contrib.auth.backends.ModelBackend",  # default
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
 
@@ -186,39 +207,24 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
-    CONN_MAX_AGE = None
+    CONN_MAX_AGE = 60
+    CSRF_TRUSTED_ORIGINS = ["https://url-ly.onrender.com"]
+
 
 # TAILWIND_APP_NAME = "theme"
 # INTERNAL_IPS = ["127.0.0.1"]
 
-if DEBUG:
-    TAILWIND_APP_NAME = "theme"
-    NPM_BIN_PATH = "C:\\Program Files\\nodejs\\npm.cmd"
-
-# email settings
-# https://docs.djangoproject.com/en/5.2/topics/email/
-
-EMAIL_BACKEND = config("EMAIL_BACKEND")
-EMAIL_HOST = config("EMAIL_HOST")
-EMAIL_PORT = config("EMAIL_PORT", cast=int)
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
-EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
-
-
-LOGIN_URL = "a:login"
-if DEBUG:
-    SITE_DOMAIN = "127.0.0.1:8000"
-else:
-    SITE_DOMAIN = "url-ly.onrender.com"
-
-if DEBUG:
-    PROTOCOL = "http"
-else:
-    PROTOCOL = "https"
-
-
-SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-
-SALT = config("SALT", cast=str)
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.user.get_username",
+    "social_core.pipeline.social_auth.associate_by_email",
+    "social_core.pipeline.user.create_user",
+    "Auth.pipelines.save_profile",
+    # "Auth.pipelines.save_profile_picture",   # custom step
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+    "social_core.pipeline.user.user_details",
+)
