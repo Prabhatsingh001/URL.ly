@@ -39,7 +39,7 @@ LOGIN_REDIRECT_URL = "/u/"
 LOGOUT_REDIRECT_URL = "/"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 if DEBUG:
     SOCIAL_AUTH_RAISE_EXCEPTIONS = True
