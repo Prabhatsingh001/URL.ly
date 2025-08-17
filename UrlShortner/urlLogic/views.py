@@ -177,15 +177,27 @@ def generate_qr(request):
     return render(request, "home.html")
 
 
-# @login_required()
-# def download_qr(request, id):
-#     """
-#     This function allows the user to download the QR code for the short URL.
-#     """
-#     response = qr.download_qr_code(qr_code)
-#     return redirect(
-#         "url:home", {"response": response}
-#     )  # adjust the home html for download
+@login_required()
+def download_qr(request, id):
+    """
+    This function allows the user to download the QR code for the short URL.
+    """
+    url = get_object_or_404(UrlModel, id=id, user=request.user)
+    urlservice = QrCode(url, request)
+    return urlservice.download_qr_code()
+
+
+# @login_required
+# def mail_qr(request, id):
+#     url = get_object_or_404(UrlModel, id=id, user=request.user)
+#     qrservice = QrCode(url, request)
+#     qr_bytes = qrservice.generate_qr_code_bytes()
+
+#     send_qr_mail(request.user, qr_bytes, url.short_url)
+#     # OR send_qr_inline(request.user, qr_bytes, url.short_url)
+
+#     messages.success(request, "QR Code has been sent to your email!")
+#     return redirect("u:home")
 
 
 # @login_required()
