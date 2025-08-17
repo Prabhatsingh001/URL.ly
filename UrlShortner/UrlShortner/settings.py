@@ -57,7 +57,6 @@ else:
 APPEND_SLASH = True
 
 INSTALLED_APPS = [
-    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
