@@ -3,37 +3,105 @@
 {% block title %}Home | URL.LY{% endblock %}
 
 {% block content %}
-<!-- Page Heading -->
-<h2 class="text-3xl font-bold text-center mt-16 text-gray-800 dark:text-white">
-  Your <span class="text-blue-500">URLs</span>
-</h2>
-<p class="text-center mt-2 mb-6 text-gray-600 dark:text-gray-400 text-lg">
-  All your shortened links in one place.
-</p>
-
-<!-- CTA Button -->
-<div class="flex justify-center mb-10">
-  <a href="{% url 'u:make_short_url' %}"
-     class="mt-4 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:scale-105 hover:shadow-lg transition duration-300">
-    {% if urls %} New URL{% else %}Get Started{% endif %}
-  </a>
-</div>
-
-<!-- URL Cards or Empty State -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 sm:px-6 lg:px-8 mb-2">
-  {% if urls %}
-    {% for url in urls %}
-      <div class="transition transform hover:-translate-y-1 hover:shadow-xl duration-300">
-        {% include "components/url_card.html" with url=url %}
-      </div>
-    {% endfor %}
-  {% else %}
-    <div class="col-span-full text-center text-gray-500 dark:text-gray-400 mt-8">
-      <div class="text-4xl mb-2">🔗</div>
-      <p class="text-lg font-medium">You haven't shortened any URLs yet.</p>
-      <p class="mt-1">Click the button above to get started!</p>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-950 dark:via-slate-900 dark:to-gray-900">
+  <!-- Hero Section -->
+  <div class="relative overflow-hidden pt-16 pb-8">
+    <!-- Background Decorations -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none select-none">
+      <div class="absolute -top-40 -right-32 w-96 h-96 bg-gradient-to-br from-blue-300/20 to-indigo-400/20 rounded-full blur-3xl animate-pulse"></div>
+      {% comment %} <div class="absolute -bottom-40 -left-32 w-96 h-96 bg-gradient-to-br from-purple-300/20 to-pink-400/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div> {% endcomment %}
+      {% comment %} <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-br from-cyan-200/20 to-blue-300/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+      <div class="absolute top-1/3 left-1/4 w-40 h-40 bg-gradient-to-br from-pink-200/30 to-blue-200/30 rounded-full blur-2xl animate-pulse" style="animation-delay: 2.5s;"></div> {% endcomment %}
     </div>
-  {% endif %}
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Page Heading -->
+      <div class="text-center">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-800 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent leading-tight drop-shadow-lg">
+          <span class="bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent animate-gradient-x">URLs</span>
+        </h1>
+        <p class="mt-6 text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          All your shortened links in one beautifully organized place.
+        </p>
+      </div>
+
+      <!-- CTA Button -->
+      <div class="flex justify-center mt-12 mb-16">
+        <a href="{% url 'u:make_short_url' %}"
+           class="group relative px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-semibold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 ease-out focus:outline-none focus:ring-4 focus:ring-blue-300">
+          <span class="relative z-10 text-lg tracking-wide flex items-center gap-2">
+            <svg class="w-5 h-5 text-white opacity-80 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            {% if urls %}Create New URL{% else %}Get Started{% endif %}
+          </span>
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-600/50 to-indigo-700/50 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <div class="relative max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+    {% if urls %}
+      <!-- URLs Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 bg-transparent">
+        {% for url in urls %}
+          <div class="transition-transform duration-300 hover:scale-105 hover:z-10">
+            {% include "components/url_card.html" with url=url %}
+          </div>
+        {% endfor %}
+      </div>
+      <!-- Stats or Additional Info -->
+      <div class="mt-16 text-center">
+        <div class="inline-flex items-center px-6 py-3 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-full border border-gray-200/60 dark:border-gray-700/60 shadow-md">
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Managing {{ urls|length }} shortened link{{ urls|length|pluralize }}
+          </span>
+        </div>
+      </div>
+    {% else %}
+      <!-- Empty State -->
+      <div class="max-w-md mx-auto text-center animate-fade-in">
+        <div class="bg-gradient-to-br from-white/80 to-blue-50/80 dark:from-gray-900/80 dark:to-blue-900/80 backdrop-blur-2xl rounded-3xl p-12 shadow-2xl border border-gray-200/60 dark:border-gray-700/60">
+          <!-- Icon -->
+          <div class="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/50 dark:to-indigo-900/50 rounded-full flex items-center justify-center shadow-lg">
+            <svg class="w-12 h-12 text-blue-600 dark:text-blue-400 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+            </svg>
+          </div>
+          <!-- Content -->
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight">
+            Ready to get started?
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-2 leading-relaxed">
+            You haven't shortened any URLs yet.
+          </p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Create your first short link and start tracking clicks!
+          </p>
+          <!-- Features Preview -->
+          <div class="mt-8 space-y-3">
+            <div class="flex items-center justify-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+              <svg class="w-4 h-4 text-green-500 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Custom short URLs</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+              <svg class="w-4 h-4 text-green-500 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Click analytics</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+              <svg class="w-4 h-4 text-green-500 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Easy management</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}
-
