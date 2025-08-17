@@ -8,10 +8,7 @@ def save_profile(strategy, details, response, user=None, *args, **kwargs):
     if user is None:
         return
 
-    # Ensure profile exists
     profile, created = Profile.objects.get_or_create(user=user)
-
-    # Fill fields from Google response
     if created or not profile.first_name:
         profile.first_name = details.get("fullname").split(" ")[0]
 
@@ -22,3 +19,11 @@ def save_profile(strategy, details, response, user=None, *args, **kwargs):
     #     profile.profile_image = response.get("picture")
 
     profile.save()
+
+
+def activate_google_user(strategy, backend, user=None, *args, **kwargs):
+    if backend.name == "google-oauth2" and user:
+        if not user.is_active:
+            user.is_active = True
+            user.save(update_fields=["is_active"])
+        return

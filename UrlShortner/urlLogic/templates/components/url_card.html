@@ -1,86 +1,114 @@
 <!-- CARD START -->
-<div class="bg-white/70 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl p-6 shadow-2xl backdrop-blur-lg transition-transform duration-300 hover:scale-[1.02] flex flex-col gap-6">
+<div class="group relative bg-gradient-to-br from-white/80 to-gray-50/80 dark:from-gray-900/80 dark:to-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 rounded-3xl p-8 shadow-xl hover:shadow-2xl backdrop-blur-xl transition-all duration-500 hover:scale-[1.02] flex flex-col gap-8 overflow-hidden">
 
-  <!-- URL Info -->
-  <div class="space-y-4">
+  <!-- Background Gradient Overlay -->
+  <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5 dark:from-blue-500/10 dark:via-purple-500/10 dark:to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+  
+  <!-- Floating Decorative Elements -->
+  <div class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-400/10 to-indigo-600/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+  <!-- URL Info Section -->
+  <div class="relative z-10 space-y-6">
     <!-- Original URL -->
-    <div>
-      <div class="flex items-center gap-1">
-        <svg class="h-4 w-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Original URL</p>
+    <div class="space-y-3">
+      <div class="flex items-center gap-2">
+        <div class="p-2 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-lg">
+          <svg class="h-4 w-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+          </svg>
+        </div>
+        <p class="text-sm font-bold text-gray-700 dark:text-gray-300 tracking-wide">ORIGINAL URL</p>
       </div>
-      <p class="text-blue-600 dark:text-blue-400 break-words text-sm">{{ url.original_url }}</p>
+      <div class="bg-gradient-to-r from-gray-50/80 to-blue-50/80 dark:from-gray-800/80 dark:to-blue-900/20 rounded-2xl p-4 border border-gray-200/50 dark:border-gray-700/50">
+        <p class="text-blue-700 dark:text-blue-300 break-words text-sm leading-relaxed font-medium">{{ url.original_url }}</p>
+      </div>
     </div>
 
     <!-- Short URL -->
-    <div>
-      <div class="flex items-center gap-1">
-        <svg class="h-4 w-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13.828 10.172a4 4 0 010 5.656l-3.535 3.535a4 4 0 01-5.656-5.656l1.414-1.414"/></svg>
-        <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Short URL</p>
+    <div class="space-y-3">
+      <div class="flex items-center gap-2">
+        <div class="p-2 bg-gradient-to-r from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 rounded-lg">
+          <svg class="h-4 w-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 010 5.656l-3.535 3.535a4 4 0 01-5.656-5.656l1.414-1.414"/>
+          </svg>
+        </div>
+        <p class="text-sm font-bold text-gray-700 dark:text-gray-300 tracking-wide">SHORT URL</p>
       </div>
 
-      <div class="flex items-center justify-between gap-2 bg-gray-100 dark:bg-gray-800 px-4 py-2.5 rounded-xl mt-1 shadow-sm">
-        <a href="{{ request.scheme }}://{{ request.get_host }}/u/{{ url.short_url }}/"
-           class="text-emerald-600 dark:text-emerald-400 underline break-all text-sm"
-           target="_blank">
-          {{ request.scheme }}://{{ request.get_host }}/u/{{ url.short_url }}/
-        </a>
-        <button
-          onClick="copyUrl(this)"
-          class="text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white transition"
-          title="Copy"
-          data-url="{{ request.scheme }}://{{ request.get_host }}/u/{{ url.short_url }}/">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12h6m-6 4h6m-3-10h.01M17 6v12a2 2 0 01-2 2H9a2 2 0 01-2-2V6a2 2 0 012-2h2l2 2h2a2 2 0 012 2z" />
-          </svg>
-        </button>
+      <div class="group/url bg-gradient-to-r from-gray-100/80 to-emerald-50/80 dark:from-gray-800/80 dark:to-emerald-900/20 border border-gray-200/60 dark:border-gray-700/60 rounded-2xl p-4 hover:shadow-lg transition-all duration-300">
+        <div class="flex items-center justify-between gap-3">
+          <a href="{{ request.scheme }}://{{ request.get_host }}/u/{{ url.short_url }}/"
+             class="text-emerald-700 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-200 underline decoration-2 underline-offset-2 break-all text-sm font-semibold flex-1 transition-colors duration-200"
+             target="_blank">
+            {{ request.scheme }}://{{ request.get_host }}/u/{{ url.short_url }}/
+          </a>
+          <button
+            onClick="copyUrl(this)"
+            class="group/copy p-2.5 bg-white/80 dark:bg-gray-700/80 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-emerald-300 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105"
+            title="Copy to clipboard"
+            data-url="{{ request.scheme }}://{{ request.get_host }}/u/{{ url.short_url }}/">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover/copy:text-emerald-600 dark:group-hover/copy:text-emerald-400 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </button>
+        </div>
       </div>
-      <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Created on: {{ url.created_at|date:"M d, Y" }}</p>
+      
+      <div class="flex items-center gap-2 text-xs">
+        <div class="w-2 h-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></div>
+        <p class="text-gray-500 dark:text-gray-400 font-medium">Created {{ url.created_at|date:"M d, Y" }}</p>
+      </div>
     </div>
   </div>
 
-  <!-- Toast Message -->
-  <div id="toast" class="hidden opacity-0 translate-y-2 fixed bottom-6 right-6 z-50 px-4 py-2 rounded-lg shadow-lg text-sm transition duration-500 ease-in-out bg-gray-800 text-white"></div>
+  <!-- Enhanced Toast Message with better positioning -->
+  <div id="toast" class="hidden fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-2xl shadow-2xl text-sm font-semibold backdrop-blur-lg border transition-all duration-500 ease-out"></div>
 
-  <!-- QR Code -->
-  {% if url.qrcode %}
-    <div class="text-center mt-2">
-      <img src="{{ url.qrcode.url }}" alt="QR Code"
-           class="w-52 h-52 mx-auto rounded-xl border border-gray-300 dark:border-gray-700 shadow-md">
-    </div>
-  {% else %}
-    <div class="flex justify-center">
-      <form method="post" action="{% url 'u:generate_qr' %}">
-        {% csrf_token %}
-        <input type="hidden" name="id" value="{{ url.id }}">
-        <button type="submit"
-                class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 transition text-sm font-medium">
-          Generate QR Code
-        </button>
-      </form>
-    </div>
-  {% endif %}
+  <!-- QR Code Section -->
+  <div class="relative z-10">
+    {% if url.qrcode %}
+      <div class="text-center">
+        <div class="inline-block p-4 bg-white/90 dark:bg-gray-800/90 rounded-3xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-sm">
+          <img src="{{ url.qrcode.url }}" alt="QR Code"
+               class="w-48 h-48 mx-auto rounded-2xl shadow-md ring-2 ring-gray-200/50 dark:ring-gray-700/50">
+          <p class="mt-3 text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide">QR CODE</p>
+        </div>
+      </div>
+    {% else %}
+      <div class="flex justify-center">
+        <form method="post" action="{% url 'u:generate_qr' %}">
+          {% csrf_token %}
+          <input type="hidden" name="id" value="{{ url.id }}">
+          <button type="submit"
+                  class="group/qr inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 hover:from-indigo-200 hover:to-purple-200 dark:hover:from-indigo-800/50 dark:hover:to-purple-800/50 text-indigo-700 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-indigo-200 rounded-2xl border border-indigo-200/50 dark:border-indigo-700/50 hover:shadow-lg transition-all duration-300 font-semibold transform hover:scale-105">
+            <svg class="w-4 h-4 transition-transform duration-300 group-hover/qr:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+            </svg>
+            Generate QR Code
+          </button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
 
   <!-- Action Buttons -->
-  <div class="flex justify-end gap-4 border-t pt-4 border-gray-200 dark:border-gray-700">
+  <div class="relative z-10 flex justify-center gap-6 pt-6 border-t border-gray-200/60 dark:border-gray-700/60">
     <a href="{% url 'u:edit_url' url.id %}"
-       class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition"
-       title="Edit">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M11 4h2M5 20l7-7 7-7M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z" />
+       class="group/edit flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 hover:from-blue-200 hover:to-indigo-200 dark:hover:from-blue-800/50 dark:hover:to-indigo-800/50 rounded-2xl border border-blue-200/50 dark:border-blue-700/50 hover:shadow-lg transition-all duration-300 transform hover:scale-110"
+       title="Edit URL">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 dark:text-blue-400 transition-transform duration-300 group-hover/edit:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7m-5.5-9.5l-7 7V16h2l7-7m0 0l3-3a2 2 0 00-3-3l-3 3z" />
       </svg>
     </a>
 
     <form method="post" action="{% url 'u:delete_url' url.id %}" class="inline-block">
       {% csrf_token %}
       <button type="submit"
-              class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition"
-              title="Delete">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4m-4 0a1 1 0 00-1 1v1h6V4a1 1 0 00-1-1m-4 0h4" />
+              onclick="return confirm('Are you sure you want to delete this URL?')"
+              class="group/delete flex items-center justify-center w-12 h-12 bg-gradient-to-r from-red-100 to-pink-100 dark:from-red-900/30 dark:to-pink-900/30 hover:from-red-200 hover:to-pink-200 dark:hover:from-red-800/50 dark:hover:to-pink-800/50 rounded-2xl border border-red-200/50 dark:border-red-700/50 hover:shadow-lg transition-all duration-300 transform hover:scale-110"
+              title="Delete URL">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 dark:text-red-400 transition-transform duration-300 group-hover/delete:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1H9a1 1 0 00-1 1v3M4 7h16" />
         </svg>
       </button>
     </form>
@@ -93,7 +121,7 @@
   function copyUrl(button) {
     const url = button.getAttribute("data-url");
     navigator.clipboard.writeText(url).then(() => {
-      showToast("Copied to clipboard!");
+      showToast("Copied to clipboard!", false);
     }).catch(err => {
       console.error("Failed to copy: ", err);
       showToast("Failed to copy!", true);
@@ -103,20 +131,55 @@
   function showToast(message, isError = false) {
     const toast = document.getElementById("toast");
     toast.textContent = message;
-    toast.className = `fixed bottom-6 right-6 z-50 px-4 py-2 rounded-lg shadow-lg text-sm transition duration-500 ease-in-out ${
-      isError ? "bg-red-600 text-white" : "bg-gray-800 text-white"
-    }`;
+    
+    // Enhanced toast styling
+    const baseClasses = "fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-2xl shadow-2xl text-sm font-semibold backdrop-blur-lg border transition-all duration-500 ease-out";
+    const successClasses = "bg-emerald-500/90 text-white border-emerald-400/50 shadow-emerald-500/25";
+    const errorClasses = "bg-red-500/90 text-white border-red-400/50 shadow-red-500/25";
+    
+    toast.className = `${baseClasses} ${isError ? errorClasses : successClasses}`;
 
-    toast.classList.remove("hidden", "opacity-0", "translate-y-2");
-    toast.classList.add("opacity-100");
+    // Show animation
+    toast.classList.remove("hidden", "opacity-0", "translate-y-4", "scale-95");
+    toast.classList.add("opacity-100", "scale-100");
 
+    // Hide animation
     setTimeout(() => {
-      toast.classList.add("opacity-0", "translate-y-2");
-    }, 2000);
+      toast.classList.add("opacity-0", "translate-y-4", "scale-95");
+    }, 2500);
 
     setTimeout(() => {
       toast.classList.add("hidden");
-    }, 2500);
+    }, 3000);
   }
+
+  function confirmDelete() {
+    return confirm('Are you sure you want to delete this URL?\n\nThis action cannot be undone.');
+  }
+
+  // Add ripple effect to buttons
+  document.querySelectorAll('button, a').forEach(element => {
+    element.addEventListener('click', function(e) {
+      if (!this.classList.contains('group/copy') && !this.classList.contains('group/edit') && !this.classList.contains('group/delete')) return;
+      
+      const ripple = document.createElement('span');
+      const rect = this.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+      
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+      ripple.classList.add('absolute', 'bg-white/30', 'rounded-full', 'animate-ping', 'pointer-events-none');
+      
+      this.style.position = 'relative';
+      this.appendChild(ripple);
+      
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    });
+  });
 </script>
 {% endblock %}

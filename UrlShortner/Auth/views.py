@@ -15,7 +15,7 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token, password_reset_token
 from django.core.mail import EmailMessage
 from .models import Contact, UserProfile
-from .mail import send_contact_email
+from .mail import send_contact_email, send_verification_mail
 
 from django.views.generic import TemplateView
 from django.views import View
@@ -131,12 +131,10 @@ def signup(request):
         user.set_password(password)  # Hash the password
         user.is_active = False
         user.save()
+        send_verification_mail(user)
         messages.success(
             request, "User created successfully, please verify your email before login"
         )
-        """
-        email sending functionality handled by signals now
-        """
         return redirect("a:login")
     return render(request, "signup.html")
 

@@ -34,6 +34,9 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 SALT = config("SALT", cast=str)
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+LOGIN_URL = "a:login"
+LOGIN_REDIRECT_URL = "/u/"
+LOGOUT_REDIRECT_URL = "/"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,13 +47,14 @@ if DEBUG:
     PROTOCOL = "http"
     TAILWIND_APP_NAME = "theme"
     NPM_BIN_PATH = "C:\\Program Files\\nodejs\\npm.cmd"
+    ALLOWED_HOSTS = ["127.0.0.1"]
 else:
     SITE_DOMAIN = "url-ly.onrender.com"
     PROTOCOL = "https"
+    ALLOWED_HOSTS = [".onrender.com"]
 
 
 APPEND_SLASH = True
-ALLOWED_HOSTS = ["127.0.0.1", ".onrender.com"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -223,8 +227,9 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.associate_by_email",
     "social_core.pipeline.user.create_user",
     "Auth.pipelines.save_profile",
-    # "Auth.pipelines.save_profile_picture",   # custom step
+    # "Auth.pipelines.save_profile_picture",
     "social_core.pipeline.social_auth.associate_user",
     "social_core.pipeline.social_auth.load_extra_data",
     "social_core.pipeline.user.user_details",
+    "Auth.pipelines.activate_google_user",
 )
