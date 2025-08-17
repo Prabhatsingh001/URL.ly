@@ -8,5 +8,6 @@ urlpatterns = [
     path("delete/<int:id>/", views.delete_url, name="delete_url"),
     path("update_url/<int:id>/", views.update_url, name="edit_url"),
     path("<str:slug>/", views.redirect_url, name="redirect_url"),
-    # path("download_qr/<str:slug>/", views.download_qr, name="download_qr"),
+    path("download-qr/<int:id>/", views.download_qr, name="download_qr"),
+    # path("mail-qr/<int:id>/", views.mail_qr, name="mail_qr"),
 ]

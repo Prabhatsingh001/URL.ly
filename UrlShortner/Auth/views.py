@@ -1,4 +1,3 @@
-# from typing import Any
 from django.contrib import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import (
@@ -16,19 +15,56 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token, password_reset_token
 from django.core.mail import EmailMessage
 from .models import Contact, UserProfile
-from .mail import send_contact_email
+from .mail import send_contact_email, send_verification_mail
 
 from django.views.generic import TemplateView
 from django.views import View
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+# import json
+# import os
+# from datetime import datetime
 
 
 # Create your views here.
 CusUser = get_user_model()
 
 
+# def debug_request(request):
+#     data = {
+#         "method": request.method,
+#         "path": request.path,
+#         "full_path": request.get_full_path(),
+#         "scheme": request.scheme,
+#         "encoding": request.encoding,
+#         "content_type": request.content_type,
+#         "user_agent": request.META.get("HTTP_USER_AGENT"),
+#         "client_ip": request.META.get("REMOTE_ADDR"),
+#         "query_params": dict(request.GET),
+#         "post_data": dict(request.POST),
+#         "cookies": request.COOKIES,
+#         "session": dict(request.session.items()) if hasattr(request, "session") else {},
+#         "meta": {
+#             k: str(v) for k, v in request.META.items()
+#         },  # serialize all META safely
+#         "timestamp": datetime.now().isoformat(),
+#     }
+
+#     # File path (logs/debug_requests.json)
+#     log_dir = os.path.join(os.getcwd(), "logs")
+#     os.makedirs(log_dir, exist_ok=True)
+#     file_path = os.path.join(log_dir, "debug_requests.json")
+
+#     # Append to file
+#     with open(file_path, "a", encoding="utf-8") as f:
+#         json.dump(data, f, indent=4)
+#         f.write("\n\n")  # separate requests
+
+
 class IndexView(View):
     def get(self, request):
+        # debug_request(request)
         if request.user.is_authenticated:
             return redirect("u:home")
         return render(request, "index.html")
@@ -64,27 +100,28 @@ def signup(request):
             messages.error(request, "email already exists")
             return redirect("a:signup")
 
-        if CusUser.objects.filter(username=username).exists():
-            messages.error(request, "username already exists")
-            return redirect("a:signup")
+        # if CusUser.objects.filter(username=username).exists():
+        #     messages.error(request, "username already exists")
+        #     return redirect("a:signup")
 
         if password != password2:
             messages.error(request, "passwords do not match")
             return redirect("a:signup")
-        if len(password) < 8:
-            messages.error(request, "password must be at least 8 characters")
+
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            for error in e.messages:
+                messages.error(request, error)
             return redirect("a:signup")
 
-        if len(username) < 4:
-            messages.error(request, "username must be at least 4 characters")
-            return redirect("a:signup")
+        # if len(username) < 4:
+        #     messages.error(request, "username must be at least 4 characters")
+        #     return redirect("a:signup")
 
-        if len(username) > 20:
-            messages.error(request, "username must be at most 20 characters")
-            return redirect("a:signup")
-        if len(password) > 20:
-            messages.error(request, "password must be at most 20 characters")
-            return redirect("a:signup")
+        # if len(username) > 20:
+        #     messages.error(request, "username must be at most 20 characters")
+        #     return redirect("a:signup")
 
         user = CusUser.objects.create_user(
             username=username,
@@ -94,12 +131,10 @@ def signup(request):
         user.set_password(password)  # Hash the password
         user.is_active = False
         user.save()
+        send_verification_mail(user)
         messages.success(
             request, "User created successfully, please verify your email before login"
         )
-        """
-        email sending functionality handled by signals now
-        """
         return redirect("a:login")
     return render(request, "signup.html")
 
@@ -331,21 +366,3 @@ def reset_password(request, uidb64, token):
     else:
         messages.error(request, "Password reset link is invalid or has expired")
         return redirect("a:login")
-
-
-"""
-detailview
--> used to create details of anything
--> cannot be paginated
-->fetches one object using primary key or slug
-
-"""
-
-
-# class indexview(TemplateView):
-#     template_name = "index.html"
-
-#     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-#         context = super().get_context_data(**kwargs)
-#         context["books"] = books.objects.all()
-#         return context

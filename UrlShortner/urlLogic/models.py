@@ -16,6 +16,7 @@ BLACKLISTED_DOMAINS = [
 
 def validate_url_format_and_blacklist(value):
     parsed_url = urlparse(value)
+    print(parsed_url)
 
     if not parsed_url.scheme or not parsed_url.netloc:
         raise ValidationError("Invalid URL format.")

@@ -35,6 +35,7 @@ handler404 = "urlLogic.views.F404_page"
 
 urlpatterns = [
     path("admin/", admin.site.urls, name="admin"),
+    path("auth/", include("social_django.urls", namespace="social")),
     path("", IndexView.as_view(), name="index"),
     path("a/", include(("Auth.urls", "Auth"), namespace="a")),
     path("u/", include(("urlLogic.urls", "urlLogic"), namespace="u")),

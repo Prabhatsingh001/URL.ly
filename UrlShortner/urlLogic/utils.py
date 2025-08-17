@@ -5,34 +5,14 @@ from PIL import Image
 import os
 from django.conf import settings
 from hashids import Hashids
-
-BASE62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+from django.http import FileResponse
+# from django.core.mail import EmailMultiAlternatives
+# from email.mime.image import MIMEImage
 
 hashid = Hashids(min_length=4, salt=settings.SALT)
 
 
 class SlugGenerator:
-    # def uuid_to_number(self, id):
-    #     # f6f4d690-fd2d-445b-bf9d-14f1726f6ccc
-    #     return id.int
-
-    # def encode_url(self, id):
-    #     id = self.uuid_to_number(id)
-    #     if id == 0:
-    #         return BASE62[0]
-    #     result = ""
-    #     while id > 0:
-    #         result = (BASE62[id % 62]) + result
-    #         id //= 62
-
-    #     return result
-
-    # def decode_url(self, slug: str):
-    #     id = 0
-    #     for char in slug:
-    #         id = id * 62 + BASE62.index(char)
-    #     return uuid.UUID(int=id)
-
     def encode_url(self, id):
         return hashid.encode(id)
 
@@ -53,12 +33,11 @@ class QrCode:
             border=4,
         )
 
-        full_url = f"{self.request.scheme}://{self.request.get_host()}/url/{self.url_instance.short_url}"
+        full_url = f"{self.request.scheme}://{self.request.get_host()}/url/{self.url_instance.short_url}/"
         qr.add_data(full_url)
         qr.make(fit=True)
 
         img = qr.make_image(fill_color="black", back_color="white").convert("RGB")  # type: ignore
-        # logo_path = os.path.join(settings.STATIC_ROOT, "logo.png")
         logo_path = os.path.join(settings.BASE_DIR, "static", "logo.png")
         try:
             logo = Image.open(logo_path)
@@ -83,14 +62,59 @@ class QrCode:
         filename = f"{self.url_instance.short_url}_qr.png"
         self.url_instance.qrcode.save(filename, File(buffer), save=True)
 
-    def download_qr_code(self, qr_code):
+    # def generate_qr_code_bytes(self):
+    #     qr = qrcode.QRCode(
+    #         version=1,
+    #         error_correction=qrcode.ERROR_CORRECT_H,
+    #         box_size=10,
+    #         border=4,
+    #     )
+    #     full_url = f"{self.request.scheme}://{self.request.get_host()}/url/{self.url_instance.short_url}/"
+    #     qr.add_data(full_url)
+    #     qr.make(fit=True)
+
+    #     img = qr.make_image(fill_color="black", back_color="white").convert("RGB")
+
+    #     buffer = BytesIO()
+    #     img.save(buffer, format="PNG")
+    #     return buffer.getvalue()
+
+    def download_qr_code(self):
+        """
+        Return a FileResponse for downloading the QR code
+        """
+        if not self.url_instance.qrcode:
+            self.generate_qr_code()
+
+        qr_path = self.url_instance.qrcode.path
+        filename = os.path.basename(qr_path)
+
+        return FileResponse(open(qr_path, "rb"), as_attachment=True, filename=filename)
+
+    def mail_qr_code(self):
+        """
+        mails the qr code to your inbox
+        """
         pass
 
-    def get_qr_code(self):
-        pass
 
-    def delete_qr_code(self):
-        pass
+# def send_qr_mail(user, qr_bytes, short_url):
+#     subject = "Your QR Code"
+#     text_content = f"Hello {user.username}, your QR code is attached."
+#     html_content = f"""
+#         <p>Hello {user.username},</p>
+#         <p>Here’s your QR code for the link: <b>{short_url}</b></p>
+#         <img src="cid:qr_image" />
+#     """
+
+#     email = EmailMultiAlternatives(subject, text_content, to=[user.email])
+#     email.attach_alternative(html_content, "text/html")
+
+#     qr_img = MIMEImage(qr_bytes, "png")
+#     qr_img.add_header("Content-ID", "<qr_image>")
+#     email.attach(qr_img)
+
+#     email.send()
 
 
 def get_client_ip(request):
