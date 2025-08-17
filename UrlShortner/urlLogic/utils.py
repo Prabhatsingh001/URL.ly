@@ -33,7 +33,7 @@ class QrCode:
             border=4,
         )
 
-        full_url = f"{self.request.scheme}://{self.request.get_host()}/url/{self.url_instance.short_url}/"
+        full_url = f"{self.request.scheme}://{self.request.get_host()}/u/{self.url_instance.short_url}/"
         qr.add_data(full_url)
         qr.make(fit=True)
 
