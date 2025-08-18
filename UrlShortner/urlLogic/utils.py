@@ -6,6 +6,7 @@ from django.conf import settings
 from hashids import Hashids
 from django.http import FileResponse
 from django.core.files.base import ContentFile
+import requests
 # from django.core.mail import EmailMultiAlternatives
 # from email.mime.image import MIMEImage
 
@@ -83,16 +84,24 @@ class QrCode:
     #     return buffer.getvalue()
 
     def download_qr_code(self):
-        """
-        Return a FileResponse for downloading the QR code
-        """
         if not self.url_instance.qrcode:
             self.generate_qr_code()
 
-        qr_path = self.url_instance.qrcode.path
-        filename = os.path.basename(qr_path)
+        qr_url = self.url_instance.qrcode.url
+        response = requests.get(qr_url, stream=True)
+        response.raise_for_status()
 
-        return FileResponse(open(qr_path, "rb"), as_attachment=True, filename=filename)
+        # get filename from cloudinary path, default to .png
+        filename = os.path.basename(self.url_instance.qrcode.name)
+        if not filename.lower().endswith((".png", ".jpg", ".jpeg")):
+            filename += ".png"
+
+        return FileResponse(
+            BytesIO(response.content),
+            as_attachment=True,
+            filename=filename,
+            content_type="image/png",
+        )
 
     def mail_qr_code(self):
         """
