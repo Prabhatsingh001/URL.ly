@@ -62,14 +62,14 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "cloudinary",
+    "cloudinary_storage",
     "django.contrib.staticfiles",
     "social_django",
     "Auth",
     "urlLogic",
     "Biolink",
     "Brandlink",
-    "cloudinary",
-    "cloudinary_storage",
 ]
 
 if DEBUG:

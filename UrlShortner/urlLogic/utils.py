@@ -1,11 +1,11 @@
 import qrcode
-from io import BytesIO
-from django.core.files import File
-from PIL import Image
 import os
+from io import BytesIO
+from PIL import Image
 from django.conf import settings
 from hashids import Hashids
 from django.http import FileResponse
+from django.core.files.base import ContentFile
 # from django.core.mail import EmailMultiAlternatives
 # from email.mime.image import MIMEImage
 
@@ -38,6 +38,8 @@ class QrCode:
         qr.make(fit=True)
 
         img = qr.make_image(fill_color="black", back_color="white").convert("RGB")  # type: ignore
+
+        # Add logo in center
         logo_path = os.path.join(settings.BASE_DIR, "static", "logo.png")
         try:
             logo = Image.open(logo_path)
@@ -57,10 +59,11 @@ class QrCode:
 
         buffer = BytesIO()
         img.save(buffer, format="PNG")
-        buffer.seek(0)
 
         filename = f"{self.url_instance.short_url}_qr.png"
-        self.url_instance.qrcode.save(filename, File(buffer), save=True)
+        self.url_instance.qrcode.save(
+            filename, ContentFile(buffer.getvalue()), save=True
+        )
 
     # def generate_qr_code_bytes(self):
     #     qr = qrcode.QRCode(
