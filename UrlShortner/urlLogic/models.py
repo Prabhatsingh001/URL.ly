@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from urllib.parse import urlparse
+from cloudinary_storage.storage import MediaCloudinaryStorage
 # Create your models here.
 
 User = get_user_model()
@@ -34,7 +35,9 @@ class UrlModel(models.Model):
         unique=True, validators=[validate_url_format_and_blacklist]
     )
     short_url = models.CharField(max_length=10, unique=True, null=True, blank=True)
-    qrcode = models.ImageField(upload_to="qr_code/", null=True, blank=True)
+    qrcode = models.ImageField(
+        upload_to="qr_code/", null=True, blank=True, storage=MediaCloudinaryStorage()
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField(null=True, blank=True)
     click_count = models.PositiveIntegerField(default=0)
