@@ -5,6 +5,7 @@ import uuid
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import BaseUserManager
 from phonenumber_field.modelfields import PhoneNumberField
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 # Create your models here.
 
@@ -79,6 +80,7 @@ class UserProfile(models.Model):
         blank=True,
         editable=True,
         validators=[validate_file_size],
+        storage=MediaCloudinaryStorage(),
     )
     gender = models.CharField(
         choices=GENDER_CHOICES, max_length=6, null=True, blank=True, editable=True

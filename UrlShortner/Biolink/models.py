@@ -3,6 +3,7 @@ import uuid
 from django.conf import settings
 from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 User = settings.AUTH_USER_MODEL
 # Create your models here.
@@ -37,6 +38,7 @@ class BioLinkProfile(models.Model):
         validators=[
             FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png", "gif"])
         ],
+        storage=MediaCloudinaryStorage(),
     )
     public_slug = models.SlugField(max_length=50, unique=True, blank=True)
     public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
