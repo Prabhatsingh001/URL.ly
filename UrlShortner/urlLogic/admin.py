@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UrlModel
+from .models import UrlModel, UrlVisit
 
 # Register your models here.
 admin.site.site_header = "URL Shortener Admin"
@@ -21,3 +21,4 @@ class UrlModelAdmin(admin.ModelAdmin):
 
 
 admin.site.register(UrlModel, UrlModelAdmin)
+admin.site.register(UrlVisit)
