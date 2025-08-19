@@ -9,21 +9,6 @@ User = settings.AUTH_USER_MODEL
 # Create your models here.
 
 
-class Link(models.Model):
-    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="links")
-    title = models.CharField(max_length=255)
-    url = models.URLField()
-    is_public = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["-created_at"]
-
-    def __str__(self):
-        return f"{self.title} --> {self.user.username}"
-
-
 class BioLinkProfile(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     user = models.OneToOneField(
@@ -67,3 +52,23 @@ class BioLinkProfile(models.Model):
             self.public_slug = unique
 
         super().save(*args, **kwargs)
+
+
+class Link(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="links")
+    profile = models.ForeignKey(
+        BioLinkProfile,
+        on_delete=models.CASCADE,
+        related_name="profile",
+    )
+    title = models.CharField(max_length=255)
+    url = models.URLField()
+    is_public = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.title} --> {self.user.username}"

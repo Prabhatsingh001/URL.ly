@@ -55,7 +55,9 @@ def Deletelink(request, id):
 @login_required
 def editprofile(request):
     profile = get_object_or_404(Profile, user=request.user)
-
+    if not profile:
+        profile = Profile.objects.create(user=request.user)
+        profile.save()
     if request.method == "POST":
         name = request.POST.get("display_name")
         bio = request.POST.get("bio")

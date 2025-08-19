@@ -3,7 +3,7 @@ import os
 from decouple import config
 
 
-DEBUG = False
+DEBUG = config("DEBUG", cast=bool, default=False)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
