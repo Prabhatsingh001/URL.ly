@@ -4,7 +4,7 @@
 {% block profile_content %}
   <div class="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-lg space-y-6">
     <div class="flex flex-wrap mt-2 md:mt-0 items-center space-x-6 bg-gray-100 p-6 rounded-lg transition-all duration-300 hover:shadow-md">
-      <div class="relative group">
+      <div class="relative group mx-auto sm:mx-0 sm:p-4">
         {% if profile.profile_image %}
           <img src="{{ profile.profile_image.url }}" alt="Profile Avatar"
                class="w-24 h-24 rounded-full object-cover border-2 border-gray-200 shadow-md group-hover:scale-110 transition-transform duration-300">
@@ -13,7 +13,7 @@
                class="w-24 h-24 rounded-full object-cover border-2 border-gray-200 shadow-md group-hover:scale-110 transition-transform duration-300">
         {% endif %}
       </div>
-      <div>
+      <div class="mx-auto mt-2 sm:mx-0 sm:mt-0">
         <h2 class="text-sm md:text-xl lg:text-2xl font-semibold text-gray-900 italic">{{ user_obj.email }}</h2>
         <p class="text-gray-500 text-sm italic">@{{ user_obj.username }}</p>
       </div>

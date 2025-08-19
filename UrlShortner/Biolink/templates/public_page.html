@@ -39,8 +39,8 @@
               <!-- Animated border -->
               <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-full opacity-75 blur-sm animate-spin" style="animation-duration: 3s;"></div>
               
-              {% if user.biolinkprofile.profile_image %}
-                <img src="{{ user.biolinkprofile.profile_image.url }}"
+              {% if owner.biolinkprofile.profile_image %}
+                <img src="{{ owner.biolinkprofile.profile_image.url }}"
                   alt="{{ owner.username }}"
                   class="relative w-full h-full rounded-full shadow-2xl object-cover border-2 border-white/20 bg-white">
               {% else %}

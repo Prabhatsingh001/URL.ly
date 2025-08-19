@@ -14,7 +14,16 @@ User = get_user_model()
 
 @login_required
 def my_biolink_page(request):
-    return redirect("biolinkpage", id=request.user.id)
+    try:
+        id = request.user.id
+        return redirect("biolinkpage", id=id)
+    except AttributeError as e:
+        print(f"Error: {e}")
+        messages.error(request, "User not found or not logged in.")
+        return redirect("create_biolink")
+    except Exception as e:
+        print(f"Error: {e}")
+        return redirect("u:home")
 
 
 @login_required()

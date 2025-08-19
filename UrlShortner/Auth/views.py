@@ -128,7 +128,7 @@ def signup(request):
             email=email,
             password=password,
         )
-        user.set_password(password)  # Hash the password
+        user.set_password(password)
         user.is_active = False
         user.save()
         send_verification_mail(user)
@@ -199,10 +199,11 @@ def logout(request):
 
 def login(request):
     if request.user.is_authenticated:
-        return redirect("url:home")
+        return redirect("u:home")
     elif request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
+        next_url = request.POST.get("next") or request.GET.get("next")
 
         if not email or not password:
             messages.error(request, "Email and password are required.")
@@ -221,13 +222,17 @@ def login(request):
         user = authenticate(request, username=email, password=password)
         if user:
             auth_login(request, user)
-            messages.success(request, "Login successful.")
-            return redirect("u:home")
+            messages.success(request, "Logged in successfully.")
+            if next_url and next_url != "/":
+                return redirect(next_url)
+            else:
+                return redirect("u:home")
         else:
             messages.error(request, "Invalid credentials.")
             return redirect("a:login")
-
-    return render(request, "login.html")
+    next_url = request.GET.get("next", "")
+    context = {"next": next_url}
+    return render(request, "login.html", context)
 
 
 @login_required()
