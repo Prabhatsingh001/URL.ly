@@ -56,11 +56,10 @@ class BioLinkProfile(models.Model):
 
 class Link(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="links")
     profile = models.ForeignKey(
         BioLinkProfile,
         on_delete=models.CASCADE,
-        related_name="profile",
+        related_name="links",
     )
     title = models.CharField(max_length=255)
     url = models.URLField()
@@ -71,4 +70,4 @@ class Link(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"{self.title} --> {self.user.username}"
+        return f"{self.title} --> {self.profile.user.username}"
