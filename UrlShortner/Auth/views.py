@@ -7,15 +7,17 @@ from django.contrib.auth import (
     get_user_model,
 )
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
 from .tokens import account_activation_token, password_reset_token
-from django.core.mail import EmailMessage
 from .models import Contact, UserProfile
-from .mail import send_contact_email, send_verification_mail
+from .mail import (
+    send_contact_email,
+    send_verification_mail,
+    send_reset_password_email,
+    password_reset_success_email,
+)
 
 from django.views.generic import TemplateView
 from django.views import View
@@ -100,10 +102,6 @@ def signup(request):
             messages.error(request, "email already exists")
             return redirect("a:signup")
 
-        # if CusUser.objects.filter(username=username).exists():
-        #     messages.error(request, "username already exists")
-        #     return redirect("a:signup")
-
         if password != password2:
             messages.error(request, "passwords do not match")
             return redirect("a:signup")
@@ -114,14 +112,6 @@ def signup(request):
             for error in e.messages:
                 messages.error(request, error)
             return redirect("a:signup")
-
-        # if len(username) < 4:
-        #     messages.error(request, "username must be at least 4 characters")
-        #     return redirect("a:signup")
-
-        # if len(username) > 20:
-        #     messages.error(request, "username must be at most 20 characters")
-        #     return redirect("a:signup")
 
         user = CusUser.objects.create_user(
             username=username,
@@ -135,43 +125,23 @@ def signup(request):
         messages.success(
             request, "User created successfully, please verify your email before login"
         )
-        return redirect("a:login")
+        return redirect("a:resend-verification-email", email=email)
     return render(request, "signup.html")
 
 
-def resend_verification_email(request):
+def resend_verification_email(request, email=None):
     if request.method == "POST":
         email = request.POST.get("email")
         user = get_object_or_404(CusUser, email=email)
 
         if user.is_active:
-            messages.success(request, "user is already verified!!!")
+            messages.success(request, "User is already verified!")
             return redirect("a:login")
 
-        current_site = get_current_site(request).domain
-        protocol = "https" if request.is_secure() else "http"
-        email_subject = "Email Verification"
-        message2 = render_to_string(
-            "emails/email_verification.html",
-            {
-                "user": user,
-                "domain": current_site,
-                "protocol": protocol,
-                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                "token": account_activation_token.make_token(user),
-            },
-        )
-
-        email = EmailMessage(
-            email_subject,
-            message2,
-            settings.EMAIL_HOST_USER,
-            [user.email],
-        )
-        email.send(fail_silently=True)
-
-        return redirect("a:login")
-    return render(request, "login.html")
+        send_verification_mail(user)
+        messages.success(request, "Verification email has been resent!")
+        return redirect("a:resend-verification-email", email=email)
+    return render(request, "resend_verification_email.html", {"email": email})
 
 
 def activate(request, uidb64, token):
@@ -302,6 +272,8 @@ def update_password(request, id):
         user.save()
 
         update_session_auth_hash(request, user)
+        # send success email
+        password_reset_success_email(user)
         messages.success(request, "Password reset successfully")
 
         return redirect("a:profile", id=id)
@@ -320,25 +292,8 @@ def forgot_password(request):
             user = CusUser.objects.get(email=email)
             protocol = "https" if request.is_secure() else "http"
             current_site = get_current_site(request)
-            email_subject = "reset password"
-            message2 = render_to_string(
-                "emails/reset_password_email.html",
-                {
-                    "user": user,
-                    "protocol": protocol,
-                    "domain": current_site.domain,
-                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    "token": password_reset_token.make_token(user),
-                },
-            )
 
-            email = EmailMessage(
-                email_subject,
-                message2,
-                settings.EMAIL_HOST_USER,
-                [user.email],
-            )
-            email.send(fail_silently=True)
+            send_reset_password_email(user, protocol, current_site)
             messages.success(request, "Password reset email sent successfully")
             return redirect("a:login")
         except CusUser.DoesNotExist:
@@ -365,6 +320,7 @@ def reset_password(request, uidb64, token):
 
             user.set_password(new_password)
             user.save()
+            password_reset_success_email(user)
             messages.success(request, "Password reset successfully")
             return redirect("a:login")
         return render(request, "reset_password.html", {"user": user})

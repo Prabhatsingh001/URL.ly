@@ -52,12 +52,12 @@ INSTALLED_APPS = [
     "urlLogic",
     "Biolink",
     "Brandlink",
+    "tailwind",
+    "theme",
 ]
 
 if DEBUG:
     INSTALLED_APPS += [
-        "tailwind",
-        "theme",
         "django_browser_reload",
         "django_extensions",
     ]

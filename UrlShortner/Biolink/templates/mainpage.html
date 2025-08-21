@@ -340,7 +340,7 @@
             {% else %}
                 <!-- Generate Link Button -->
                 <div class="text-center mt-8">
-                    <form action="{% url 'enable_public_link' %}" method="post">
+                    <form action="{% url 'enablepubliclink' %}" method="post">
                         {% csrf_token %}
                         <button type="submit"
                                 class="btn-primary px-8 py-4 rounded-2xl font-semibold text-white shadow-2xl transform hover:scale-105 transition-all duration-300">

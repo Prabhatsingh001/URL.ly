@@ -5,6 +5,7 @@ from .models import BioLinkProfile as Profile, Link
 from django.utils.text import slugify
 from django.contrib import messages
 from django.http import Http404
+from django.db import transaction
 
 
 User = get_user_model()
@@ -52,30 +53,65 @@ def Deletelink(request, id):
     return redirect("biolinkpage", id=request.user.id)
 
 
+def safe_get_or_create_profile(user):
+    try:
+        profile = Profile.objects.get(user=user)
+        created = False
+    except Profile.DoesNotExist:
+        profile = Profile(user=user)
+        profile.display_name = user.username
+        base_slug = slugify(user.username)
+        counter = 1
+        unique_slug = base_slug
+        while Profile.objects.filter(public_slug=unique_slug).exists():
+            unique_slug = f"{base_slug}-{counter}"
+            counter += 1
+
+        profile.public_slug = unique_slug
+        profile.save()
+        created = True
+
+    return profile, created
+
+
 @login_required
+@transaction.atomic
 def editprofile(request):
-    profile = get_object_or_404(Profile, user=request.user)
-    if not profile:
-        profile = Profile.objects.create(user=request.user)
+    profile, created = safe_get_or_create_profile(user=request.user)
+    if created:
+        profile.display_name = request.user.username
+        profile.public_slug = slugify(request.user.username)
         profile.save()
     if request.method == "POST":
-        name = request.POST.get("display_name")
-        bio = request.POST.get("bio")
+        name = request.POST.get("display_name", "").strip()
+        bio = request.POST.get("bio", "").strip()
         profile_image = request.FILES.get("profile_image")
 
+        changes_made = False
         if name and name != profile.display_name:
             profile.display_name = name
             profile.public_slug = ""
+            changes_made = True
 
-        if bio and bio != profile.bio:
+        if bio != profile.bio:
             profile.bio = bio
+            changes_made = True
 
         if profile_image:
+            if profile.profile_image:
+                profile.profile_image.delete(save=False)
             profile.profile_image = profile_image
+            changes_made = True
 
-        profile.save()
+        if changes_made:
+            try:
+                profile.save()
+                messages.success(request, "Profile updated successfully!")
+            except Exception as e:
+                messages.error(request, f"Error updating profile: {str(e)}")
+        else:
+            messages.info(request, "No changes were made to your profile.")
         return redirect("biolinkpage", id=request.user.id)
-
     return render(request, "mainpage.html")
 
 
