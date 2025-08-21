@@ -5,8 +5,8 @@ from .models import Link, BioLinkProfile
 
 @admin.register(Link)
 class LinkAdmin(admin.ModelAdmin):
-    list_display = ("title", "url", "user")
-    list_filter = ("user",)
+    list_display = ("title", "url", "profile", "created_at")
+    list_filter = ("profile",)
     search_fields = ("title", "url")
 
 
