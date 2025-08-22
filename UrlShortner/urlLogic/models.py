@@ -3,13 +3,12 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from urllib.parse import urlparse
 from cloudinary_storage.storage import MediaCloudinaryStorage
-# Create your models here.
 
 User = get_user_model()
 
 # Optional: list of disallowed domains (e.g., your own app domain to prevent recursive short URLs)
 BLACKLISTED_DOMAINS = [
-    "yourdomain.com",
+    "url-ly.onrender.com",
     "localhost",
     "127.0.0.1",
 ]

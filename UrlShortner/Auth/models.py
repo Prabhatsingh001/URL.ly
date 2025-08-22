@@ -7,8 +7,6 @@ from django.contrib.auth.models import BaseUserManager
 from phonenumber_field.modelfields import PhoneNumberField
 from cloudinary_storage.storage import MediaCloudinaryStorage
 
-# Create your models here.
-
 
 def validate_file_size(value):
     limit = 2 * 1024 * 1024  # 2 MB

@@ -24,49 +24,12 @@ from django.views import View
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-# import json
-# import os
-# from datetime import datetime
 
-
-# Create your views here.
 CusUser = get_user_model()
-
-
-# def debug_request(request):
-#     data = {
-#         "method": request.method,
-#         "path": request.path,
-#         "full_path": request.get_full_path(),
-#         "scheme": request.scheme,
-#         "encoding": request.encoding,
-#         "content_type": request.content_type,
-#         "user_agent": request.META.get("HTTP_USER_AGENT"),
-#         "client_ip": request.META.get("REMOTE_ADDR"),
-#         "query_params": dict(request.GET),
-#         "post_data": dict(request.POST),
-#         "cookies": request.COOKIES,
-#         "session": dict(request.session.items()) if hasattr(request, "session") else {},
-#         "meta": {
-#             k: str(v) for k, v in request.META.items()
-#         },  # serialize all META safely
-#         "timestamp": datetime.now().isoformat(),
-#     }
-
-#     # File path (logs/debug_requests.json)
-#     log_dir = os.path.join(os.getcwd(), "logs")
-#     os.makedirs(log_dir, exist_ok=True)
-#     file_path = os.path.join(log_dir, "debug_requests.json")
-
-#     # Append to file
-#     with open(file_path, "a", encoding="utf-8") as f:
-#         json.dump(data, f, indent=4)
-#         f.write("\n\n")  # separate requests
 
 
 class IndexView(View):
     def get(self, request):
-        # debug_request(request)
         if request.user.is_authenticated:
             return redirect("u:home")
         return render(request, "index.html")
@@ -161,12 +124,6 @@ def activate(request, uidb64, token):
         return redirect("a:login")
 
 
-def logout(request):
-    auth_logout(request)
-    messages.success(request, "Logged out successfully.")
-    return redirect("index")
-
-
 def login(request):
     if request.user.is_authenticated:
         return redirect("u:home")
@@ -203,6 +160,61 @@ def login(request):
     next_url = request.GET.get("next", "")
     context = {"next": next_url}
     return render(request, "login.html", context)
+
+
+def logout(request):
+    auth_logout(request)
+    messages.success(request, "Logged out successfully.")
+    return redirect("index")
+
+
+def forgot_password(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+
+        if not email:
+            messages.error(request, "email is required to reset password")
+
+        try:
+            user = CusUser.objects.get(email=email)
+            protocol = "https" if request.is_secure() else "http"
+            current_site = get_current_site(request)
+
+            send_reset_password_email(user, protocol, current_site)
+
+            messages.success(request, "Password reset email sent successfully")
+            return redirect("a:login")
+        except CusUser.DoesNotExist:
+            messages.error(request, "User with this email does not exist")
+            return redirect("a:forgot_password")
+    return render(request, "forgot_password.html")
+
+
+def reset_password(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = CusUser.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, CusUser.DoesNotExist):
+        user = None
+
+    if user is not None and password_reset_token.check_token(user, token):
+        if request.method == "POST":
+            new_password = request.POST.get("password")
+            confirm_password = request.POST.get("confirm-password")
+
+            if new_password != confirm_password:
+                messages.error(request, "Passwords do not match")
+                return redirect("a:reset_password", uidb64=uidb64, token=token)
+
+            user.set_password(new_password)
+            user.save()
+            password_reset_success_email(user)
+            messages.success(request, "Password reset successfully")
+            return redirect("a:login")
+        return render(request, "reset_password.html", {"user": user})
+    else:
+        messages.error(request, "Password reset link is invalid or has expired")
+        return redirect("a:login")
 
 
 @login_required()
@@ -279,51 +291,3 @@ def update_password(request, id):
         return redirect("a:profile", id=id)
 
     return render(request, "profile_update_password.html", context)
-
-
-def forgot_password(request):
-    if request.method == "POST":
-        email = request.POST.get("email")
-
-        if not email:
-            messages.error(request, "email is required to reset password")
-
-        try:
-            user = CusUser.objects.get(email=email)
-            protocol = "https" if request.is_secure() else "http"
-            current_site = get_current_site(request)
-
-            send_reset_password_email(user, protocol, current_site)
-            messages.success(request, "Password reset email sent successfully")
-            return redirect("a:login")
-        except CusUser.DoesNotExist:
-            messages.error(request, "User with this email does not exist")
-            return redirect("a:forgot_password")
-    return render(request, "forgot_password.html")
-
-
-def reset_password(request, uidb64, token):
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = CusUser.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, CusUser.DoesNotExist):
-        user = None
-
-    if user is not None and password_reset_token.check_token(user, token):
-        if request.method == "POST":
-            new_password = request.POST.get("password")
-            confirm_password = request.POST.get("confirm-password")
-
-            if new_password != confirm_password:
-                messages.error(request, "Passwords do not match")
-                return redirect("a:reset_password", uidb64=uidb64, token=token)
-
-            user.set_password(new_password)
-            user.save()
-            password_reset_success_email(user)
-            messages.success(request, "Password reset successfully")
-            return redirect("a:login")
-        return render(request, "reset_password.html", {"user": user})
-    else:
-        messages.error(request, "Password reset link is invalid or has expired")
-        return redirect("a:login")
