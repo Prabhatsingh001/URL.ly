@@ -23,7 +23,6 @@ def F404_page(request, excetipon):
     return render(request, "404_notF.html", status=404)
 
 
-# Create your views here.
 @login_required()
 def home(request):
     """
@@ -47,12 +46,10 @@ def make_short_url(request):
         if not long_url.startswith(("http://", "https://")):
             long_url = "http://" + long_url
 
-        # Check if this URL was already shortened by this user
         if UrlModel.objects.filter(original_url=long_url, user=request.user).exists():
             messages.error(request, "This URL has already been shortened.")
             return render(request, "url_shortner.html")
 
-        # Check if custom short URL is already taken
         if short_url and UrlModel.objects.filter(short_url=short_url).exists():
             messages.error(request, "This short URL already exists. Try another name.")
             return render(request, "url_shortner.html")
@@ -95,10 +92,9 @@ def redirect_url(request, slug):
     url.click_count += 1
     url.save()
     ua_string = request.META.get("HTTP_USER_AGENT", "")
-    ip = get_client_ip(request)  # Defined below
+    ip = get_client_ip(request)
     ua = user_agents.parse(ua_string)
 
-    # Create a new visit entry
     UrlVisit.objects.create(
         url=url,
         timestamp=now(),
@@ -136,7 +132,6 @@ def update_url(request, id):
             url.original_url = long_url
 
         if expiry_time:
-            # Convert input datetime-local to Python datetime
             from datetime import datetime
             from django.utils import timezone
 
@@ -144,8 +139,7 @@ def update_url(request, id):
                 expiry_dt = datetime.strptime(expiry_time, "%Y-%m-%dT%H:%M")
                 url.expires_at = timezone.make_aware(expiry_dt)
             except ValueError:
-                pass  # optionally handle invalid input
-
+                pass
         url.save()
         return redirect("u:home")
 
@@ -185,28 +179,3 @@ def download_qr(request, id):
     url = get_object_or_404(UrlModel, id=id, user=request.user)
     urlservice = QrCode(url, request)
     return urlservice.download_qr_code()
-
-
-# @login_required
-# def mail_qr(request, id):
-#     url = get_object_or_404(UrlModel, id=id, user=request.user)
-#     qrservice = QrCode(url, request)
-#     qr_bytes = qrservice.generate_qr_code_bytes()
-
-#     send_qr_mail(request.user, qr_bytes, url.short_url)
-#     # OR send_qr_inline(request.user, qr_bytes, url.short_url)
-
-#     messages.success(request, "QR Code has been sent to your email!")
-#     return redirect("u:home")
-
-
-# @login_required()
-# def delete_qr(request, id):
-#     """
-#     This function deletes the QR code for the short URL.
-#     """
-#     url = get_object_or_404(UrlModel, id=id)
-#     url.qrcode.delete()
-#     url.save()
-#     messages.success(request, "QR code deleted successfully.")
-#     return redirect("url:home")

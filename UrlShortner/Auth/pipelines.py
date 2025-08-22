@@ -15,8 +15,8 @@ def save_profile(strategy, details, response, user=None, *args, **kwargs):
     if created or not profile.last_name:
         profile.last_name = details.get("fullname").split(" ")[1]
 
-    # if created or not profile.profile_image:
-    #     profile.profile_image = response.get("picture")
+    if created or not profile.profile_image:
+        profile.profile_image = response.get("picture")
 
     profile.save()
 

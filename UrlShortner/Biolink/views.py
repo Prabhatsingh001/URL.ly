@@ -29,8 +29,9 @@ def my_biolink_page(request):
 
 @login_required()
 def Getlinks(request, id):
-    links = Link.objects.filter(user_id=id).order_by("-created_at")
-    context = {"links": links}
+    biolink = get_object_or_404(Profile, user_id=id)
+    links = biolink.links.all().order_by("-created_at")  # type: ignore
+    context = {"links": links, "user": request.user}
     return render(request, "mainpage.html", context)
 
 
@@ -39,15 +40,16 @@ def Addlink(request, id):
     if request.method == "POST":
         url = request.POST.get("url")
         title = request.POST.get("title")
-        user_instance = User.objects.get(id=id)  # Get actual user object
-        Link.objects.create(user=user_instance, title=title, url=url)
+        biolink = get_object_or_404(Profile, user__id=id)  # Get actual user object
+        Link.objects.create(profile=biolink, title=title, url=url)
         return redirect("biolinkpage", id=request.user.id)
     return render(request, "mainpage.html")
 
 
 @login_required()
 def Deletelink(request, id):
-    url = get_object_or_404(Link, id=id, user=request.user)
+    biolink = get_object_or_404(Profile, user=request.user)
+    url = get_object_or_404(Link, id=id, profile=biolink)
     if request.method == "POST":
         url.delete()
     return redirect("biolinkpage", id=request.user.id)
@@ -138,7 +140,7 @@ def public_biolink_by_slug(request, slug):
         raise Http404("Profile not found")
     except Profile.user.RelatedObjectDoesNotExist:
         raise Http404("User not found")
-    links = Link.objects.filter(user=profile.user, is_public=True)
+    links = Link.objects.filter(profile=profile, is_public=True)
     return render(
         request,
         "public_page.html",
