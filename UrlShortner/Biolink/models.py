@@ -4,9 +4,11 @@ from django.conf import settings
 from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
 from cloudinary_storage.storage import MediaCloudinaryStorage
+from django.core.files.base import ContentFile
+from io import BytesIO
+from PIL import Image
 
 User = settings.AUTH_USER_MODEL
-# Create your models here.
 
 
 class BioLinkProfile(models.Model):
@@ -50,6 +52,18 @@ class BioLinkProfile(models.Model):
                 unique = f"{candidate}-{i}"
                 i += 1
             self.public_slug = unique
+
+        if self.profile_image:
+            img = Image.open(self.profile_image)
+            if img.mode in ("RGBA", "P"):
+                img = img.convert("RGB")
+            img.thumbnail((500, 500), Image.Resampling.LANCZOS)
+            buffer = BytesIO()
+            img.save(buffer, format="JPEG", quality=85, optimize=True)
+            buffer.seek(0)
+            self.profile_image.save(
+                self.profile_image.name, ContentFile(buffer.read()), save=False
+            )
 
         super().save(*args, **kwargs)
 
