@@ -15,11 +15,6 @@ def save_profile(strategy, details, response, user=None, *args, **kwargs):
     if created or not profile.last_name:
         profile.last_name = details.get("fullname").split(" ")[1]
 
-    print(strategy)
-    print(details)
-    print(response)
-    print(user)
-
     profile.save()
 
 
