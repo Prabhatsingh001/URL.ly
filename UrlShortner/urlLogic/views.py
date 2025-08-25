@@ -23,6 +23,13 @@ def F404_page(request, excetipon):
     return render(request, "404_notF.html", status=404)
 
 
+def F500_page(request):
+    """
+    This function renders a custom 500 page.
+    """
+    return render(request, "server_500.html", status=500)
+
+
 @login_required()
 def home(request):
     """

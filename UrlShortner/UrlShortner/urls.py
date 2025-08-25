@@ -32,6 +32,7 @@ from Biolink.views import (
 )
 
 handler404 = "urlLogic.views.F404_page"
+handler500 = "urlLogic.views.F500_page"
 
 urlpatterns = [
     path("admin/", admin.site.urls, name="admin"),

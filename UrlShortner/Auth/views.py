@@ -12,7 +12,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from .tokens import account_activation_token, password_reset_token
 from .models import Contact, UserProfile
-from .mail import (
+from .tasks import (
     send_contact_email,
     send_verification_mail,
     send_reset_password_email,
@@ -24,6 +24,7 @@ from django.views import View
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.db import transaction
 
 CusUser = get_user_model()
 
@@ -46,7 +47,7 @@ def contact(request):
         message = request.POST.get("message")
         if name and email and message:
             contact = Contact.objects.create(name=name, email=email, message=message)
-            send_contact_email(contact)
+            transaction.on_commit(lambda: send_contact_email.delay(contact.id))  # type: ignore
             messages.success(request, "Thank you! Your message has been sent.")
             return redirect("a:contact")
         else:
@@ -84,7 +85,7 @@ def signup(request):
         user.set_password(password)
         user.is_active = False
         user.save()
-        send_verification_mail(user)
+        transaction.on_commit(lambda: send_verification_mail.delay(user.id))  # type: ignore
         messages.success(
             request, "User created successfully, please verify your email before login"
         )
@@ -101,7 +102,7 @@ def resend_verification_email(request, email=None):
             messages.success(request, "User is already verified!")
             return redirect("a:login")
 
-        send_verification_mail(user)
+        transaction.on_commit(lambda: send_verification_mail.delay(user.id))  # type: ignore
         messages.success(request, "Verification email has been resent!")
         return redirect("a:resend-verification-email", email=email)
     return render(request, "resend_verification_email.html", {"email": email})
@@ -180,7 +181,13 @@ def forgot_password(request):
             protocol = "https" if request.is_secure() else "http"
             current_site = get_current_site(request)
 
-            send_reset_password_email(user, protocol, current_site)
+            transaction.on_commit(
+                lambda: send_reset_password_email.delay(  # type: ignore
+                    user.id,  # type: ignore
+                    protocol,
+                    current_site.domain,
+                )
+            )
 
             messages.success(request, "Password reset email sent successfully")
             return redirect("a:login")
@@ -208,7 +215,7 @@ def reset_password(request, uidb64, token):
 
             user.set_password(new_password)
             user.save()
-            password_reset_success_email(user)
+            transaction.on_commit(lambda: password_reset_success_email.delay(user.id))  # type: ignore
             messages.success(request, "Password reset successfully")
             return redirect("a:login")
         return render(request, "reset_password.html", {"user": user})
@@ -285,7 +292,7 @@ def update_password(request, id):
 
         update_session_auth_hash(request, user)
         # send success email
-        password_reset_success_email(user)
+        transaction.on_commit(lambda: password_reset_success_email.delay(user.id))  # type: ignore
         messages.success(request, "Password reset successfully")
 
         return redirect("a:profile", id=id)
