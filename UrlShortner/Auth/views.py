@@ -26,7 +26,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import transaction
 
-CusUser = get_user_model()
+User = get_user_model()
 
 
 class IndexView(View):
@@ -62,7 +62,7 @@ def signup(request):
         password = request.POST.get("password")
         password2 = request.POST.get("confirm-password")
 
-        if CusUser.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists():
             messages.error(request, "email already exists")
             return redirect("a:signup")
 
@@ -77,7 +77,7 @@ def signup(request):
                 messages.error(request, error)
             return redirect("a:signup")
 
-        user = CusUser.objects.create_user(
+        user = User.objects.create_user(
             username=username,
             email=email,
             password=password,
@@ -96,7 +96,7 @@ def signup(request):
 def resend_verification_email(request, email=None):
     if request.method == "POST":
         email = request.POST.get("email")
-        user = get_object_or_404(CusUser, email=email)
+        user = get_object_or_404(User, email=email)
 
         if user.is_active:
             messages.success(request, "User is already verified!")
@@ -111,8 +111,8 @@ def resend_verification_email(request, email=None):
 def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        user = CusUser.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, CusUser.DoesNotExist):
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
@@ -138,8 +138,8 @@ def login(request):
             return redirect("a:login")
 
         try:
-            user = CusUser.objects.get(email=email)
-        except CusUser.DoesNotExist:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
             messages.error(request, "Invalid credentials.")
             return redirect("a:login")
 
@@ -177,7 +177,7 @@ def forgot_password(request):
             messages.error(request, "email is required to reset password")
 
         try:
-            user = CusUser.objects.get(email=email)
+            user = User.objects.get(email=email)
             protocol = "https" if request.is_secure() else "http"
             current_site = get_current_site(request)
 
@@ -191,7 +191,7 @@ def forgot_password(request):
 
             messages.success(request, "Password reset email sent successfully")
             return redirect("a:login")
-        except CusUser.DoesNotExist:
+        except User.DoesNotExist:
             messages.error(request, "User with this email does not exist")
             return redirect("a:forgot_password")
     return render(request, "forgot_password.html")
@@ -200,8 +200,8 @@ def forgot_password(request):
 def reset_password(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        user = CusUser.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, CusUser.DoesNotExist):
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
     if user is not None and password_reset_token.check_token(user, token):
@@ -226,7 +226,7 @@ def reset_password(request, uidb64, token):
 
 @login_required()
 def profile(request, id):
-    user_obj = get_object_or_404(CusUser, id=id)
+    user_obj = get_object_or_404(User, id=id)
 
     try:
         profile = user_obj.user_profile_link  # type: ignore
@@ -273,7 +273,7 @@ def update_profile(request, id):
 
 @login_required
 def update_password(request, id):
-    user = get_object_or_404(CusUser, id=id)
+    user = get_object_or_404(User, id=id)
     profile = user.user_profile_link  # type: ignore
     context = {
         "user_obj": user,

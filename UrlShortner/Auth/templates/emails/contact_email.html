@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0; padding:0; font-family: Arial, sans-serif; background-color:#f4f4f7;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+            <td align="center" style="padding: 30px 15px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600"
+                       style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+
+                    <!-- Header / Logo -->
+                    <tr>
+                        <td align="center" style="background:#1e3a8a; padding: 20px;">
+                            <h1 style="color:#ffffff; margin:0; font-size:24px;">URL&#8203;.LY</h1>
+                        </td>
+                    </tr>
+
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding: 30px;">
+                            <h2 style="color:#333; font-size:20px; margin-bottom:15px;">New Contact Message</h2>
+                            <p style="color:#555; font-size:15px; line-height:1.6;">
+                                You have received a new message from the contact form on your website.
+                            </p>
+
+                            <h3 style="color:#333; font-size:18px; margin-top:20px;">Details:</h3>
+                            <p style="color:#555; font-size:15px; line-height:1.6;">
+                                <strong>Name:</strong> {{ contact.name }}<br>
+                                <strong>Email:</strong> {{ contact.email }}<br>
+                                <strong>Message:</strong><br>
+                                {{ contact.message|linebreaks }}
+                            </p>
+
+                            <p style="color:#555; font-size:14px; margin-top:20px;">
+                                Please respond to the user as soon as possible.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td align="center" style="background:#f9fafb; padding: 20px; font-size:12px; color:#777;">
+                            Thank you 💙 <br>
+                            URL&#8203;.LY Team
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

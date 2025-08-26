@@ -51,14 +51,14 @@
     <!-- Action Buttons -->
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
       {% if user.is_authenticated %}
-      <a href="{% url "index" %}" class="group inline-flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-stone-600 to-gray-600 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition-all duration-300">
+      <a href="{% url "u:home" %}" class="group inline-flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-stone-600 to-gray-600 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition-all duration-300">
         <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
         </svg>
         <span>Go Home</span>
       </a>
       {% else %}
-      <a href="{% url "u:home" %}" class="group inline-flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-stone-600 to-gray-600 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition-all duration-300">
+      <a href="{% url "index" %}" class="group inline-flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-stone-600 to-gray-600 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 hover:-translate-y-1 transform transition-all duration-300">
         <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
         </svg>

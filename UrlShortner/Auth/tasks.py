@@ -3,7 +3,6 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from .tokens import account_activation_token
-from django.core.mail import EmailMessage
 from django.core.mail import EmailMultiAlternatives
 from .tokens import password_reset_token
 from celery import shared_task
@@ -161,16 +160,31 @@ def send_contact_email(contact_id):
     from .models import Contact
 
     contact = Contact.objects.get(id=contact_id)
-    email_subject = f"New Notification {contact.email}"
-    message = f"""
+    subject = f"New Notification from {contact.email}"
+    html_content = render_to_string(
+        "emails/contact_email.html",
+        {
+            "name": contact.name,
+            "email": contact.email,
+            "message": contact.message,
+        },
+    )
+
+    text_content = f"""
         you have recieved a new message
 
         name: {contact.name}
-        Email: {contact.email}
+        email: {contact.email}
 
         message: {contact.message}
     """
     team_mail = ["ghostcoder420@gmail.com"]
 
-    email = EmailMessage(email_subject, message, settings.EMAIL_HOST_USER, team_mail)
-    email.send(fail_silently=False)
+    email = EmailMultiAlternatives(
+        subject,
+        text_content,
+        settings.EMAIL_HOST_USER,
+        team_mail,
+    )
+    email.attach_alternative(html_content, "text/html")
+    email.send(fail_silently=True)
