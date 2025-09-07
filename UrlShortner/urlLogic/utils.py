@@ -81,11 +81,22 @@ class QrCode:
             content_type="image/png",
         )
 
-    def mail_qr_code(self):
+    def get_qr_file_to_mail(self):
         """
         mails the qr code to your inbox
         """
-        pass
+        if not self.url_instance.qrcode:
+            self.generate_qr_code()
+
+        qr_url = self.url_instance.qrcode.url
+        response = requests.get(qr_url, stream=True)
+        response.raise_for_status()
+
+        filename = os.path.basename(self.url_instance.qrcode.name)
+        if not filename.lower().endswith((".png", ".jpg", ".jpeg")):
+            filename += ".png"
+
+        return filename, response.content
 
 
 def get_client_ip(request):

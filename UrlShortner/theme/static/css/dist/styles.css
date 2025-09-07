@@ -4350,6 +4350,16 @@
     }
   }
   @media (prefers-color-scheme: dark) {
+    .dark\:bg-gray-400\/30 {
+      background-color: color-mix(in srgb, oklch(70.7% 0.022 261.325) 30%, transparent);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .dark\:bg-gray-400\/30 {
+        background-color: color-mix(in oklab, var(--color-gray-400) 30%, transparent);
+      }
+    }
+  }
+  @media (prefers-color-scheme: dark) {
     .dark\:bg-gray-700 {
       background-color: var(--color-gray-700);
     }
@@ -4412,6 +4422,16 @@
   @media (prefers-color-scheme: dark) {
     .dark\:bg-transparent {
       background-color: transparent;
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    .dark\:bg-white\/10 {
+      background-color: color-mix(in srgb, #fff 10%, transparent);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .dark\:bg-white\/10 {
+        background-color: color-mix(in oklab, var(--color-white) 10%, transparent);
+      }
     }
   }
   @media (prefers-color-scheme: dark) {
@@ -4682,6 +4702,11 @@
     }
   }
   @media (prefers-color-scheme: dark) {
+    .dark\:text-black {
+      color: var(--color-black);
+    }
+  }
+  @media (prefers-color-scheme: dark) {
     .dark\:text-blue-300 {
       color: var(--color-blue-300);
     }
@@ -4734,6 +4759,16 @@
   @media (prefers-color-scheme: dark) {
     .dark\:text-white {
       color: var(--color-white);
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    .dark\:text-white\/80 {
+      color: color-mix(in srgb, #fff 80%, transparent);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .dark\:text-white\/80 {
+        color: color-mix(in oklab, var(--color-white) 80%, transparent);
+      }
     }
   }
   @media (prefers-color-scheme: dark) {

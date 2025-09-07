@@ -186,3 +186,19 @@ def download_qr(request, id):
     url = get_object_or_404(UrlModel, id=id, user=request.user)
     urlservice = QrCode(url, request)
     return urlservice.download_qr_code()
+
+
+@login_required()
+def mail_qr(request, id):
+    from .tasks import send_qr_email
+
+    url = get_object_or_404(UrlModel, id=id, user=request.user)
+    urlservice = QrCode(url, request)
+
+    filename, filebytes = urlservice.get_qr_file_to_mail()
+
+    transaction.on_commit(
+        lambda: send_qr_email.delay(request.user.id, filename, filebytes)
+    )  # type: ignore
+    messages.success(request, "QR code email has been sent.")
+    return redirect("u:home")

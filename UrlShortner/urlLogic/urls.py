@@ -9,4 +9,5 @@ urlpatterns = [
     path("update_url/<int:id>/", views.update_url, name="edit_url"),
     path("<str:slug>/", views.redirect_url, name="redirect_url"),
     path("download-qr/<int:id>/", views.download_qr, name="download_qr"),
+    path("mail-qr/<int:id>/", views.mail_qr, name="mail_qr"),
 ]
