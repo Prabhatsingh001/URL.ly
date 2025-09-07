@@ -100,7 +100,7 @@ def send_reset_password_email(
         {
             "user": user,
             "protocol": protocol,
-            "domain": current_site.domain,
+            "domain": current_site,
             "uid": uid,
             "token": token,
         },
