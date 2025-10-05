@@ -1,7 +1,7 @@
 
 # URL.ly - Django URL Shortener
 
-A modern, full-featured URL shortener built with **Django**, **TailwindCSS**, and **JavaScript**. URL.ly lets you shorten links, track analytics, manage user a, and more—all with a clean, responsive UI.
+A modern, full-featured URL shortener built with **Django**, **TailwindCSS**, and **JavaScript**. URL.ly lets you shorten links, track analytics, manage user accounts, and more — all with a clean, responsive UI.
 
 ## Features
 
@@ -22,7 +22,7 @@ A modern, full-featured URL shortener built with **Django**, **TailwindCSS**, an
 
 ## Live Demo
 
-Try the app live: [URL.ly](https://url-ly.onrender.com/)
+Try the app live: [https://url-ly.onrender.com/](https://url-ly.onrender.com/)
 
 ## Getting Started (Local Setup)
 
@@ -114,166 +114,9 @@ Below are all the main URLs exposed by the project, grouped by app/module:
 
 ## Project Structure
 
-```text
-URL.LY/
-├── .env
-├── .git/
-├── .gitignore
-├── .venv/                       # Python virtual environment
-├── .vscode/                     # VS Code settings
-├── issues.txt
-├── README.md
-└── UrlShortner/
-    ├── Auth/                    # User authentication app
-    |   ├── admin.py
-    │   ├── apps.py
-    │   ├── mail.py
-    │   ├── migrations/
-    │   │   ├── 0001_initial.py
-    │   │   ├── __init__.py
-    │   │   └── __pycache__/
-    │   ├── models.py
-    │   ├── pipelines.py
-    │   ├── signals.py
-    │   ├── templates/
-    │   │   ├── about.html
-    │   │   ├── contact.html
-    │   │   ├── emails/
-    │   │   │   ├── email_verification.html
-    │   │   │   └── reset_password_email.html
-    │   │   ├── forgot_password.html
-    │   │   ├── index.html
-    │   │   ├── login.html
-    │   │   ├── profile.html
-    │   │   ├── profile_layout.html
-    │   │   ├── profile_setting.html
-    │   │   ├── profile_update_password.html
-    │   │   ├── reset_password.html
-    │   │   └── signup.html
-    │   ├── tests.py
-    │   ├── tokens.py
-    │   ├── urls.py
-    │   ├── views.py
-    │   ├── __init__.py
-    │   └── __pycache__/
-    ├── Biolink/                 # Biolink (profile/landing page) app
-    │   ├── admin.py
-    │   ├── apps.py
-    │   ├── migrations/
-    │   │   ├── 0001_initial.py
-    │   │   ├── __init__.py
-    │   │   └── __pycache__/
-    │   ├── models.py
-    │   ├── signals.py
-    │   ├── templates/
-    │   │   ├── mainpage.html
-    │   │   └── public_page.html
-    │   ├── tests.py
-    │   ├── views.py
-    │   ├── __init__.py
-    │   └── __pycache__/
-    ├── Brandlink/               # Branded link management app
-    │   ├── admin.py
-    │   ├── apps.py
-    │   ├── migrations/
-    │   │   ├── __init__.py
-    │   │   └── __pycache__/
-    │   ├── models.py
-    │   ├── tests.py
-    │   ├── views.py
-    │   ├── __init__.py
-    │   └── __pycache__/
-    ├── db.sqlite3               # SQLite database
-    ├── logs/                    # Log files
-    │   └── debug_requests.json
-    ├── manage.py                # Django management script
-    ├── media/                   # Uploaded media files
-    │   ├── avatars/
-    │   │   └── [user avatar images]
-    │   ├── profile_pictures/
-    │   │   └── [profile pictures]
-    │   └── qr_code/
-    ├── Procfile                 # For deployment (e.g., Heroku)
-    ├── requirements.txt         # Python dependencies
-    ├── static/                  # Static files (CSS, JS, images)
-    │   ├── 404.jpg
-    │   ├── backgrounds/
-    │   │   └── 404_bg.jpg
-    │   ├── dribbble_1.gif
-    │   ├── icons/
-    │   │   ├── editprofile.svg
-    │   │   ├── edittext.svg
-    │   │   ├── github.svg
-    │   │   ├── instagram.svg
-    │   │   ├── link.svg
-    │   │   └── twitter.svg
-    │   ├── logo.png
-    │   ├── profile_image.png
-    │   ├── signin-image.webp
-    │   └── signup.jpg
-    ├── staticfiles_build/       # Collected static files for deployment
-    │   └── static/
-    │       ├── 404.jpg
-    │       ├── admin/
-    │       ├── backgrounds/
-    │       ├── css/
-    │       ├── dribbble_1.gif
-    │       ├── icons/
-    │       ├── logo.png
-    │       ├── profile_image.png
-    │       ├── signin-image.webp
-    │       └── signup.jpg
-    ├── templates/               # Shared HTML templates
-    │   ├── alert.html
-    │   ├── footer.html
-    │   ├── layout.html
-    │   └── navbar.html
-    ├── theme/                   # Theme and Tailwind config
-    │   ├── apps.py
-    │   ├── static/
-    │   │   └── css/
-    │   ├── static_src/
-    │   │   ├── .gitignore
-    │   │   ├── node_modules/
-    │   │   ├── package-lock.json
-    │   │   ├── package.json
-    │   │   ├── postcss.config.js
-    │   │   └── src/
-    │   │       └── styles.css
-    │   ├── templates/
-    │   │   └── base.html
-    │   ├── __init__.py
-    │   └── __pycache__/
-    ├── urlLogic/                # URL shortening and analytics logic
-    │   ├── admin.py
-    │   ├── apps.py
-    │   ├── migrations/
-    │   │   ├── 0001_initial.py
-    │   │   ├── __init__.py
-    │   │   └── __pycache__/
-    │   ├── models.py
-    │   ├── signals.py
-    │   ├── templates/
-    │   │   ├── 404_notF.html
-    │   │   ├── components/
-    │   │   │   └── url_card.html
-    │   │   ├── home.html
-    │   │   ├── update_edit_url.html
-    │   │   └── url_shortner.html
-    │   ├── tests.py
-    │   ├── urls.py
-    │   ├── utils.py
-    │   ├── views.py
-    │   ├── __init__.py
-    │   └── __pycache__/
-    ├── UrlShortner/             # Django project settings
-    │   ├── asgi.py
-    │   ├── settings.py
-    │   ├── urls.py
-    │   ├── wsgi.py
-    │   ├── __init__.py
-    │   └── __pycache__/
-```
+The full project tree is long and lives in a separate file to keep this README concise.
+
+See the complete structure in: `STRUCTURE.md`
 
 ---
 

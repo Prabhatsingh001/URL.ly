@@ -5,75 +5,120 @@
     <title>Your QR Code</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
-        background-color: #f6f9fc;
         margin: 0;
         padding: 0;
-      }
-      .container {
-        max-width: 600px;
-        margin: 20px auto;
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 30px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      }
-      h2 {
+        background-color: #f5f9ff;
+        font-family: "Segoe UI", Arial, sans-serif;
         color: #333333;
-        margin-bottom: 16px;
       }
+
+      .container {
+        max-width: 640px;
+        margin: 40px auto;
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 40px 30px;
+        box-shadow: 0 6px 18px rgba(44, 123, 229, 0.15);
+        border: 1px solid #e6efff;
+      }
+
+      h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #2c7be5;
+        text-align: center;
+      }
+
+      .subtitle {
+        font-size: 15px;
+        color: #4a6fa5;
+        text-align: center;
+        margin-bottom: 28px;
+      }
+
       p {
-        color: #555555;
-        line-height: 1.6;
+        font-size: 15px;
+        color: #444444;
+        line-height: 1.7;
+        margin: 16px 0;
       }
+
       .qr-box {
         text-align: center;
-        margin: 30px 0;
+        margin: 40px 0;
       }
+
       .qr-box img {
-        max-width: 220px;
-        border: 4px solid #f0f0f0;
-        border-radius: 12px;
+        max-width: 240px;
+        border: 6px solid #e6efff;
+        border-radius: 16px;
       }
+
+      .button {
+        display: inline-block;
+        margin: 20px auto;
+        padding: 12px 28px;
+        background: #2c7be5;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 500;
+      }
+
+      .button:hover {
+        background: #1f5db5;
+      }
+
       .footer {
         font-size: 12px;
-        color: #888888;
-        margin-top: 30px;
+        color: #6a89b6;
+        margin-top: 40px;
         text-align: center;
+        border-top: 1px solid #e6efff;
+        padding-top: 20px;
       }
+
       a {
         color: #2c7be5;
         text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h2>Your QR Code is Ready 🎉</h2>
+      <h2>Your QR Code is Ready</h2>
+      <p class="subtitle">Scan it instantly or download it from this email.</p>
 
       <p>Hello,</p>
 
       <p>
-        We’ve generated your QR code. You can either <strong>scan it directly below</strong>
-        or download it from the attachment included with this email.
+        We've generated your unique QR code. You can either
+        <strong>scan it below</strong> or download it directly as an attachment.
       </p>
 
-      <!-- ✅ Show QR inline if you embed it in Celery -->
       <div class="qr-box">
         <img src="cid:qr_code" alt="QR Code" />
       </div>
 
+      <div style="text-align:center;">
+        <a href="cid:qr_code" class="button">Download QR Code</a>
+      </div>
+
       <p>
-        If you have any questions or need support, feel free to reach out at
+        Need help? Reach us anytime at
         <a href="mailto:{{ support_email }}">{{ support_email }}</a>.
       </p>
 
-      <p>Best regards,<br />The URL.ly Team</p>
+      <p>Best regards,<br /><strong>The URL.ly Team</strong></p>
 
       <div class="footer">
-        <p>
-          This is an automated message. Please do not reply directly to this email.
-        </p>
+        <p>This is an automated message. Please do not reply directly.</p>
       </div>
     </div>
   </body>

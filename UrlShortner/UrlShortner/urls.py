@@ -20,6 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic.base import RedirectView
 from Biolink.views import (
     Getlinks,
     Addlink,
@@ -35,6 +36,7 @@ handler404 = "urlLogic.views.F404_page"
 handler500 = "urlLogic.views.F500_page"
 
 urlpatterns = [
+    path("favicon.ico", RedirectView.as_view(url=static("logo.png"), permanent=True)),
     path("admin/", admin.site.urls, name="admin"),
     path("auth/", include("social_django.urls", namespace="social")),
     path("", IndexView.as_view(), name="index"),
@@ -53,7 +55,7 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # type: ignore
     urlpatterns += [
         path("__reload__/", include("django_browser_reload.urls")),
     ]

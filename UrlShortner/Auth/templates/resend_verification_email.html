@@ -1,13 +1,14 @@
 {% load static %}
-{% load static tailwind_tags %}
+{% comment %} {% load static tailwind_tags %} {% endcomment %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="{% static 'logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
     <title>Mail Verification | URL.ly</title>
-    {% tailwind_css %}
+    {% comment %} {% tailwind_css %} {% endcomment %}
 </head>
 <body class="min-h-screen w-full bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white flex items-center justify-center">
 

@@ -4096,6 +4096,16 @@
     }
   }
   @media (width >= 48rem) {
+    .md\:py-1 {
+      padding-block: calc(var(--spacing) * 1);
+    }
+  }
+  @media (width >= 48rem) {
+    .md\:py-2 {
+      padding-block: calc(var(--spacing) * 2);
+    }
+  }
+  @media (width >= 48rem) {
     .md\:text-2xl {
       font-size: var(--text-2xl);
       line-height: var(--tw-leading, var(--text-2xl--line-height));
@@ -4425,16 +4435,6 @@
     }
   }
   @media (prefers-color-scheme: dark) {
-    .dark\:bg-white\/10 {
-      background-color: color-mix(in srgb, #fff 10%, transparent);
-    }
-    @supports (color: color-mix(in lab, red, red)) {
-      .dark\:bg-white\/10 {
-        background-color: color-mix(in oklab, var(--color-white) 10%, transparent);
-      }
-    }
-  }
-  @media (prefers-color-scheme: dark) {
     .dark\:from-blue-500\/10 {
       --tw-gradient-from: color-mix(in srgb, oklch(62.3% 0.214 259.815) 10%, transparent);
       --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
@@ -4699,11 +4699,6 @@
       .dark\:to-purple-900\/30 {
         --tw-gradient-to: color-mix(in oklab, var(--color-purple-900) 30%, transparent);
       }
-    }
-  }
-  @media (prefers-color-scheme: dark) {
-    .dark\:text-black {
-      color: var(--color-black);
     }
   }
   @media (prefers-color-scheme: dark) {

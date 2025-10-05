@@ -198,7 +198,7 @@ def mail_qr(request, id):
     filename, filebytes = urlservice.get_qr_file_to_mail()
 
     transaction.on_commit(
-        lambda: send_qr_email.delay(request.user.id, filename, filebytes)
-    )  # type: ignore
+        lambda: send_qr_email.delay(request.user.id, filename, filebytes)  # type: ignore
+    )
     messages.success(request, "QR code email has been sent.")
     return redirect("u:home")
