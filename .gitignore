@@ -8,6 +8,6 @@ __pycache__
 *.sqlite3
 *.log
 .env
-*.txt
+issues.txt
 media
 logs
