@@ -1,4 +1,4 @@
-{% comment %} {% load static tailwind_tags %} {% endcomment %}
+{% load static tailwind_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -10,9 +10,10 @@
     {% else %}
         <title>{{ user.username }} | Bio Link</title>
     {% endif %}
-    <link rel="icon" type="image/png" href="{% static 'logo.png' %}">
-    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
-    {% comment %} {% tailwind_css %} {% endcomment %}
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    {% comment %} <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}"> {% endcomment %}
+    {% tailwind_css %}
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -115,7 +116,7 @@
         {% if messages %}
         {% for message in messages %}
             <div id="flash-alert" class="fixed top-16 left-1/2 transform -translate-x-1/2 z-50 w-auto max-w-md px-6 py-4 rounded-lg shadow-lg bg-white text-gray-800 border border-gray-200
-                dark:bg-gray-800 dark:text-white dark:border-gray-700 transition-transform duration-300 ease-out alert alert-{{message.tags}}">
+                dark:bg-gray-400/30 dark:text-white/80 dark:border-gray-700 transition-transform duration-300 ease-out alert alert-{{message.tags}}">
                 <strong class="text-sm">{{ message }}</strong>
                 <button id="alert-close" class="ml-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -177,7 +178,7 @@
                         </div>
                         
                         <!-- Edit Image Form -->
-                        <form id="edit-image" class="hidden mt-4 slide-in" action="{% url "editprofile" %}" method="post" enctype="multipart/form-data">
+                        <form id="edit-image" class="hidden mt-4 slide-in" action="{% url "editprofile" user.id%}" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="flex flex-col sm:flex-row gap-3 items-center">
                                 <input type="file" name="profile_image" accept="image/*" 
@@ -205,7 +206,7 @@
                         </div>
                         
                         <!-- Edit Name Form -->
-                        <form id="edit-name" class="hidden mt-3 slide-in" action="{% url "editprofile" %}" method="post">
+                        <form id="edit-name" class="hidden mt-3 slide-in" action="{% url "editprofile" user.id %}" method="post">
                             {% csrf_token %}
                             <div class="flex flex-col sm:flex-row gap-3">
                                 <input type="text" name="display_name" value="{{ user.biolinkprofile.display_name }}" 
@@ -234,7 +235,7 @@
                         </div>
                         
                         <!-- Edit Bio Form -->
-                        <form id="edit-bio" class="hidden mt-3 slide-in" action="{% url "editprofile" %}" method="post">
+                        <form id="edit-bio" class="hidden mt-3 slide-in" action="{% url "editprofile" user.id%}" method="post">
                             {% csrf_token %}
                             <div class="flex flex-col gap-3">
                                 <textarea name="bio" rows="3" 
@@ -322,8 +323,8 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-300 mb-2">Link URL</label>
                                 <input type="url" name="url" placeholder="https://example.com" 
-                                       class="form-input w-full px-4 py-3 rounded-xl text-white placeholder-gray-400"
-                                       required>
+                                    class="form-input w-full px-4 py-3 rounded-xl text-white placeholder-gray-400"
+                                    required>
                             </div>
 
                             <!-- Submit Button -->
@@ -368,6 +369,23 @@
                             ✓ Link copied to clipboard!
                         </p>
                     </div>
+                    {% if name_changed %}
+                    <div class="text-center mt-2">
+                        <form action="{% url 'enablepubliclink' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn-primary px-8 py-4 rounded-2xl font-semibold text-white shadow-2xl transform hover:scale-105 transition-all duration-300">
+                                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                </svg>
+                                Regenerate Shareable Link
+                            </button>
+                        </form>
+                        <p class="mt-4 text-gray-400 text-sm max-w-sm mx-auto">
+                            you changed your display name, you can keep using the old link or regenerate a new one
+                        </p>
+                    </div>
+                    {% endif %}
                 </div>
             {% else %}
                 <!-- Generate Link Button -->
@@ -390,119 +408,6 @@
         </div>
     </div>
 
-    <script>
-        function toggleEdit(field) {
-            const editForm = document.getElementById(`edit-${field}`);
-            const displayEl = document.getElementById(`display-${field}`);
-            
-            editForm.classList.toggle('hidden');
-            if (displayEl) {
-                displayEl.classList.toggle('hidden');
-            }
-            
-            // Focus the first input when showing the form
-            if (!editForm.classList.contains('hidden')) {
-                const input = editForm.querySelector('input, textarea');
-                if (input) input.focus();
-            }
-        }
-
-        function hideFormAfterSubmit() {
-            setTimeout(() => {
-                document.getElementById('addLinkForm').classList.add('hidden');
-            }, 100);
-        }
-
-        // Copy functionality with enhanced UX
-        const copyBtn = document.getElementById('copyBtn');
-        const shareLink = document.getElementById('shareLink');
-        const toast = document.getElementById('copiedToast');
-        
-        if (copyBtn && shareLink && toast) {
-            copyBtn.addEventListener('click', async () => {
-                try {
-                    await navigator.clipboard.writeText(shareLink.value);
-                    showToast();
-                } catch (e) {
-                    // Fallback for older browsers
-                    shareLink.select();
-                    document.execCommand('copy');
-                    showToast();
-                }
-            });
-            
-            function showToast() {
-                toast.classList.remove('opacity-0');
-                toast.classList.add('opacity-100');
-                setTimeout(() => {
-                    toast.classList.remove('opacity-100');
-                    toast.classList.add('opacity-0');
-                }, 2000);
-            }
-        }
-
-        // Enhanced form interactions
-        document.addEventListener('DOMContentLoaded', function() {
-            // Auto-hide edit forms when clicking outside
-            document.addEventListener('click', function(e) {
-                const editForms = document.querySelectorAll('[id^="edit-"]');
-                editForms.forEach(form => {
-                    if (!form.contains(e.target) && !e.target.closest('button[onclick*="toggleEdit"]')) {
-                        form.classList.add('hidden');
-                        const field = form.id.replace('edit-', '');
-                        const displayEl = document.getElementById(`display-${field}`);
-                        if (displayEl) displayEl.classList.remove('hidden');
-                    }
-                });
-            });
-            
-            // Add slide-in animation to new elements
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    mutation.addedNodes.forEach(function(node) {
-                        if (node.nodeType === 1 && node.classList && node.classList.contains('slide-in')) {
-                            node.style.animation = 'slideIn 0.3s ease-out';
-                        }
-                    });
-                });
-            });
-            
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        });
-
-        const alert = document.getElementById("flash-alert");
-        const closeBtn = document.getElementById("alert-close");
-
-        if (alert) {
-            alert.style.transition = "all 0.3s ease-out";
-            alert.style.transform = "translate(-50%, -20px)";
-            alert.style.opacity = "10";
-
-            // Trigger fade/slide-in
-            setTimeout(() => {
-                alert.style.transform = "translate(-50%, 0)";
-                alert.style.opacity = "1";
-            }, 50);
-
-            setTimeout(() => {
-                alert.style.transition = "all 0.3s ease";
-                alert.style.opacity = "0";
-                alert.style.transform = "translate(-50%, -10px)";
-                setTimeout(() => alert.remove(), 300); // remove after transition
-            }, 3000);
-
-            if (closeBtn) {
-            closeBtn.addEventListener("click", () => {
-                alert.style.transition = "all 0.3s ease";
-                alert.style.opacity = "0";
-                alert.style.transform = "translate(-50%, -10px)";
-                setTimeout(() => alert.remove(), 300);
-            });
-            }
-        }
-    </script>
+    <script src="{% static 'main/js/biolink.js' %}"></script>
 </body>
 </html>
