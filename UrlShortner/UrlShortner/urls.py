@@ -28,30 +28,31 @@ from Biolink.views import (
     Deletelink,
     editprofile,
     public_biolink_by_slug,
-    public_biolink_by_uuid,
     enable_public_link,
 )
+from urlLogic.views import anonymousShorturl, redirect_to_original
 
 handler404 = "urlLogic.views.F404_page"
 handler500 = "urlLogic.views.F500_page"
+handler403 = "urlLogic.views.custom_403_view"
+
 
 urlpatterns = [
-    path("favicon.ico", RedirectView.as_view(url=static("logo.png"), permanent=True)),
+    path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
     path("admin/", admin.site.urls, name="admin"),
     path("auth/", include("social_django.urls", namespace="social")),
     path("", IndexView.as_view(), name="index"),
+    path("s/", anonymousShorturl, name="urlshort"),
+    path("s/<str:short_code>/", redirect_to_original, name="redirect"),
     path("a/", include(("Auth.urls", "Auth"), namespace="a")),
     path("u/", include(("urlLogic.urls", "urlLogic"), namespace="u")),
     path("my-bio-link-page/", my_biolink_page, name="my_biolink_page"),
     path("biolink-page/<uuid:id>/", Getlinks, name="biolinkpage"),
     path("addlink/<uuid:id>/", Addlink, name="addlink"),
     path("deletelink/<uuid:id>/", Deletelink, name="deletelink"),
-    # path for generating a url
-    path("editprofile/", editprofile, name="editprofile"),
+    path("editprofile/<uuid:id>/", editprofile, name="editprofile"),
     path("enable/", enable_public_link, name="enablepubliclink"),
-    # path for visiting the public profile
     path("p/<slug:slug>/", public_biolink_by_slug, name="public_biolink_slug"),
-    path("u/<uuid:public_id>/", public_biolink_by_uuid, name="public_biolink_uuid"),
 ]
 
 if settings.DEBUG:

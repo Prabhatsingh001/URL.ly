@@ -3,17 +3,23 @@ from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 
-from .models import UrlModel, UrlVisit
+from .models import UrlModel, UrlVisit, ShortUrlAnonymous
 from .utils import QrCode, SlugGenerator
 from django.db import transaction
 from django.utils.timezone import now
 import user_agents
 from .utils import get_client_ip
 from django.views.decorators.http import require_POST
+from django_ratelimit.decorators import ratelimit
+from django_ratelimit.exceptions import Ratelimited
 
 Slug = SlugGenerator()
+
+# ------------------------------------------------------------------------------
+"""custom error pages"""
 
 
 def F404_page(request, excetipon):
@@ -28,6 +34,56 @@ def F500_page(request):
     This function renders a custom 500 page.
     """
     return render(request, "server_500.html", status=500)
+
+
+def custom_403_view(request, exception=None):
+    message = "You are sending requests too quickly. Please wait a few moments before trying again."
+    messages.error(request, message)
+    return redirect("index")
+
+
+# ------------------------------------------------------------------------------
+"""url shortening without login"""
+
+
+@ratelimit(key="ip", rate="5/m", method="POST", block=True)
+def anonymousShorturl(request):
+    try:
+        short_url = None
+
+        if request.method == "POST":
+            original_url = request.POST.get("url")
+            if original_url:
+                try:
+                    with transaction.atomic():
+                        url_obj = ShortUrlAnonymous.objects.create(
+                            original_url=original_url, ip_address=get_client_ip(request)
+                        )
+                        slug = Slug.encode_url(url_obj.pk)
+                        url_obj.short_code = slug
+                        url_obj.save()
+                        short_url = request.build_absolute_uri(
+                            f"/s/{url_obj.short_code}/"
+                        )
+                        messages.success(request, "Short URL created successfully!")
+                        return redirect(f"{reverse('index')}?short_url={short_url}")
+                except Exception as e:
+                    messages.error(request, f"Error: {str(e)}")
+                    return render(request, "f.html")
+        return render(request, "f.html")
+    except Ratelimited:
+        messages.error(
+            request, "You are submitting too fast. Please try again in a few minutes."
+        )
+        return redirect("index")
+
+
+def redirect_to_original(request, short_code):
+    url = get_object_or_404(ShortUrlAnonymous, short_code=short_code)
+    return redirect(url.original_url)
+
+
+# ------------------------------------------------------------------------------
 
 
 @login_required()

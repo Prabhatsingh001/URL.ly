@@ -33,7 +33,8 @@ class IndexView(View):
     def get(self, request):
         if request.user.is_authenticated:
             return redirect("u:home")
-        return render(request, "index.html")
+        short_url = request.GET.get("short_url")
+        return render(request, "index.html", {"short_url": short_url})
 
 
 class AboutView(TemplateView):

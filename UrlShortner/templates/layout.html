@@ -1,14 +1,20 @@
 {% load static %}
-{% comment %} {% load static tailwind_tags %} {% endcomment %}
+{% if debug %}
+  {% load static tailwind_tags %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="{% static 'logo.png' %}">
-    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    {% if debug %}
+      {% tailwind_css %}
+    {% else %}
+      <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+    {% endif %}
     <title>{% block title %}{% endblock %}</title>
-    {% comment %} {% tailwind_css %} {% endcomment %}
 </head>
 
 <body class="flex flex-col min-h-screen h-full w-full m-0 p-0 bg-gradient-to-br from-blue-100 via-white to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -33,40 +39,7 @@
   {% include "footer.html" %}
 
   {% block scripts %}{% endblock %}
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const alert = document.getElementById("flash-alert");
-      const closeBtn = document.getElementById("alert-close");
-
-      if (alert) {
-        alert.style.transition = "all 0.3s ease-out";
-        alert.style.transform = "translate(-50%, -20px)";
-        alert.style.opacity = "10";
-
-        // Trigger fade/slide-in
-        setTimeout(() => {
-          alert.style.transform = "translate(-50%, 0)";
-          alert.style.opacity = "1";
-        }, 50);
-
-        setTimeout(() => {
-          alert.style.transition = "all 0.3s ease";
-          alert.style.opacity = "0";
-          alert.style.transform = "translate(-50%, -10px)";
-          setTimeout(() => alert.remove(), 300); // remove after transition
-        }, 3000);
-
-        if (closeBtn) {
-          closeBtn.addEventListener("click", () => {
-            alert.style.transition = "all 0.3s ease";
-            alert.style.opacity = "0";
-            alert.style.transform = "translate(-50%, -10px)";
-            setTimeout(() => alert.remove(), 300);
-          });
-        }
-      }
-    });
-  </script>
+<script src="{% static 'main/js/alert.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/flowbite@latest/dist/flowbite.min.js"></script>
 </body>
 </html>

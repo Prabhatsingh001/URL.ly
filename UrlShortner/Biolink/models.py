@@ -1,7 +1,7 @@
 from django.db import models
 import uuid
 from django.conf import settings
-from django.utils.text import slugify
+
 from django.core.validators import FileExtensionValidator
 from cloudinary_storage.storage import MediaCloudinaryStorage
 from django.core.files.base import ContentFile
@@ -28,31 +28,8 @@ class BioLinkProfile(models.Model):
         storage=MediaCloudinaryStorage(),
     )
     public_slug = models.SlugField(max_length=50, unique=True, blank=True)
-    public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def save(self, *args, **kwargs):
-        base_source = (
-            self.display_name.strip()
-            if self.display_name
-            else (self.user.username or f"user-{self.user.pk}")
-        )
-        candidate = slugify(base_source)[:40] or str(self.public_id)[:12]
-
-        # If slug is missing or doesn't match the expected base, regenerate it
-        if not self.public_slug or not self.public_slug.startswith(
-            slugify(base_source)[:40]
-        ):
-            unique = candidate
-            i = 1
-            while (
-                BioLinkProfile.objects.filter(public_slug=unique)
-                .exclude(pk=self.pk)
-                .exists()
-            ):
-                unique = f"{candidate}-{i}"
-                i += 1
-            self.public_slug = unique
-
         if self.profile_image:
             img = Image.open(self.profile_image)
             if img.mode in ("RGBA", "P"):

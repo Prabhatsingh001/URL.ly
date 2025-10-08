@@ -24,6 +24,7 @@ if DEBUG:
     CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
 else:
     CELERY_BROKER_URL = config("CELERY_BROKER_URL", cast=str)
+
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
@@ -37,7 +38,6 @@ CLOUDINARY_API_SECRET = config("CLOUDINARY_API_SECRET")
 SALT = config("SALT", cast=str)
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-
 
 LOGIN_URL = "/a/login/"
 LOGIN_REDIRECT_URL = "/u/"
@@ -108,6 +108,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.debug",
             ],
         },
     },

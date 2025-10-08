@@ -6,6 +6,7 @@ from django.utils.text import slugify
 from django.contrib import messages
 from django.http import Http404
 from django.db import transaction
+import uuid
 
 
 User = get_user_model()
@@ -40,7 +41,7 @@ def Addlink(request, id):
     if request.method == "POST":
         url = request.POST.get("url")
         title = request.POST.get("title")
-        biolink = get_object_or_404(Profile, user__id=id)  # Get actual user object
+        biolink = get_object_or_404(Profile, user_id=id)  # Get actual user object
         Link.objects.create(profile=biolink, title=title, url=url)
         return redirect("biolinkpage", id=request.user.id)
     return render(request, "mainpage.html")
@@ -78,12 +79,9 @@ def safe_get_or_create_profile(user):
 
 @login_required
 @transaction.atomic
-def editprofile(request):
+def editprofile(request, id):
     profile, created = safe_get_or_create_profile(user=request.user)
-    if created:
-        profile.display_name = request.user.username
-        profile.public_slug = slugify(request.user.username)
-        profile.save()
+    name_changed = request.session.get("name_changed", False)
     if request.method == "POST":
         name = request.POST.get("display_name", "").strip()
         bio = request.POST.get("bio", "").strip()
@@ -92,8 +90,8 @@ def editprofile(request):
         changes_made = False
         if name and name != profile.display_name:
             profile.display_name = name
-            profile.public_slug = ""
             changes_made = True
+            request.session["name_changed"] = True
 
         if bio != profile.bio:
             profile.bio = bio
@@ -113,8 +111,10 @@ def editprofile(request):
                 messages.error(request, f"Error updating profile: {str(e)}")
         else:
             messages.info(request, "No changes were made to your profile.")
-        return redirect("biolinkpage", id=request.user.id)
-    return render(request, "mainpage.html")
+        return redirect("editprofile", id=request.user.id)
+    return render(
+        request, "mainpage.html", {"profile": profile, "name_changed": name_changed}
+    )
 
 
 @login_required
@@ -122,14 +122,27 @@ def enable_public_link(request):
     if request.method == "POST":
         profile = get_object_or_404(Profile, user=request.user)
 
-        if not profile.display_name:
-            profile.public_slug = slugify(profile.user.username)
+        if profile.display_name:
+            base_slug = slugify(profile.display_name)
         else:
-            profile.public_slug = slugify(profile.display_name)
+            base_slug = slugify(profile.user.username)
 
+        unique_slug = base_slug
+        while (
+            Profile.objects.filter(public_slug=unique_slug)
+            .exclude(pk=profile.pk)
+            .exists()
+        ):
+            unique_slug = f"{base_slug}-{uuid.uuid4().hex[:6]}"
+
+        profile.public_slug = unique_slug
         profile.save()
-        messages.success(request, "Public link generated successfully!")
+
+        request.session["name_changed"] = False
+
+        messages.success(request, "Public link regenerated successfully!")
         return redirect("biolinkpage", id=request.user.id)
+
     return render(request, "mainpage.html")
 
 
@@ -141,20 +154,6 @@ def public_biolink_by_slug(request, slug):
     except Profile.user.RelatedObjectDoesNotExist:
         raise Http404("User not found")
     links = Link.objects.filter(profile=profile, is_public=True)
-    return render(
-        request,
-        "public_page.html",
-        {
-            "owner": profile.user,
-            "profile": profile,
-            "links": links,
-        },
-    )
-
-
-def public_biolink_by_uuid(request, public_id):
-    profile = get_object_or_404(Profile, public_id=public_id)
-    links = Link.objects.filter(user=profile.user, is_public=True)
     return render(
         request,
         "public_page.html",
