@@ -1,21 +1,52 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model
-from .models import BioLinkProfile as Profile, Link
-from django.utils.text import slugify
-from django.contrib import messages
-from django.http import Http404
-from django.db import transaction
+"""
+View functions for the Biolink feature managing user profile pages.
+
+This module provides views for:
+- Profile creation and management
+- Link management (CRUD operations)
+- Public profile access
+- Profile customization
+
+Key features:
+- Authentication protection
+- Transaction safety
+- Slug-based public URLs
+- Image handling
+- Error handling and user feedback
+"""
+
 import uuid
 
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.text import slugify
+
+from .models import BioLinkProfile as Profile
+from .models import Link
 
 User = get_user_model()
-
-# Create your views here.
 
 
 @login_required
 def my_biolink_page(request):
+    """
+    Redirect users to their personal biolink page.
+
+    Args:
+        request: The HTTP request object
+
+    Returns:
+        HttpResponse: Redirect to user's biolink page or appropriate error page
+
+    Handles various error cases:
+    - Missing user attributes
+    - Authentication issues
+    - General exceptions
+    """
     try:
         id = request.user.id
         return redirect("biolinkpage", id=id)
@@ -30,6 +61,21 @@ def my_biolink_page(request):
 
 @login_required()
 def Getlinks(request, id):
+    """
+    Display all links for a specific biolink profile.
+
+    Args:
+        request: The HTTP request object
+        id: User ID whose links to display
+
+    Returns:
+        HttpResponse: Rendered page with user's links
+
+    Features:
+    - Ordered by creation date (newest first)
+    - 404 handling for invalid profiles
+    - Authentication required
+    """
     biolink = get_object_or_404(Profile, user_id=id)
     links = biolink.links.all().order_by("-created_at")  # type: ignore
     context = {"links": links, "user": request.user}
@@ -38,6 +84,21 @@ def Getlinks(request, id):
 
 @login_required
 def Addlink(request, id):
+    """
+    Add a new link to user's biolink profile.
+
+    Args:
+        request: The HTTP request object
+        id: User ID whose profile to add link to
+
+    Returns:
+        HttpResponse: Redirect to biolink page or form for new link
+
+    Features:
+    - POST-only link creation
+    - Profile ownership validation
+    - Error handling for invalid profiles
+    """
     if request.method == "POST":
         url = request.POST.get("url")
         title = request.POST.get("title")
@@ -49,6 +110,21 @@ def Addlink(request, id):
 
 @login_required()
 def Deletelink(request, id):
+    """
+    Delete a link from user's biolink profile.
+
+    Args:
+        request: The HTTP request object
+        id: Link ID to delete
+
+    Returns:
+        HttpResponse: Redirect to biolink page
+
+    Security:
+    - Validates profile ownership
+    - POST-only deletion
+    - 404 handling for invalid links
+    """
     biolink = get_object_or_404(Profile, user=request.user)
     url = get_object_or_404(Link, id=id, profile=biolink)
     if request.method == "POST":
@@ -57,6 +133,21 @@ def Deletelink(request, id):
 
 
 def safe_get_or_create_profile(user):
+    """
+    Safely retrieve or create a biolink profile for a user.
+
+    Args:
+        user: User instance to get/create profile for
+
+    Returns:
+        tuple: (Profile instance, bool indicating if created)
+
+    Features:
+    - Automatic slug generation
+    - Duplicate slug handling
+    - Username-based defaults
+    - Error handling
+    """
     try:
         profile = Profile.objects.get(user=user)
         created = False
@@ -80,6 +171,24 @@ def safe_get_or_create_profile(user):
 @login_required
 @transaction.atomic
 def editprofile(request, id):
+    """
+    Edit biolink profile details with image handling.
+
+    Args:
+        request: The HTTP request object
+        id: User ID whose profile to edit
+
+    Returns:
+        HttpResponse: Rendered form or redirect after update
+
+    Features:
+    - Image upload and processing
+    - Transaction-safe updates
+    - Automatic profile creation
+    - Change tracking
+    - User feedback messages
+    - Session-based name change tracking
+    """
     profile, created = safe_get_or_create_profile(user=request.user)
     name_changed = request.session.get("name_changed", False)
     if request.method == "POST":
@@ -119,6 +228,22 @@ def editprofile(request, id):
 
 @login_required
 def enable_public_link(request):
+    """
+    Generate or regenerate public slug for profile access.
+
+    Args:
+        request: The HTTP request object
+
+    Returns:
+        HttpResponse: Redirect to biolink page with status
+
+    Features:
+    - Unique slug generation
+    - Collision handling with UUID
+    - Name-based slug creation
+    - Session state clearing
+    - Success messaging
+    """
     if request.method == "POST":
         profile = get_object_or_404(Profile, user=request.user)
 
@@ -147,6 +272,23 @@ def enable_public_link(request):
 
 
 def public_biolink_by_slug(request, slug):
+    """
+    Display public biolink profile page by slug.
+
+    Args:
+        request: The HTTP request object
+        slug: Public URL slug to look up
+
+    Returns:
+        HttpResponse: Rendered public profile page
+
+    Features:
+    - Public access (no auth required)
+    - Only shows public links
+    - Efficient database queries
+    - 404 handling for missing profiles
+    - Related object prefetching
+    """
     try:
         profile = Profile.objects.select_related("user").get(public_slug=slug)
     except Profile.DoesNotExist:

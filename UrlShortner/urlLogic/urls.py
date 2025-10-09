@@ -1,4 +1,27 @@
+"""
+URL configuration for URL shortening functionality.
+
+This module defines the URL patterns for all URL shortening operations:
+
+Core Features:
+- URL shortening and management
+- QR code generation and handling
+- URL redirection
+- URL analytics
+
+URL Patterns:
+- /: Dashboard view for URL management
+- /shortenurl/: Create new shortened URLs
+- /generateqr/: Generate QR codes for URLs
+- /delete/<id>/: Delete existing URLs
+- /updateurl/<id>/: Update URL settings
+- /<slug>/: Redirect to original URL
+- /downloadqr/<id>/: Download QR code image
+- /mailqr/<id>/: Email QR code to user
+"""
+
 from django.urls import path
+
 from . import views
 
 urlpatterns = [

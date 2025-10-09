@@ -1,7 +1,46 @@
-from pathlib import Path
-import os
-from decouple import config
+"""
+Django settings for URL.ly project.
 
+This module manages all Django settings for both development and production environments.
+Configuration is handled through environment variables using python-decouple.
+
+Key Features:
+- Environment-specific settings (DEBUG vs Production)
+- Security settings (SECRET_KEY, ALLOWED_HOSTS, etc.)
+- Database configuration (SQLite for dev, PostgreSQL for prod)
+- Authentication backends (Django + Google OAuth2)
+- Email configuration
+- Celery task queue settings
+- Static/Media file handling with Cloudinary
+- Custom user model integration
+- Social authentication pipeline
+- TailwindCSS configuration
+
+Environment Variables:
+    Required:
+    - SECRET_KEY: Django secret key
+    - GOOGLE_CLIENT_ID: Google OAuth client ID
+    - GOOGLE_CLIENT_SECRET: Google OAuth client secret
+    - EMAIL_* settings for email configuration
+    - CLOUDINARY_* settings for media storage
+    - DATABASE_* settings for production database
+
+    Optional:
+    - DEBUG: Set to True for development environment (default: False)
+    - CELERY_BROKER_URL: Redis URL for production (uses localhost in dev)
+
+Security:
+    Production environment enables additional security features:
+    - Secure cookies
+    - HTTPS-only
+    - WhiteNoise for static files
+    - PostgreSQL with SSL
+"""
+
+import os
+from pathlib import Path
+
+from decouple import config
 
 DEBUG = config("DEBUG", cast=bool, default=False)
 

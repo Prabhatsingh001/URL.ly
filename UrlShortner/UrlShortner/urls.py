@@ -1,35 +1,44 @@
 """
-URL configuration for UrlShortner project.
+Root URL configuration for URL.ly project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+This module defines the main URL routing for the entire application, integrating
+all sub-applications and their URL patterns. The routing structure is organized as follows:
+
+Main Routes:
+- / : Main landing page (IndexView)
+- /s/ : URL shortening functionality
+- /a/ : Authentication and user management
+- /u/ : User dashboard and URL management
+- /p/ : Public biolink pages
+- /admin/ : Admin interface
+
+Features:
+- URL shortening with anonymous access
+- Social authentication integration
+- Biolink page management
+- Custom error handlers (404, 500, 403)
+- Static file serving in development
+- Browser reload support in debug mode
+
+Note: Static file serving is only enabled in DEBUG mode. In production,
+static files should be served by the web server or a CDN.
 """
 
 from Auth.views import IndexView
+from Biolink.views import (
+    Addlink,
+    Deletelink,
+    Getlinks,
+    editprofile,
+    enable_public_link,
+    my_biolink_page,
+    public_biolink_by_slug,
+)
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic.base import RedirectView
-from Biolink.views import (
-    Getlinks,
-    Addlink,
-    my_biolink_page,
-    Deletelink,
-    editprofile,
-    public_biolink_by_slug,
-    enable_public_link,
-)
 from urlLogic.views import anonymousShorturl, redirect_to_original
 
 handler404 = "urlLogic.views.F404_page"
