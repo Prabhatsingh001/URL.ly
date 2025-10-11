@@ -1,0 +1,56 @@
+{% load static %}
+{% if debug %}
+  {% load static tailwind_tags %}
+{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+  {% if debug %}
+    {% tailwind_css %}
+  {% else %}
+    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+  {% endif %}
+  <title>Link Expired | URL.LY</title>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white flex flex-col md:flex-row items-center justify-center px-6 md:px-12 font-sans">
+  
+  <!-- Left Section -->
+  <div class="flex flex-col justify-center items-center text-center md:text-left space-y-6 animate-fadeInUp backdrop-blur-md">
+    <h1 class="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-red-500 via-orange-400 to-red-500 bg-clip-text text-transparent">
+      Link Expired
+    </h1>
+    <p class="text-lg md:text-xl text-gray-300 max-w-md">
+      The URL you’re trying to access has expired or is no longer valid.
+    </p>
+  </div>
+
+  <!-- Right Section (Image) -->
+  <div class="mt-10 md:mt-0 md:ml-12">
+    <img src="{% static 'expired.svg' %}" 
+         alt="Link Expired Illustration" 
+         class="w-full max-w-xs md:max-w-md lg:max-w-lg object-contain drop-shadow-2xl animate-fadeIn">
+  </div>
+
+  <!-- Tailwind Animation Styles -->
+  <style>
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .animate-fadeInUp {
+      animation: fadeInUp 0.8s ease-out;
+    }
+    .animate-fadeIn {
+      animation: fadeIn 1s ease-in;
+    }
+  </style>
+</body>
+</html>

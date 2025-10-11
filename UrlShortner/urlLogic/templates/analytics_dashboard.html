@@ -1,0 +1,137 @@
+{% load static %}
+{% if debug %}
+  {% load static tailwind_tags %}
+{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+  {% if debug %}
+    {% tailwind_css %}
+  {% else %}
+    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+  {% endif %}
+    <title>{{ url.short_code }} Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-800 text-white min-h-screen">
+
+  <div class="container mx-auto px-6 py-8">
+    <h1 class="text-3xl font-bold mb-2">Analytics for <span class="text-blue-600">{{ url.short_code }}</span></h1>
+    <p class="text-gray-500 mb-6 break-words">Original: <a href="{{ url.original_url }}" class="text-blue-600 underline">{{ url.original_url }}</a></p>
+
+    {% if not has_data %}
+      <div class="mb-6 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded">
+        <p>No analytics available yet. Showing demo data to visualize how your dashboard will look once clicks start coming in.</p>
+      </div>
+    {% endif %}
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white p-4 rounded-xl shadow text-center">
+        <h2 class="text-gray-500 text-sm">Total Visits</h2>
+        <p class="text-3xl font-bold text-black">{{ total_visits }}</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow text-center">
+        <h2 class="text-gray-500 text-sm">Top Country</h2>
+        <p class="text-2xl font-bold text-black">{{ top_country|default:"-" }}</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow text-center">
+        <h2 class="text-gray-500 text-sm">Top Device</h2>
+        <p class="text-2xl font-bold text-black">{{ top_device|default:"-" }}</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow text-center">
+        <h2 class="text-gray-500 text-sm">Top Referrer</h2>
+        <p class="text-2xl font-bold text-black">{{ top_referrer|default:"-" }}</p>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-4 text-black">Clicks Over Time</h3>
+        <canvas id="clicksChart"></canvas>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-4 text-black">Top Countries</h3>
+        <canvas id="countryChart"></canvas>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-4 text-black">Device Distribution</h3>
+        <canvas id="deviceChart"></canvas>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-4 text-black">Top Referrers</h3>
+        <canvas id="referrerChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  {{ visits_by_day|json_script:"visitsByDayData" }}
+  {{ visits_by_country|json_script:"visitsByCountryData" }}
+  {{ visits_by_device|json_script:"visitsByDeviceData" }}
+  {{ visits_by_referrer|json_script:"visitsByReferrerData" }}
+
+  <script>
+    const visitsByDay = JSON.parse(document.getElementById('visitsByDayData').textContent);
+    const visitsByCountry = JSON.parse(document.getElementById('visitsByCountryData').textContent);
+    const visitsByDevice = JSON.parse(document.getElementById('visitsByDeviceData').textContent);
+    const visitsByReferrer = JSON.parse(document.getElementById('visitsByReferrerData').textContent);
+
+    new Chart(document.getElementById("clicksChart"), {
+      type: 'line',
+      data: {
+        labels: visitsByDay.map(v => v.day.substring(0, 10)),
+        datasets: [{
+          label: 'Clicks',
+          data: visitsByDay.map(v => v.clicks),
+          borderColor: '#2563eb',
+          fill: false,
+          tension: 0.3
+        }]
+      }
+    });
+
+    new Chart(document.getElementById("countryChart"), {
+      type: 'bar',
+      data: {
+        labels: visitsByCountry.map(v => v.country || "Unknown"),
+        datasets: [{
+          label: 'Visits',
+          data: visitsByCountry.map(v => v.total),
+          backgroundColor: '#10b981'
+        }]
+      }
+    });
+
+    new Chart(document.getElementById("deviceChart"), {
+      type: 'doughnut',
+      data: {
+        labels: visitsByDevice.map(v => v.device || "Unknown"),
+        datasets: [{
+          data: visitsByDevice.map(v => v.total),
+          backgroundColor: ['#3b82f6','#f97316','#22c55e']
+        }]
+      }
+    });
+
+    new Chart(document.getElementById("referrerChart"), {
+      type: 'pie',
+      data: {
+        labels: visitsByReferrer.map(v => v.referrer || "Direct"),
+        datasets: [{
+          data: visitsByReferrer.map(v => v.total),
+          backgroundColor: ['#8b5cf6','#ec4899','#f59e0b','#14b8a6','#84cc16']
+        }]
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -27,6 +27,7 @@ from . import views
 urlpatterns = [
     path("", views.home, name="home"),
     path("shortenurl/", views.make_short_url, name="make_short_url"),
+    path("analytics/<int:id>/", views.analytics_dashboard, name="analytics_dashboard"),
     path("generateqr/", views.generate_qr, name="generate_qr"),
     path("delete/<int:id>/", views.delete_url, name="delete_url"),
     path("updateurl/<int:id>/", views.update_url, name="edit_url"),

@@ -1,14 +1,36 @@
+"""
+Email functionality module for the Auth system.
+
+This module handles all email communications for the authentication and user management system,
+including welcome emails, verification emails, password reset notifications, and contact form submissions.
+Each email is sent in both HTML and plain text formats for maximum compatibility.
+
+Functions in this module use Django's email backend and template system to generate and send emails.
+All email templates are stored in the 'emails' directory within templates.
+"""
+
 from django.conf import settings
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from .tokens import account_activation_token
-from django.core.mail import EmailMessage
-from django.core.mail import EmailMultiAlternatives
-from .tokens import password_reset_token
+from django.utils.http import urlsafe_base64_encode
+
+from .tokens import account_activation_token, password_reset_token
 
 
 def send_welcome_email(user):
+    """
+    Send a welcome email to newly registered users.
+
+    Args:
+        user: The User instance who just registered.
+
+    The email includes:
+        - Personalized greeting
+        - Login URL
+        - User's registration details (username and email)
+        - Both HTML and plain text versions
+    """
     login_url = f"{settings.PROTOCOL}://{settings.SITE_DOMAIN}/a/login/"
     subject = "Welcome to URL.LY"
     html_content = render_to_string(
@@ -38,6 +60,17 @@ def send_welcome_email(user):
 
 
 def send_verification_mail(user):
+    """
+    Send an email verification link to newly registered users.
+
+    Args:
+        user: The User instance whose email needs to be verified.
+
+    The email includes:
+        - Verification link with encoded user ID and security token
+        - Instructions for verification
+        - Both HTML and plain text versions
+    """
     current_site = settings.SITE_DOMAIN
     protocol = settings.PROTOCOL
     subject = "Confirm your email - URL.LY"
@@ -77,6 +110,19 @@ def send_reset_password_email(
     protocol,
     current_site=settings.SITE_DOMAIN,
 ):
+    """
+    Send a password reset link to users who requested it.
+
+    Args:
+        user: The User instance requesting password reset
+        protocol: The protocol to use in the reset link (http/https)
+        current_site: The domain name, defaults to settings.SITE_DOMAIN
+
+    The email includes:
+        - Password reset link with encoded user ID and security token
+        - Instructions for resetting password
+        - Both HTML and plain text versions
+    """
     subject = "Reset Password"
     html_content = render_to_string(
         "emails/reset_password_email.html",
@@ -108,6 +154,18 @@ def send_reset_password_email(
 
 
 def password_reset_success_email(user):
+    """
+    Send a confirmation email after successful password reset.
+
+    Args:
+        user: The User instance whose password was reset
+
+    The email includes:
+        - Confirmation of password reset
+        - Login URL
+        - Security warning if user didn't request the change
+        - Both HTML and plain text versions
+    """
     subject = "Password Reset Successfully"
     html_content = render_to_string(
         "emails/password_reset_success_email.html",
@@ -134,6 +192,16 @@ def password_reset_success_email(user):
 
 
 def send_contact_email(contact):
+    """
+    Forward contact form submissions to the team email address.
+
+    Args:
+        contact: The Contact instance containing form submission details
+                (name, email, and message)
+
+    Sends a notification email to the team with the contact form details.
+    Unlike other email functions, this only sends plain text format.
+    """
     email_subject = f"New Notofication {contact.email}"
     message = f"""
         you have recieved a new message

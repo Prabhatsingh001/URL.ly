@@ -51,7 +51,7 @@ class UrlModel(models.Model):
         upload_to="qr_code/", null=True, blank=True, storage=MediaCloudinaryStorage()
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField(null=True, blank=True)
+    expires_at = models.DateTimeField(null=True, blank=True, default=None)
     click_count = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -69,20 +69,14 @@ class UrlVisit(models.Model):
     browser = models.CharField(max_length=50)
     os = models.CharField(max_length=50)
     device = models.CharField(max_length=50, null=True, blank=True)
-    device_type = models.CharField(max_length=50, null=True, blank=True)
-    screen_resolution = models.CharField(max_length=20, null=True, blank=True)
     referrer = models.URLField(null=True, blank=True)
-    utm_source = models.CharField(max_length=50, null=True, blank=True)
-    utm_medium = models.CharField(max_length=50, null=True, blank=True)
-    utm_campaign = models.CharField(max_length=50, null=True, blank=True)
-    user_agent = models.TextField(null=True, blank=True)
-    session_id = models.CharField(max_length=100, null=True, blank=True)
-    http_method = models.CharField(max_length=10, null=True, blank=True)
-    status_code = models.IntegerField(null=True, blank=True)
     is_bot = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["-timestamp"]
+
+    def __str__(self):
+        return f"{self.url} -> {self.url.click_count} -> {self.url.original_url}"  # type: ignore
 
 
 # ------------------------------------------------------------------------------
