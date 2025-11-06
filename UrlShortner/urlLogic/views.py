@@ -34,118 +34,51 @@ from django.db.models import Count
 from django.db.models.functions import TruncDay
 
 from django.views.decorators.cache import cache_page
+from urllib.parse import urlparse
+import logging
 
+logger = logging.getLogger("urlLogic")
 Slug = SlugGenerator()
 
-# ------------------------------------------------------------------------------
-"""custom error pages"""
-
-
-def F404_page(request, excetipon):
-    """
-    Handle 404 Not Found errors with a custom template.
-
-    Args:
-        request: The HTTP request object
-        excetipon: The exception that triggered the 404
-
-    Returns:
-        HttpResponse: Rendered 404 page with custom branding
-
-    This view provides a user-friendly 404 page that maintains
-    site branding and suggests next steps to users.
-    """
-    return render(request, "404_notF.html", status=404)
-
-
-def F500_page(request):
-    """
-    Handle 500 Server Error responses with a custom template.
-
-    Args:
-        request: The HTTP request object
-
-    Returns:
-        HttpResponse: Rendered 500 page with custom branding
-
-    Provides a user-friendly error page for server-side errors
-    while maintaining site branding and suggesting next steps.
-    """
-    return render(request, "server_500.html", status=500)
-
-
-def custom_403_view(request, exception=None):
-    """
-    Handle rate limit exceeded (403 Forbidden) responses.
-
-    Args:
-        request: The HTTP request object
-        exception: Optional exception that triggered the 403
-
-    Returns:
-        HttpResponse: Redirect to index with error message
-
-    Used primarily for rate limiting responses, providing user-friendly
-    feedback when request limits are exceeded.
-    """
-    message = "You are sending requests too quickly. Please wait a few moments before trying again."
-    messages.error(request, message)
-    return redirect("index")
-
 
 # ------------------------------------------------------------------------------
-"""url shortening without login"""
-
-
-@ratelimit(key="ip", rate="5/m", method="POST", block=True)
-@cache_page(60 * 10)
+@ratelimit(key="ip", rate="2/m", method="POST", block=True)
 def anonymousShorturl(request):
     """
     Create shortened URLs for anonymous users with rate limiting.
-
-    Args:
-        request: The HTTP request object
-
-    Returns:
-        HttpResponse: Rendered form or redirect with shortened URL
-
-    Features:
-    - Rate limited to 5 requests per minute per IP
-    - Transaction-safe URL creation
-    - IP tracking for anonymous URLs
-    - Success/error messaging
-
-    Rate limiting helps prevent abuse while allowing legitimate use
-    by anonymous users.
     """
-    try:
-        short_url = None
+    if request.method == "POST":
+        original_url = request.POST.get("original_url")
 
-        if request.method == "POST":
-            original_url = request.POST.get("url")
-            if original_url:
-                try:
-                    with transaction.atomic():
-                        url_obj = ShortUrlAnonymous.objects.create(
-                            original_url=original_url, ip_address=get_client_ip(request)
-                        )
-                        slug = Slug.encode_url(url_obj.pk)
-                        url_obj.short_code = slug
-                        url_obj.save()
-                        short_url = request.build_absolute_uri(
-                            f"/s/{url_obj.short_code}/"
-                        )
-                        messages.success(request, "Short URL created successfully!")
-                        return redirect(f"{reverse('index')}?short_url={short_url}")
-                except Exception as e:
-                    messages.error(request, f"Error: {str(e)}")
-                    return render(request, "f.html")
-        return render(request, "f.html")
-    except Ratelimited:
-        messages.error(
-            request, "You are submitting too fast. Please try again in a few minutes."
-        )
-        return redirect("index")
+        if not original_url:
+            messages.error(request, "Please enter a valid URL.")
+            return redirect("index")  # Redirect to form page
+
+        try:
+            with transaction.atomic():
+                url_obj = ShortUrlAnonymous.objects.create(
+                    original_url=original_url, ip_address=get_client_ip(request)
+                )
+                slug = Slug.encode_url(url_obj.pk)
+                url_obj.short_code = slug
+                url_obj.save(update_fields=["short_code"])
+
+                short_url = request.build_absolute_uri(f"/s/{url_obj.short_code}/")
+                messages.success(request, "Short URL created successfully!")
+                return redirect(f"{reverse('index')}?short_url={short_url}")
+
+        except Ratelimited:
+            messages.error(
+                request,
+                "You are submitting too fast. Please try again in a few minutes.",
+            )
+            return redirect("index")
+
+        except Exception as e:
+            messages.error(request, f"Error: {str(e)}")
+            return redirect("index")
+
+    return render(request, "anony_shorturl.html")
 
 
 def redirect_to_original(request, short_code):
@@ -486,6 +419,45 @@ def update_url(request, id):
     return render(
         request, "update_edit_url.html", {"url": url, "url_details": url_details}
     )
+
+
+def get_original_url(request):
+    context = {}
+
+    if request.method == "POST":
+        short_url = request.POST.get("short_url", "").strip()
+        if not short_url:
+            request.session["error"] = "Please enter a short URL."
+            return redirect("preview")
+
+        parsed = urlparse(short_url)
+        path_parts = parsed.path.strip("/").split("/")
+
+        if len(path_parts) < 2:
+            request.session["error"] = "Invalid short URL format."
+            return redirect("preview")
+
+        short_code = path_parts[-1]
+
+        try:
+            if path_parts[0] == "s":
+                url_obj = ShortUrlAnonymous.objects.get(short_code=short_code)
+            else:
+                url_obj = UrlModel.objects.get(short_url=short_code)
+
+            request.session["original_url"] = url_obj.original_url
+            request.session["short_url"] = short_url
+
+        except (ShortUrlAnonymous.DoesNotExist, UrlModel.DoesNotExist):
+            request.session["error"] = "No original URL found for this short link."
+
+        return redirect("preview")
+
+    context["original_url"] = request.session.pop("original_url", None)
+    context["short_url"] = request.session.pop("short_url", None)
+    context["error"] = request.session.pop("error", None)
+
+    return render(request, "url_preview.html", context)
 
 
 @login_required()

@@ -47,6 +47,7 @@
         {% else %}
           <a href="{% url 'index' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Home</a>
           <a href="{% url 'my_biolink_page' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Url.ly Page</a>
+          <a href="{% url 'preview' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">preview original</a>
           <a href="{% url 'a:about' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold  transition">About</a>
           <a href="{% url 'a:contact' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Contact</a>
           <a href="{% url "a:login" %}"
@@ -66,6 +67,7 @@
       <a href="{% url 'index' %}" class="block text-gray-700 dark:text-white font-semibold hover:text-blue-600 transition">Home</a>
       <a href="{% url 'my_biolink_page' %}" class="block text-gray-700 dark:text-white font-semibold hover:text-blue-600 transition">URL.ly Page</a>
       {% endif %}
+      <a href="{% url 'preview' %}" class="hover:text-blue-600 font-semibold transition">Preview original</a>
       <a href="{% url 'a:about' %}" class="hover:text-blue-600 font-semibold transition">About</a>
       <a href="{% url 'a:contact' %}" class="hover:text-blue-600 font-semibold transition">Contact</a>
 

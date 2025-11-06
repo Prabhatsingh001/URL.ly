@@ -120,5 +120,3 @@ UrlShortner/
     └── wsgi.py
 
 ```
-
-If you'd like, I can also generate a shortened tree (only top-level folders) for quick reference and keep this full tree in `STRUCTURE.md`.

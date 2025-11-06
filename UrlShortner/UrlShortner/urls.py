@@ -39,11 +39,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic.base import RedirectView
-from urlLogic.views import anonymousShorturl, redirect_to_original
+from urlLogic.views import anonymousShorturl, redirect_to_original, get_original_url
 
-handler404 = "urlLogic.views.F404_page"
-handler500 = "urlLogic.views.F500_page"
-handler403 = "urlLogic.views.custom_403_view"
+handler404 = "urlLogic.errors.F404_page"
+handler500 = "urlLogic.errors.F500_page"
+handler403 = "urlLogic.errors.custom_403_view"
 
 
 urlpatterns = [
@@ -51,6 +51,7 @@ urlpatterns = [
     path("admin/", admin.site.urls, name="admin"),
     path("auth/", include("social_django.urls", namespace="social")),
     path("", IndexView.as_view(), name="index"),
+    path("preview/", get_original_url, name="preview"),
     path("s/", anonymousShorturl, name="urlshort"),
     path("s/<str:short_code>/", redirect_to_original, name="redirect"),
     path("a/", include(("Auth.urls", "Auth"), namespace="a")),

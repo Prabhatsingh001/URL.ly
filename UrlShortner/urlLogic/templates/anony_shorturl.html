@@ -1,0 +1,57 @@
+{% load static %}
+{% if debug %}
+  {% load static tailwind_tags %}
+{% endif %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <title>URL Shortener</title>
+    {% if debug %}
+        {% tailwind_css %}
+    {% else %}
+        <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+    {% endif %}
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center ">
+
+    <div class="flex flex-col md:flex-row items-center gap-x-20 mx-auto">
+  
+        <div class="bg-white/10 backdrop-blur-md shadow-md rounded-lg p-8 w-96 text-center max-w-sm animate-fadeIn">
+            <h1 class="text-2xl font-bold mb-4 text-gray-50">URL Shortener</h1>
+
+            <form method="POST" class="space-y-3">
+                {% csrf_token %}
+                <input type="url" name="original_url" required placeholder="Enter long URL"
+                    class=" text-gray-400 border w-full px-3 py-2 rounded focus:ring focus:ring-blue-300">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Shorten
+                </button>
+            </form>
+        </div>
+
+        <div class="hidden md:flex flex-1">
+            <img src="{% static "link_shortner.svg" %}" alt="link svg image" loading="lazy"
+            class="object-contain drop-shadow-2xl animate-float"
+            >
+        </div>
+
+    </div>
+
+<style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-fadeIn { animation: fadeIn 0.8s ease-out; }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+</style>
+</body>
+</html>
