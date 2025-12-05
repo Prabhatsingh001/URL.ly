@@ -80,6 +80,8 @@ class BioLinkProfile(models.Model):
             *args: Variable length argument list
             **kwargs: Arbitrary keyword arguments
         """
+        if not self.public_slug:
+            self.public_slug = self.user.username
         if self.profile_image:
             img = Image.open(self.profile_image)
             if img.mode in ("RGBA", "P"):

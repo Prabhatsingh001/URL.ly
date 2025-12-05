@@ -126,6 +126,10 @@ def signup(request):
             messages.error(request, "passwords do not match")
             return redirect("a:signup")
 
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "username already exists")
+            return redirect("a:signup")
+
         try:
             validate_password(password)
         except ValidationError as e:

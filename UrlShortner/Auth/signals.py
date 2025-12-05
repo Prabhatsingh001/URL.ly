@@ -12,8 +12,9 @@ and are automatically registered when the Auth app is loaded.
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db import transaction
 
-from .mail import send_welcome_email
+from .tasks import send_welcome_email
 from .models import UserProfile
 
 User = get_user_model()
@@ -34,7 +35,7 @@ def send_email(sender, instance, created, **kwargs):
     email with login information and account details.
     """
     if created:
-        send_welcome_email(instance)
+        transaction.on_commit(lambda: send_welcome_email.delay(instance.id))  # type: ignore
 
 
 @receiver(post_save, sender=User)
