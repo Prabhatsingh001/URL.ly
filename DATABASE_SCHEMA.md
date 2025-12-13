@@ -8,11 +8,11 @@ This document provides a comprehensive overview of the database models and their
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────┐
-│                                     URL.LY DATABASE                                      │
+│                                     URL.LY DATABASE                                     │
 └─────────────────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────┐          1:1           ┌─────────────────────┐
-│     CustomUser      │◄─────────────────────►│    UserProfile      │
+│     CustomUser      │◄─────────────────────► │    UserProfile      │
 ├─────────────────────┤                        ├─────────────────────┤
 │ PK  id (UUID)       │                        │ PK  id (UUID)       │
 │     email (unique)  │                        │ FK  user ──────────►│
@@ -28,7 +28,7 @@ This document provides a comprehensive overview of the database models and their
           │ 1:1
           ▼
 ┌─────────────────────┐           1:N          ┌─────────────────────┐
-│  BioLinkProfile     │◄─────────────────────►│        Link         │
+│  BioLinkProfile     │◄─────────────────────► │        Link         │
 ├─────────────────────┤                        ├─────────────────────┤
 │ PK  id (UUID)       │                        │ PK  id (UUID)       │
 │ FK  user ───────────┤                        │ FK  profile ───────►│
@@ -42,7 +42,7 @@ This document provides a comprehensive overview of the database models and their
           │ 1:N (CustomUser)
           ▼
 ┌─────────────────────┐           1:N          ┌─────────────────────┐
-│      UrlModel       │◄─────────────────────►│      UrlVisit       │
+│      UrlModel       │◄─────────────────────► │      UrlVisit       │
 ├─────────────────────┤                        ├─────────────────────┤
 │ PK  id (auto)       │                        │ PK  id (auto)       │
 │     original_url    │                        │ FK  url ───────────►│
