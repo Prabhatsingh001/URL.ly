@@ -9,5 +9,5 @@ __pycache__
 *.log
 .env
 issues.txt
-media
+media/
 logs

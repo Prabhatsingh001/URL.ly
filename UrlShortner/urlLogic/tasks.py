@@ -1,12 +1,36 @@
-from django.conf import settings
-from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
+"""
+Asynchronous Celery tasks for URL-related email notifications.
+
+This module handles background tasks for sending QR code emails to users.
+Emails are sent asynchronously to avoid blocking the main application flow
+and include both HTML and plain text versions with file attachments.
+"""
 
 from celery import shared_task
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 
 @shared_task
 def send_qr_email(user_id, filename, filebytes):
+    """
+    Send an email with a QR code attachment to a user asynchronously.
+
+    Args:
+        user_id: UUID of the user to send the email to
+        filename: Name of the QR code file to be attached
+        filebytes: Binary content of the QR code image
+
+    The email includes:
+        - QR code as a PNG attachment
+        - HTML and plain text versions of the message
+        - Support contact information
+        - Branded email template
+
+    Uses qr_code_email.html template for consistent branding and
+    sends the email with fail_silently=True to prevent task failures.
+    """
     from django.contrib.auth import get_user_model
 
     User = get_user_model()

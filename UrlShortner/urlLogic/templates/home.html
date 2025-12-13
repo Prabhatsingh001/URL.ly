@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load cloudinary %}
+{% load static %}
 
 {% block title %}Home | URL.LY{% endblock %}
 
@@ -105,4 +106,8 @@
     {% endif %}
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'main/js/url_card.js' %}"></script>
 {% endblock %}

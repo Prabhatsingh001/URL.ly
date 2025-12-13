@@ -1,17 +1,54 @@
-from django.db import models
+"""
+Database models for the Biolink feature, providing user profile pages with multiple links.
+
+This module defines the data structure for:
+- User bio link profiles with customizable information
+- Individual links within profiles
+- Image handling with automatic optimization
+
+Key features:
+- UUID-based primary keys for security
+- Automatic image processing and optimization
+- Cloud storage integration for media
+- Customizable profile slugs for public URLs
+"""
+
 import uuid
-from django.conf import settings
-from django.utils.text import slugify
-from django.core.validators import FileExtensionValidator
-from cloudinary_storage.storage import MediaCloudinaryStorage
-from django.core.files.base import ContentFile
 from io import BytesIO
+
+from cloudinary_storage.storage import MediaCloudinaryStorage
+from django.conf import settings
+from django.core.files.base import ContentFile
+from django.core.validators import FileExtensionValidator
+from django.db import models
 from PIL import Image
 
 User = settings.AUTH_USER_MODEL
 
 
 class BioLinkProfile(models.Model):
+    """
+    User profile model for bio link pages.
+
+    This model represents a user's customizable profile page that can contain
+    multiple links and personal information. It includes automatic image
+    processing for profile pictures.
+
+    Attributes:
+        id (UUIDField): Unique identifier for the profile
+        user (OneToOneField): Associated user account
+        display_name (CharField): Public display name
+        bio (CharField): Short biography or description
+        profile_image (ImageField): Profile picture with auto-optimization
+        public_slug (SlugField): Custom URL for public profile
+
+    The save method includes automatic image processing:
+    - Converts RGBA/P images to RGB
+    - Resizes images to max 500x500
+    - Optimizes JPEG quality to 85%
+    - Handles cloud storage upload
+    """
+
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="biolinkprofile"
@@ -28,31 +65,23 @@ class BioLinkProfile(models.Model):
         storage=MediaCloudinaryStorage(),
     )
     public_slug = models.SlugField(max_length=50, unique=True, blank=True)
-    public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def save(self, *args, **kwargs):
-        base_source = (
-            self.display_name.strip()
-            if self.display_name
-            else (self.user.username or f"user-{self.user.pk}")
-        )
-        candidate = slugify(base_source)[:40] or str(self.public_id)[:12]
+        """
+        Override save method to process profile images before saving.
 
-        # If slug is missing or doesn't match the expected base, regenerate it
-        if not self.public_slug or not self.public_slug.startswith(
-            slugify(base_source)[:40]
-        ):
-            unique = candidate
-            i = 1
-            while (
-                BioLinkProfile.objects.filter(public_slug=unique)
-                .exclude(pk=self.pk)
-                .exists()
-            ):
-                unique = f"{candidate}-{i}"
-                i += 1
-            self.public_slug = unique
+        Process includes:
+        - Converting image mode to RGB if needed
+        - Resizing to maximum 500x500 pixels
+        - Optimizing JPEG quality
+        - Handling cloud storage upload
 
+        Args:
+            *args: Variable length argument list
+            **kwargs: Arbitrary keyword arguments
+        """
+        if not self.public_slug:
+            self.public_slug = self.user.username
         if self.profile_image:
             img = Image.open(self.profile_image)
             if img.mode in ("RGBA", "P"):
@@ -69,6 +98,24 @@ class BioLinkProfile(models.Model):
 
 
 class Link(models.Model):
+    """
+    Individual link model for items within a bio link profile.
+
+    This model represents a single link entry in a user's profile page.
+    Links can be made public or private and are ordered by creation date.
+
+    Attributes:
+        id (UUIDField): Unique identifier for the link
+        profile (ForeignKey): Associated BioLinkProfile
+        title (CharField): Display text for the link
+        url (URLField): Destination URL
+        is_public (BooleanField): Visibility toggle
+        created_at (DateTimeField): Timestamp of creation
+
+    Meta:
+        ordering: Links are ordered by creation date (newest first)
+    """
+
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     profile = models.ForeignKey(
         BioLinkProfile,
@@ -84,4 +131,10 @@ class Link(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
+        """
+        String representation of the Link model.
+
+        Returns:
+            str: Formatted string showing link title and associated username
+        """
         return f"{self.title} --> {self.profile.user.username}"

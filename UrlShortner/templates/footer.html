@@ -24,7 +24,7 @@
           </div>
           
           <p class="text-gray-300 leading-relaxed max-w-md">
-            The modern way to shorten, manage, and analyze your links. Join thousands of users who trust URL.ly for their link management needs.
+            Transform the way you share content with powerful link shortening, custom biolinks, and comprehensive analytics. Trusted by thousands worldwide.
           </p>
           
           <!-- Contact Info -->
@@ -35,8 +35,8 @@
                   <path d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <a href="mailto:prabhatsingh1112004@gmail.com" class="text-gray-300 hover:text-blue-400 transition-colors duration-200">
-                support@urly.com
+              <a href="mailto:noreply.url.ly@gmail.com" class="text-gray-300 hover:text-blue-400 transition-colors duration-200">
+                    support@urlly.com
               </a>
             </div>
           </div>
@@ -76,7 +76,7 @@
               </a></li>
               <li><a href="{% url 'biolinkpage' user.id %}" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
                 <span class="w-1 h-1 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                Bio Link Page
+                Biolink Page
               </a></li>
             {% else %}
               <li><a href="{% url 'a:login' %}?next={% url 'u:home' %}" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
@@ -85,14 +85,15 @@
               </a></li>
               <li><a href="{% url 'a:login' %}?next={% url 'my_biolink_page' %}" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
                 <span class="w-1 h-1 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                Bio Link Page
+                Biolink Page
               </a></li>
             {% endif %}
-            {% comment %} <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
+            <li><a href="{% url 'preview' %}" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
               <span class="w-1 h-1 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
-              API Access
+              Preview URL
             </a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
+
+            {% comment %} <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
               <span class="w-1 h-1 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
               Pricing
             </a></li> {% endcomment %}
@@ -107,11 +108,11 @@
               <span class="w-1 h-1 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
               About Us
             </a></li>
-            {% comment %} <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
+            <li><a href="{% url "urlshort" %}" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
               <span class="w-1 h-1 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
-              Blog
+              URL Shortener
             </a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
+            {% comment %} <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
               <span class="w-1 h-1 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
               Careers
             </a></li>

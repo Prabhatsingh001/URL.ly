@@ -1,14 +1,21 @@
 {% load static %}
-{% comment %} {% load static tailwind_tags %} {% endcomment %}
+{% if debug %}
+    {% load static tailwind_tags %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="{% static 'logo.png' %}">
-    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    {% if debug %}
+        {% tailwind_css %}
+    {% else %}
+        <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">   
+    {% endif %}
     <title>Mail Verification | URL.ly</title>
-    {% comment %} {% tailwind_css %} {% endcomment %}
+    
 </head>
 <body class="min-h-screen w-full bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white flex items-center justify-center">
 
@@ -75,57 +82,6 @@
         </div>
     {% endif %}
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const alerts = document.querySelectorAll(".flash-alert");
-
-        alerts.forEach((alert) => {
-            alert.style.opacity = "0";
-            alert.style.transform = "translateY(-10px)";
-            setTimeout(() => {
-                alert.style.transition = "all 0.3s ease-out";
-                alert.style.opacity = "1";
-                alert.style.transform = "translateY(0)";
-            }, 50);
-
-            setTimeout(() => {
-                alert.style.transition = "all 0.3s ease";
-                alert.style.opacity = "0";
-                alert.style.transform = "translateY(-10px)";
-                setTimeout(() => alert.remove(), 300);
-            }, 3000);
-
-            const closeBtn = alert.querySelector(".alert-close");
-            if (closeBtn) {
-                closeBtn.addEventListener("click", () => {
-                    alert.style.transition = "all 0.3s ease";
-                    alert.style.opacity = "0";
-                    alert.style.transform = "translateY(-10px)";
-                    setTimeout(() => alert.remove(), 300);
-                });
-            }
-        });
-
-        const timerDisplay = document.getElementById("timerDisplay");
-        const mybutton = document.getElementById("mybuttonId");
-        let countDownDate = new Date().getTime() + (1 * 30 * 1000);
-
-        let x = setInterval(() => {
-            let now = new Date().getTime();
-            let distance = countDownDate - now;
-            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            if (distance > 0) {
-                timerDisplay.innerHTML = `You can resend the email in <span class="font-semibold">${seconds}</span> seconds.`;
-            } else {
-                clearInterval(x);
-                timerDisplay.innerHTML = "You can now resend the email.";
-                mybutton.disabled = false;
-                mybutton.classList.remove("cursor-not-allowed", "bg-blue-600");
-                mybutton.classList.add("cursor-pointer", "bg-blue-700", "hover:bg-blue-800", "transition");
-            }
-        }, 1000);
-    });
-</script>
+<script src="{% static "main/js/resend_verification_email.js" %}"></script>
 </body>
 </html>

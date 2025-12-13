@@ -1,11 +1,87 @@
 {% load static %}
 
-<div id="flash-alert" class="fixed top-16 left-1/2 transform -translate-x-1/2 z-50 w-auto max-w-md px-6 py-4 rounded-lg shadow-lg bg-white text-gray-800 border border-gray-200
-        dark:bg-gray-400/30 dark:text-white/80 dark:border-gray-700 transition-transform duration-300 ease-out alert alert-{{message.tags}}">
-    <strong class="text-sm">{{ message }}</strong>
-    <button id="alert-close" class="ml-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-    </button>
+<div id="flash-alert" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 w-auto max-w-lg animate-slide-down transition-all duration-300 ease-out alert alert-{{message.tags}}">
+    <div class="flex items-start gap-3 px-5 py-4 rounded-xl shadow-2xl backdrop-blur-md border
+        {% if message.tags == 'success' %}
+            bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-200 text-emerald-800
+            dark:from-emerald-900/20 dark:to-green-900/20 dark:border-emerald-700 dark:text-emerald-300
+        {% elif message.tags == 'error' or message.tags == 'danger' %}
+            bg-gradient-to-r from-red-50 to-rose-50 border-red-200 text-red-800
+            dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700 dark:text-red-300
+        {% elif message.tags == 'warning' %}
+            bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200 text-amber-800
+            dark:from-amber-900/20 dark:to-yellow-900/20 dark:border-amber-700 dark:text-amber-300
+        {% elif message.tags == 'info' %}
+            bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200 text-blue-800
+            dark:from-blue-900/20 dark:to-cyan-900/20 dark:border-blue-700 dark:text-blue-300
+        {% else %}
+            bg-white text-gray-800 border-gray-200
+            dark:bg-gray-800/90 dark:text-gray-100 dark:border-gray-700
+        {% endif %}">
+        
+        <!-- Icon -->
+        <div class="flex-shrink-0 mt-0.5">
+            {% if message.tags == 'success' %}
+                <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+            {% elif message.tags == 'error' or message.tags == 'danger' %}
+                <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+            {% elif message.tags == 'warning' %}
+                <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+            {% elif message.tags == 'info' %}
+                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                </svg>
+            {% else %}
+                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                </svg>
+            {% endif %}
+        </div>
+
+        <!-- Message -->
+        <div class="flex-1 pt-0.5">
+            <p class="text-sm font-semibold leading-relaxed">{{ message }}</p>
+        </div>
+
+        <!-- Close Button -->
+        <button id="alert-close" class="flex-shrink-0 ml-2 p-1 rounded-lg transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-1
+            {% if message.tags == 'success' %}
+                text-emerald-600 dark:text-emerald-400 focus:ring-emerald-500
+            {% elif message.tags == 'error' or message.tags == 'danger' %}
+                text-red-600 dark:text-red-400 focus:ring-red-500
+            {% elif message.tags == 'warning' %}
+                text-amber-600 dark:text-amber-400 focus:ring-amber-500
+            {% elif message.tags == 'info' %}
+                text-blue-600 dark:text-blue-400 focus:ring-blue-500
+            {% else %}
+                text-gray-600 dark:text-gray-400 focus:ring-gray-500
+            {% endif %}">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
 </div>
+
+<style>
+    @keyframes slide-down {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -20px);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+    }
+    
+    .animate-slide-down {
+        animation: slide-down 0.4s ease-out;
+    }
+</style>

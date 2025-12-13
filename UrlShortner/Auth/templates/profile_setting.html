@@ -2,24 +2,24 @@
 {% load static %}
 
 {% block profile_content %}
-  <form class="space-y-6 max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-lg" method="POST" enctype="multipart/form-data">
+  <form class="space-y-6 w-full max-w-2xl mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <div class="flex flex-wrap mt-2 md:mt-0 items-center space-x-4 mb-6 bg-gray-100 p-6 rounded-lg transition-all duration-300 hover:shadow-md">
-      <div class="relative group mx-auto sm:mx-0 sm:px-4">
+    <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-6 bg-gray-100 p-4 sm:p-6 rounded-lg transition-all duration-300 hover:shadow-md">
+      <div class="relative group flex-shrink-0">
         {% if profile.profile_image %}
           <img src="{{ profile.profile_image.url }}" alt="Profile Avatar"
-               class="w-24 h-24 rounded-full object-cover border-2 border-gray-200 shadow-md group-hover:scale-110 transition-transform duration-300">
+               class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-gray-200 shadow-md group-hover:scale-110 transition-transform duration-300">
         {% else %}
           <img src="{% static 'profile_image.png' %}" alt="Default Avatar"
-               class="w-24 h-24 rounded-full object-cover border-2 border-gray-200 shadow-md group-hover:scale-110 transition-transform duration-300">
+               class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-gray-200 shadow-md group-hover:scale-110 transition-transform duration-300">
         {% endif %}
         <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <span class="text-xs font-medium text-white bg-black bg-opacity-50 px-2 py-1 rounded">Change</span>
         </div>
       </div>
-      <div>
-        <label for="profile_image" class="block text-sm md:text-xl font-medium text-gray-900 my-2 text-center">Profile Picture</label>
+      <div class="w-full sm:flex-1 text-center sm:text-left">
+        <label for="profile_image" class="block text-base sm:text-lg font-medium text-gray-900 mb-2">Profile Picture</label>
         <input type="file" id="profile_image" name="profile_image" accept="image/*"
                class="block w-full text-sm text-gray-600 bg-white border border-gray-300 rounded-lg cursor-pointer p-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
       </div>
@@ -33,7 +33,7 @@
     </div>
 
     <!-- Gender and Phone Number (Grid Layout) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
       <div>
         <label for="gender" class="block text-sm font-medium text-gray-900 mb-2">Gender</label>
         <select id="gender" name="gender"
@@ -56,9 +56,9 @@
       <p>Updated: <span class="font-medium">{{ profile.updated_at }}</span></p>
     </div>
 
-    <div class="flex justify-end">
+    <div class="flex flex-col sm:flex-row sm:justify-end gap-3">
       <button type="submit"
-              class="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200">
+              class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200">
         Save Changes
       </button>
     </div>

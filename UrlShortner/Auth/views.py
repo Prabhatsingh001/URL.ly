@@ -1,46 +1,87 @@
+"""Auth views for URL.ly.
+
+This module implements all user-facing authentication and profile views used by
+the application: signup, login, logout, email verification, password reset,
+contact form, and profile management. Several views trigger asynchronous
+background tasks (Celery) to send emails: verification, contact notifications,
+and password reset flows.
+
+Each view accepts a Django HttpRequest and returns an HttpResponse (or a
+redirect). Views that modify user data are protected with authentication where
+appropriate.
+"""
+
 from django.contrib import messages
-from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import (
     authenticate,
+    get_user_model,
+    update_session_auth_hash,
     login as auth_login,
     logout as auth_logout,
-    get_user_model,
 )
 from django.contrib.auth.decorators import login_required
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.http import urlsafe_base64_decode
-from django.utils.encoding import force_str
-from .tokens import account_activation_token, password_reset_token
-from .models import Contact, UserProfile
-from .tasks import (
-    send_contact_email,
-    send_verification_mail,
-    send_reset_password_email,
-    password_reset_success_email,
-)
-
-from django.views.generic import TemplateView
-from django.views import View
-from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.password_validation import validate_password
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
+from django.views import View
+from django.views.generic import TemplateView
+
+from .models import Contact, UserProfile
+from .tasks import (
+    password_reset_success_email,
+    send_contact_email,
+    send_reset_password_email,
+    send_verification_mail,
+)
+from .tokens import account_activation_token, password_reset_token
 
 User = get_user_model()
 
 
 class IndexView(View):
+    """Landing page view.
+
+    GET: If the user is authenticated redirect to the dashboard (`u:home`).
+    Otherwise render the public index page. If `short_url` is present in the
+    query parameters it will be passed to the template for pre-filling / display.
+    """
+
     def get(self, request):
         if request.user.is_authenticated:
             return redirect("u:home")
-        return render(request, "index.html")
+        short_url = request.GET.get("short_url")
+        return render(request, "index.html", {"short_url": short_url})
 
 
 class AboutView(TemplateView):
+    """Static about page.
+
+    Renders the `about.html` template. Kept as a TemplateView for simplicity.
+    """
+
     template_name = "about.html"
 
 
 def contact(request):
+    """Handle contact form submissions.
+
+    POST: Validate required fields (name, email, message). On success create a
+    Contact object and schedule `send_contact_email` as a background task. Adds
+    a success or error message and redirects back to the contact page.
+
+    GET: Render the contact page.
+
+    Args:
+        request (HttpRequest): Django request object.
+
+    Returns:
+        HttpResponse: Rendered contact page or redirect after POST.
+    """
+
     if request.method == "POST":
         name = request.POST.get("name")
         email = request.POST.get("email")
@@ -56,6 +97,21 @@ def contact(request):
 
 
 def signup(request):
+    """Register a new user and send verification email.
+
+    POST: Validate the provided username, email and password. If validation
+    passes, create an inactive user and schedule an email verification task.
+    Adds success/error messages and redirects accordingly.
+
+    GET: Render the signup form.
+
+    Args:
+        request (HttpRequest): Django request object.
+
+    Returns:
+        HttpResponse: Rendered signup form or redirect after successful POST.
+    """
+
     if request.method == "POST":
         username = request.POST.get("username")
         email = request.POST.get("email")
@@ -68,6 +124,10 @@ def signup(request):
 
         if password != password2:
             messages.error(request, "passwords do not match")
+            return redirect("a:signup")
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "username already exists")
             return redirect("a:signup")
 
         try:
@@ -94,6 +154,16 @@ def signup(request):
 
 
 def resend_verification_email(request, email=None):
+    """Resend account verification email.
+
+    POST: Look up the user by email and, if the account is not active, schedule
+    a new verification email. Redirect and flash messages are used to notify
+    the user of the result.
+
+    GET: Render the resend verification page with an optional pre-filled
+    `email` parameter.
+    """
+
     if request.method == "POST":
         email = request.POST.get("email")
         user = get_object_or_404(User, email=email)
@@ -109,6 +179,21 @@ def resend_verification_email(request, email=None):
 
 
 def activate(request, uidb64, token):
+    """Activate a user's account using a uid and token from email link.
+
+    The `uidb64` is base64-encoded user id used together with a token to
+    validate the request. On successful validation the account is activated
+    and the user is redirected to the login page with a success message.
+
+    Args:
+        request (HttpRequest): Django request.
+        uidb64 (str): Base64-encoded user id from the activation email.
+        token (str): Activation token to validate the request.
+
+    Returns:
+        HttpResponse: Redirect to login with success/error message.
+    """
+
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -126,6 +211,21 @@ def activate(request, uidb64, token):
 
 
 def login(request):
+    """Authenticate and log a user in.
+
+    GET: Render the login page (optionally with a `next` query parameter).
+
+    POST: Validate credentials (email and password). Ensures the account is
+    active before authenticating. On success logs the user in and redirects to
+    `next` if provided, otherwise to `u:home`.
+
+    Args:
+        request (HttpRequest): Django request object.
+
+    Returns:
+        HttpResponse: Rendered login page or redirect after authentication.
+    """
+
     if request.user.is_authenticated:
         return redirect("u:home")
     elif request.method == "POST":
@@ -164,12 +264,28 @@ def login(request):
 
 
 def logout(request):
+    """Log the current user out and redirect to the index page.
+
+    Args:
+        request (HttpRequest): Django request object.
+    """
+
     auth_logout(request)
     messages.success(request, "Logged out successfully.")
     return redirect("index")
 
 
 def forgot_password(request):
+    """Initiate a password reset by sending an email with a reset link.
+
+    POST: Accepts an `email` field, looks up the user and schedules a
+    `send_reset_password_email` task that will email a reset link containing a
+    uid and token. Shows success or error messages and redirects to the
+    appropriate page.
+
+    GET: Render the "forgot password" form.
+    """
+
     if request.method == "POST":
         email = request.POST.get("email")
 
@@ -198,6 +314,21 @@ def forgot_password(request):
 
 
 def reset_password(request, uidb64, token):
+    """Complete a password reset after following the emailed link.
+
+    The link contains a base64-encoded user id (`uidb64`) and a `token`. If
+    the token validates the user can set a new password. Upon success, a
+    confirmation email is scheduled and the user is redirected to login.
+
+    Args:
+        request (HttpRequest): Django request object.
+        uidb64 (str): Base64-encoded user id.
+        token (str): Password reset token.
+
+    Returns:
+        HttpResponse: Render reset form or redirect after password reset.
+    """
+
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -226,6 +357,20 @@ def reset_password(request, uidb64, token):
 
 @login_required()
 def profile(request, id):
+    """Show a user's profile.
+
+    Requires the requesting user to be authenticated. Fetches the requested
+    `User` by id and passes the related `UserProfile` to the `profile.html`
+    template. If no profile exists an error message is flashed.
+
+    Args:
+        request (HttpRequest): Django request object.
+        id (uuid): Primary key of the requested user.
+
+    Returns:
+        HttpResponse: Rendered profile page.
+    """
+
     user_obj = get_object_or_404(User, id=id)
 
     try:
@@ -242,6 +387,22 @@ def profile(request, id):
 
 @login_required
 def update_profile(request, id):
+    """Update the authenticated user's profile.
+
+    POST: Accepts profile fields (`full_name`, `gender`, `phone_number`, and an
+    uploaded `profile_image`) and updates the `UserProfile` linked to the
+    authenticated user. After saving redirects back to the profile page.
+
+    GET: Render the profile settings form.
+
+    Args:
+        request (HttpRequest): Django request object.
+        id (uuid): User id (used for redirect after successful update).
+
+    Returns:
+        HttpResponse: Rendered profile settings page or redirect after POST.
+    """
+
     profile = request.user.user_profile_link
 
     if request.method == "POST":
@@ -273,6 +434,15 @@ def update_profile(request, id):
 
 @login_required
 def update_password(request, id):
+    """Change a user's password while preserving the session.
+
+    POST: Validate `password` and `confirm-password`, update the user's
+    password and refresh the session auth hash so the user remains logged in.
+    A success email is scheduled after the change.
+
+    GET: Render the password update form.
+    """
+
     user = get_object_or_404(User, id=id)
     profile = user.user_profile_link  # type: ignore
     context = {

@@ -1,7 +1,46 @@
-from pathlib import Path
-import os
-from decouple import config
+"""
+Django settings for URL.ly project.
 
+This module manages all Django settings for both development and production environments.
+Configuration is handled through environment variables using python-decouple.
+
+Key Features:
+- Environment-specific settings (DEBUG vs Production)
+- Security settings (SECRET_KEY, ALLOWED_HOSTS, etc.)
+- Database configuration (SQLite for dev, PostgreSQL for prod)
+- Authentication backends (Django + Google OAuth2)
+- Email configuration
+- Celery task queue settings
+- Static/Media file handling with Cloudinary
+- Custom user model integration
+- Social authentication pipeline
+- TailwindCSS configuration
+
+Environment Variables:
+    Required:
+    - SECRET_KEY: Django secret key
+    - GOOGLE_CLIENT_ID: Google OAuth client ID
+    - GOOGLE_CLIENT_SECRET: Google OAuth client secret
+    - EMAIL_* settings for email configuration
+    - CLOUDINARY_* settings for media storage
+    - DATABASE_* settings for production database
+
+    Optional:
+    - DEBUG: Set to True for development environment (default: False)
+    - CELERY_BROKER_URL: Redis URL for production (uses localhost in dev)
+
+Security:
+    Production environment enables additional security features:
+    - Secure cookies
+    - HTTPS-only
+    - WhiteNoise for static files
+    - PostgreSQL with SSL
+"""
+
+import os
+from pathlib import Path
+
+from decouple import config
 
 DEBUG = config("DEBUG", cast=bool, default=False)
 
@@ -19,11 +58,13 @@ EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 SUPPORT_EMAIL = config("SUPPORT_EMAIL")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 if DEBUG:
     CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
 else:
     CELERY_BROKER_URL = config("CELERY_BROKER_URL", cast=str)
+
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
@@ -37,7 +78,6 @@ CLOUDINARY_API_SECRET = config("CLOUDINARY_API_SECRET")
 SALT = config("SALT", cast=str)
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-
 
 LOGIN_URL = "/a/login/"
 LOGIN_REDIRECT_URL = "/u/"
@@ -108,6 +148,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.debug",
             ],
         },
     },
@@ -199,3 +240,117 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.user.user_details",
     "Auth.pipelines.activate_google_user",
 )
+
+
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "file": {
+#             "class": "logging.FileHandler",
+#             "filename": config("DJANGO_LOG_FILE"),
+#             "level": config("DJANGO_LOG_LEVEL"),
+#             "formatter": "verbose",
+#         },
+#     },
+#     "loggers": {
+#         "": {  # root logger
+#             "level": "DEBUG",
+#             "handlers": ["file"],
+#         }
+#     },
+#     "formatters": {
+#         "simple": {
+#             "format": "{asctime} {levelname} {message}",
+#             "style": "{",
+#         },
+#         "verbose": {
+#             "format": "{asctime}:{levelname} - {name} {module}.py (line {lineno:d}). {message}",
+#             "style": "{",
+#         },
+#     },
+# }
+
+ADMINS = [
+    ("Prabhat", "prabhat.singh0012004@gmail.com"),
+]
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    # 🔹 FORMATTERS
+    "formatters": {
+        "simple": {
+            "format": "[{asctime}] {levelname} [{name}] {message}",
+            "style": "{",
+        },
+        "verbose": {
+            "format": "{asctime}:{levelname} - {name} {module}.py (line {lineno:d}). {message}",
+            "style": "{",
+        },
+    },
+    # 🔹 HANDLERS
+    "handlers": {
+        # Console output for development
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "simple",
+        },
+        # General log file
+        "general_file": {
+            "class": "logging.FileHandler",
+            "filename": "logs/general.log",
+            "level": "INFO",
+            "formatter": "simple",
+        },
+        # App-specific file for urlLogic
+        "urlLogic_file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "logs/urlLogic.log",
+            "maxBytes": 1024 * 1024 * 5,  # 5MB
+            "backupCount": 5,
+            "level": "DEBUG",
+            "formatter": "simple",
+        },
+        # Auth-specific file
+        "auth_file": {
+            "class": "logging.FileHandler",
+            "filename": "logs/auth.log",
+            "level": "INFO",
+            "formatter": "simple",
+        },
+        "mail_admins": {
+            "class": "django.utils.log.AdminEmailHandler",
+            "level": "ERROR",
+            "include_html": True,  # Include HTML-formatted error trace
+        },
+    },
+    # 🔹 LOGGERS
+    "loggers": {
+        # Root logger — catches everything not matched below
+        "": {
+            "handlers": ["console", "general_file"],
+            "level": "WARNING",
+            "propagate": True,
+        },
+        # For your urlLogic app
+        "urlLogic": {
+            "handlers": ["console", "urlLogic_file"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+        # Django’s built-in auth app
+        "django.contrib.auth": {
+            "handlers": ["auth_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "django.request": {
+            "handlers": ["mail_admins", "general_file"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}

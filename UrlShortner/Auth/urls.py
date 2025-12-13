@@ -1,4 +1,18 @@
+"""
+URL configuration for the Auth module.
+
+This module defines the URL patterns for authentication and user management features including:
+- User registration and email verification
+- Login and logout functionality
+- Profile management (view, edit, password update)
+- Password reset workflow
+- About and contact pages
+
+Each URL pattern is mapped to its corresponding view function or class in the views module.
+"""
+
 from django.urls import path
+
 from . import views
 from .views import AboutView
 

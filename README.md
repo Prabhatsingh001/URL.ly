@@ -1,24 +1,80 @@
 
-# URL.ly - Django URL Shortener
+# URL.ly - Django URL Shortener & Bio Link Platform
 
-A modern, full-featured URL shortener built with **Django**, **TailwindCSS**, and **JavaScript**. URL.ly lets you shorten links, track analytics, manage user accounts, and more — all with a clean, responsive UI.
+A comprehensive platform built with **Django**, **TailwindCSS**, and **JavaScript**. URL.ly combines powerful URL shortening with bio link pages, analytics, and user management — all with a modern, responsive UI.
 
 ## Features
 
-- Shorten long URLs instantly
-- Track click analytics for each short URL
-- Generate QR codes for every shortened link
-- User authentication (signup, login, password reset)
-- Upload and manage profile pictures
-- Secure password reset via email
-- User dashboard for managing links (coming soon)
-- Branded/custom domain links (coming soon)
+### URL Shortening
+
+- Instant URL shortening with custom slug options
+- Comprehensive click analytics and visitor tracking
+- QR code generation with branded overlay
+- Email delivery of QR codes
+- Link expiration management
+- Anonymous URL shortening with rate limiting
+
+### Bio Link Pages
+
+- Customizable profile pages for multiple links
+- Public/private link toggle
+- Custom profile slugs
+- Profile image upload with automatic optimization
+- Rich analytics for link clicks
+- Mobile-responsive layouts
+
+### User Features
+
+- Email-based authentication
+- Google OAuth2 integration
+- Profile management with avatar support
+- Secure password reset system
+- Email verification
+- Contact form with admin notifications
+
+### Analytics & Tracking
+
+- Geolocation tracking
+- Device and browser detection
+- Bot detection
+- Referrer tracking
+- Visit timestamps
+- Click counting
+
+### Security & Performance
+
+- Rate limiting on API endpoints
+- CSRF protection
+- Secure password handling
+- CDN-based asset delivery
+- Mobile-first responsive design
+- XSS protection
+- SQL injection prevention
+- Automated backup system
 
 ## Tech Stack
 
-- **Backend:** Django (Python)
-- **Frontend:** HTML, TailwindCSS, JavaScript
-- **Database:** SQLite (default, easy to switch)
+### Backend
+
+- **Framework:** Django (Python)
+- **Task Queue:** Celery with Redis
+- **Database:** PostgreSQL (production), SQLite (development)
+- **Storage:** Cloudinary for media files
+- **Authentication:** Django + Social Auth
+
+### Frontend
+
+- **Styling:** TailwindCSS
+- **Interactivity:** JavaScript
+- **Templates:** Django Templates
+- **Image Processing:** PIL/Pillow
+
+### External Services
+
+- **Email:** SMTP Integration
+- **Media Storage:** Cloudinary CDN
+- **Geolocation:** MaxMind GeoIP2
+- **OAuth:** Google Authentication
 
 ## Live Demo
 
@@ -74,7 +130,15 @@ After cloning, set `DEBUG = True` in `UrlShortner/settings.py` for local develop
 
 Below are all the main URLs exposed by the project, grouped by app/module:
 
-### Auth App
+### Core Routes
+
+- `/` — Main landing page
+- `/admin/` — Admin interface
+- `/auth/` — Social authentication endpoints
+- `/s/<str:short_code>/` — Anonymous short URL redirects
+- `/s/` — Anonymous URL shortening
+
+### Auth App (`/a/`)
 
 - `/a/about/` — About page
 - `/a/contact/` — Contact page
@@ -87,28 +151,36 @@ Below are all the main URLs exposed by the project, grouped by app/module:
 - `/a/activate/<uidb64>/<token>/` — Activate account
 - `/a/forgot_password/` — Forgot password
 - `/a/reset_password/<uidb64>/<token>/` — Reset password
+- `/a/resend-verification/<str:email>/` — Resend verification email
 
-### urlLogic App
+### URL Management (`/u/`)
 
-- `/u/` — Home (dashboard)
-- `/u/ShortenUrl/` — Shorten a URL
-- `/u/generate_qr/` — Generate QR code
-- `/u/delete/<int:id>/` — Delete a short URL
-- `/u/update_url/<int:id>/` — Update a short URL
-- `/u/<str:slug>/` — Redirect to original URL
+- `/u/` — User dashboard
+- `/u/shortenurl/` — Create new short URL
+- `/u/generateqr/` — Generate QR code
+- `/u/delete/<int:id>/` — Delete URL
+- `/u/updateurl/<int:id>/` — Update URL settings
+- `/u/<str:slug>/` — URL redirect
+- `/u/downloadqr/<int:id>/` — Download QR code
+- `/u/mailqr/<int:id>/` — Email QR code
 
-### Biolink App & Project-level
+### Biolink Features
 
-- `/my-bio-link-page/` — Redirect to your biolink page
-- `/biolink-page/<uuid:id>/` — View your biolink links
-- `/addlink/<uuid:id>/` — Add a link to your biolink
-- `/deletelink/<uuid:id>/` — Delete a link from your biolink
-- `/editprofile/` — Edit your biolink profile
-- `/enable/` — Enable public biolink
-- `/p/<slug:slug>/` — Public biolink by slug
-- `/u/<uuid:public_id>/` — Public biolink by UUID
+- `/my-bio-link-page/` — Your biolink page
+- `/biolink-page/<uuid:id>/` — View biolink links
+- `/addlink/<uuid:id>/` — Add biolink
+- `/deletelink/<uuid:id>/` — Remove biolink
+- `/editprofile/<uuid:id>/` — Edit biolink profile
+- `/enable/` — Toggle public access
+- `/p/<slug:slug>/` — Public biolink (slug)
 
-> **Note:** Some endpoints require authentication (login/session). For more details, see the code or API docs.
+### Development (Debug Mode Only)
+
+- `/__reload__/` — Browser auto-reload
+- `/static/` — Static files serving
+
+> **Note:** Most endpoints require authentication. Error pages (404, 500, 403) are handled by custom views. Static file serving is only enabled in development mode.
+Some endpoints require authentication (login/session). For more details, see the code or API docs.
 
 ---
 
