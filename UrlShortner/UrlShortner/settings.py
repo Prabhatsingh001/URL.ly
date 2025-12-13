@@ -271,86 +271,86 @@ SOCIAL_AUTH_PIPELINE = (
 #     },
 # }
 
-ADMINS = [
-    ("Prabhat", "prabhat.singh0012004@gmail.com"),
-]
+# ADMINS = [
+#     ("Prabhat", "prabhat.singh0012004@gmail.com"),
+# ]
 
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    # 🔹 FORMATTERS
-    "formatters": {
-        "simple": {
-            "format": "[{asctime}] {levelname} [{name}] {message}",
-            "style": "{",
-        },
-        "verbose": {
-            "format": "{asctime}:{levelname} - {name} {module}.py (line {lineno:d}). {message}",
-            "style": "{",
-        },
-    },
-    # 🔹 HANDLERS
-    "handlers": {
-        # Console output for development
-        "console": {
-            "class": "logging.StreamHandler",
-            "level": "DEBUG",
-            "formatter": "simple",
-        },
-        # General log file
-        "general_file": {
-            "class": "logging.FileHandler",
-            "filename": "logs/general.log",
-            "level": "INFO",
-            "formatter": "simple",
-        },
-        # App-specific file for urlLogic
-        "urlLogic_file": {
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": "logs/urlLogic.log",
-            "maxBytes": 1024 * 1024 * 5,  # 5MB
-            "backupCount": 5,
-            "level": "DEBUG",
-            "formatter": "simple",
-        },
-        # Auth-specific file
-        "auth_file": {
-            "class": "logging.FileHandler",
-            "filename": "logs/auth.log",
-            "level": "INFO",
-            "formatter": "simple",
-        },
-        "mail_admins": {
-            "class": "django.utils.log.AdminEmailHandler",
-            "level": "ERROR",
-            "include_html": True,  # Include HTML-formatted error trace
-        },
-    },
-    # 🔹 LOGGERS
-    "loggers": {
-        # Root logger — catches everything not matched below
-        "": {
-            "handlers": ["console", "general_file"],
-            "level": "WARNING",
-            "propagate": True,
-        },
-        # For your urlLogic app
-        "urlLogic": {
-            "handlers": ["console", "urlLogic_file"],
-            "level": "DEBUG",
-            "propagate": False,
-        },
-        # Django’s built-in auth app
-        "django.contrib.auth": {
-            "handlers": ["auth_file"],
-            "level": "INFO",
-            "propagate": False,
-        },
-        "django.request": {
-            "handlers": ["mail_admins", "general_file"],
-            "level": "ERROR",
-            "propagate": False,
-        },
-    },
-}
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     # 🔹 FORMATTERS
+#     "formatters": {
+#         "simple": {
+#             "format": "[{asctime}] {levelname} [{name}] {message}",
+#             "style": "{",
+#         },
+#         "verbose": {
+#             "format": "{asctime}:{levelname} - {name} {module}.py (line {lineno:d}). {message}",
+#             "style": "{",
+#         },
+#     },
+#     # 🔹 HANDLERS
+#     "handlers": {
+#         # Console output for development
+#         "console": {
+#             "class": "logging.StreamHandler",
+#             "level": "DEBUG",
+#             "formatter": "simple",
+#         },
+#         # General log file
+#         "general_file": {
+#             "class": "logging.FileHandler",
+#             "filename": "logs/general.log",
+#             "level": "INFO",
+#             "formatter": "simple",
+#         },
+#         # App-specific file for urlLogic
+#         "urlLogic_file": {
+#             "class": "logging.handlers.RotatingFileHandler",
+#             "filename": "logs/urlLogic.log",
+#             "maxBytes": 1024 * 1024 * 5,  # 5MB
+#             "backupCount": 5,
+#             "level": "DEBUG",
+#             "formatter": "simple",
+#         },
+#         # Auth-specific file
+#         "auth_file": {
+#             "class": "logging.FileHandler",
+#             "filename": "logs/auth.log",
+#             "level": "INFO",
+#             "formatter": "simple",
+#         },
+#         "mail_admins": {
+#             "class": "django.utils.log.AdminEmailHandler",
+#             "level": "ERROR",
+#             "include_html": True,  # Include HTML-formatted error trace
+#         },
+#     },
+#     # 🔹 LOGGERS
+#     "loggers": {
+#         # Root logger — catches everything not matched below
+#         "": {
+#             "handlers": ["console", "general_file"],
+#             "level": "WARNING",
+#             "propagate": True,
+#         },
+#         # For your urlLogic app
+#         "urlLogic": {
+#             "handlers": ["console", "urlLogic_file"],
+#             "level": "DEBUG",
+#             "propagate": False,
+#         },
+#         # Django’s built-in auth app
+#         "django.contrib.auth": {
+#             "handlers": ["auth_file"],
+#             "level": "INFO",
+#             "propagate": False,
+#         },
+#         "django.request": {
+#             "handlers": ["mail_admins", "general_file"],
+#             "level": "ERROR",
+#             "propagate": False,
+#         },
+#     },
+# }
