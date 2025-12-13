@@ -2,123 +2,401 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Your QR Code</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your QR Code is Ready | URL.ly</title>
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
       body {
         margin: 0;
         padding: 0;
-        background-color: #f5f9ff;
-        font-family: "Segoe UI", Arial, sans-serif;
-        color: #333333;
+        background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 50%, #f5f7ff 100%);
+        font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        color: #1a1a2e;
+        line-height: 1.6;
+      }
+
+      .wrapper {
+        padding: 40px 20px;
       }
 
       .container {
-        max-width: 640px;
-        margin: 40px auto;
+        max-width: 600px;
+        margin: 0 auto;
         background: #ffffff;
-        border-radius: 16px;
-        padding: 40px 30px;
-        box-shadow: 0 6px 18px rgba(44, 123, 229, 0.15);
-        border: 1px solid #e6efff;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(44, 123, 229, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
       }
 
-      h2 {
-        font-size: 24px;
-        font-weight: 600;
-        margin-bottom: 12px;
-        color: #2c7be5;
+      /* Header */
+      .header {
+        background: linear-gradient(135deg, #2c7be5 0%, #6366f1 50%, #8b5cf6 100%);
+        padding: 40px 30px;
         text-align: center;
+      }
+
+      .logo {
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+        margin-bottom: 8px;
+      }
+
+      .logo-dot {
+        color: #fbbf24;
+      }
+
+      .tagline {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 400;
+      }
+
+      /* Content */
+      .content {
+        padding: 48px 40px;
+      }
+
+      .icon-circle {
+        width: 72px;
+        height: 72px;
+        background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+        border-radius: 50%;
+        margin: 0 auto 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .icon-circle svg {
+        width: 36px;
+        height: 36px;
+        color: #4f46e5;
+      }
+
+      h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #1a1a2e;
+        text-align: center;
+        margin-bottom: 12px;
       }
 
       .subtitle {
-        font-size: 15px;
-        color: #4a6fa5;
+        font-size: 16px;
+        color: #64748b;
         text-align: center;
-        margin-bottom: 28px;
+        margin-bottom: 32px;
       }
 
-      p {
+      .greeting {
+        font-size: 16px;
+        color: #334155;
+        margin-bottom: 16px;
+      }
+
+      .message {
         font-size: 15px;
-        color: #444444;
+        color: #475569;
+        margin-bottom: 32px;
         line-height: 1.7;
-        margin: 16px 0;
+      }
+
+      /* QR Code Box */
+      .qr-section {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border: 2px dashed #cbd5e1;
+        border-radius: 20px;
+        padding: 32px;
+        margin: 32px 0;
+        text-align: center;
+      }
+
+      .qr-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 20px;
       }
 
       .qr-box {
-        text-align: center;
-        margin: 40px 0;
+        display: inline-block;
+        padding: 16px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       }
 
       .qr-box img {
-        max-width: 240px;
-        border: 6px solid #e6efff;
-        border-radius: 16px;
+        display: block;
+        width: 200px;
+        height: 200px;
+        border-radius: 12px;
+      }
+
+      .qr-hint {
+        font-size: 13px;
+        color: #94a3b8;
+        margin-top: 16px;
+      }
+
+      /* Button */
+      .button-container {
+        text-align: center;
+        margin: 32px 0;
       }
 
       .button {
         display: inline-block;
-        margin: 20px auto;
-        padding: 12px 28px;
-        background: #2c7be5;
-        color: #ffffff;
+        padding: 16px 40px;
+        background: linear-gradient(135deg, #2c7be5 0%, #6366f1 100%);
+        color: #ffffff !important;
         text-decoration: none;
-        border-radius: 8px;
-        font-size: 15px;
-        font-weight: 500;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+        transition: all 0.3s ease;
       }
 
       .button:hover {
-        background: #1f5db5;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(99, 102, 241, 0.45);
       }
 
-      .footer {
-        font-size: 12px;
-        color: #6a89b6;
-        margin-top: 40px;
+      /* Info Box */
+      .info-box {
+        background: #fffbeb;
+        border-left: 4px solid #fbbf24;
+        border-radius: 0 12px 12px 0;
+        padding: 16px 20px;
+        margin: 32px 0;
+      }
+
+      .info-box p {
+        font-size: 14px;
+        color: #92400e;
+        margin: 0;
+      }
+
+      .info-box strong {
+        color: #78350f;
+      }
+
+      /* Divider */
+      .divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+        margin: 32px 0;
+      }
+
+      /* Help Section */
+      .help-section {
         text-align: center;
-        border-top: 1px solid #e6efff;
-        padding-top: 20px;
+        padding: 24px;
+        background: #f8fafc;
+        border-radius: 16px;
+        margin-top: 32px;
       }
 
-      a {
-        color: #2c7be5;
+      .help-section p {
+        font-size: 14px;
+        color: #64748b;
+        margin: 0;
+      }
+
+      .help-section a {
+        color: #4f46e5;
+        font-weight: 600;
         text-decoration: none;
       }
 
-      a:hover {
+      .help-section a:hover {
         text-decoration: underline;
+      }
+
+      /* Signature */
+      .signature {
+        margin-top: 32px;
+        font-size: 15px;
+        color: #475569;
+      }
+
+      .signature strong {
+        color: #1a1a2e;
+      }
+
+      /* Footer */
+      .footer {
+        background: #1a1a2e;
+        padding: 32px 40px;
+        text-align: center;
+      }
+
+      .footer-logo {
+        font-size: 20px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 16px;
+      }
+
+      .footer-links {
+        margin-bottom: 20px;
+      }
+
+      .footer-links a {
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 13px;
+        margin: 0 12px;
+      }
+
+      .footer-links a:hover {
+        color: #ffffff;
+      }
+
+      .social-links {
+        margin-bottom: 20px;
+      }
+
+      .social-links a {
+        display: inline-block;
+        width: 36px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        margin: 0 6px;
+        line-height: 36px;
+        text-align: center;
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .social-links a:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+      }
+
+      .footer-text {
+        font-size: 12px;
+        color: #64748b;
+        margin-top: 16px;
+      }
+
+      .footer-text a {
+        color: #818cf8;
+        text-decoration: none;
+      }
+
+      /* Responsive */
+      @media (max-width: 600px) {
+        .content {
+          padding: 32px 24px;
+        }
+
+        .footer {
+          padding: 24px 20px;
+        }
+
+        h1 {
+          font-size: 22px;
+        }
+
+        .qr-box img {
+          width: 160px;
+          height: 160px;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h2>Your QR Code is Ready</h2>
-      <p class="subtitle">Scan it instantly or download it from this email.</p>
+    <div class="wrapper">
+      <div class="container">
+        <!-- Header -->
+        <div class="header">
+          <div class="logo">URL<span class="logo-dot">.</span>ly</div>
+          <div class="tagline">Smart URL Management</div>
+        </div>
 
-      <p>Hello,</p>
+        <!-- Content -->
+        <div class="content">
+          <!-- Icon -->
+          <div class="icon-circle">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+            </svg>
+          </div>
 
-      <p>
-        We've generated your unique QR code. You can either
-        <strong>scan it below</strong> or download it directly as an attachment.
-      </p>
+          <h1>Your QR Code is Ready! 🎉</h1>
+          <p class="subtitle">Scan instantly or download from this email</p>
 
-      <div class="qr-box">
-        <img src="cid:qr_code" alt="QR Code" />
-      </div>
+          <p class="greeting">Hello there,</p>
 
-      <div style="text-align:center;">
-        <a href="cid:qr_code" class="button">Download QR Code</a>
-      </div>
+          <p class="message">
+            Great news! We've successfully generated your unique QR code. You can scan it directly from this email or download the attached image for printing and sharing.
+          </p>
 
-      <p>
-        Need help? Reach us anytime at
-        <a href="mailto:{{ support_email }}">{{ support_email }}</a>.
-      </p>
+          <!-- QR Code Section -->
+          <div class="qr-section">
+            <div class="qr-label">Your Unique QR Code</div>
+            <div class="qr-box">
+              <img src="cid:qr_code" alt="Your QR Code" />
+            </div>
+            <p class="qr-hint">Point your camera at the code to scan</p>
+          </div>
 
-      <p>Best regards,<br /><strong>The URL.ly Team</strong></p>
+          <!-- Download Button -->
+          <div class="button-container">
+            <a href="cid:qr_code" class="button">⬇ Download QR Code</a>
+          </div>
 
-      <div class="footer">
-        <p>This is an automated message. Please do not reply directly.</p>
+          <!-- Tip Box -->
+          <div class="info-box">
+            <p><strong>💡 Pro Tip:</strong> Print your QR code on business cards, flyers, or products for easy access to your links!</p>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Help Section -->
+          <div class="help-section">
+            <p>Need assistance? We're here to help!<br/>
+            Contact us at <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+          </div>
+
+          <!-- Signature -->
+          <div class="signature">
+            <p>Best regards,</p>
+            <p><strong>The URL.ly Team</strong></p>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <div class="footer-logo">URL<span style="color: #fbbf24;">.</span>ly</div>
+          
+          <div class="footer-links">
+            <a href="#">Features</a>
+            <a href="#">Pricing</a>
+            <a href="#">Support</a>
+            <a href="#">Privacy</a>
+          </div>
+
+          <p class="footer-text">
+            © 2024 URL.ly. All rights reserved.<br/>
+            This is an automated message. Please do not reply directly.<br/><br/>
+            <a href="#">Unsubscribe</a> · <a href="#">Manage Preferences</a>
+          </p>
+        </div>
       </div>
     </div>
   </body>

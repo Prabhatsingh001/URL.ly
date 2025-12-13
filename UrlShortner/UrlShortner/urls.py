@@ -39,7 +39,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic.base import RedirectView
-from urlLogic.views import anonymousShorturl, redirect_to_original, get_original_url
+from urlLogic.views import (
+    anonymousShorturl,
+    get_original_url,
+    redirect_to_original,
+)
 
 handler404 = "urlLogic.errors.F404_page"
 handler500 = "urlLogic.errors.F500_page"
@@ -67,6 +71,7 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # type: ignore
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # type: ignore
     urlpatterns += [
         path("__reload__/", include("django_browser_reload.urls")),
     ]

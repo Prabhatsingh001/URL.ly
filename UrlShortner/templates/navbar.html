@@ -32,27 +32,30 @@
       </button>
 
       <!-- Mobile Dropdown Popup -->
-      <div id="mobile-menu" class="hidden italic absolute right-0 top-full mt-4 w-56 bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-xl ring-1 ring-gray-200 dark:ring-gray-700 z-50 space-y-3 p-4 text-sm">
+      <div id="mobile-menu" class="hidden absolute right-0 top-full mt-4 w-56 bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-lg shadow-xl ring-1 ring-gray-200 dark:ring-gray-700 z-50 space-y-3 p-4 text-sm">
         {% if user.is_authenticated %}
-          <a href="{% url 'u:home' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Home</a>
-          <a href="{% url "biolinkpage" user.id %}" class="block hover:text-blue-600 transition text-gray-700 dark:text-white">URL.ly Page</a>
-          <a href="{% url 'a:about' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">About</a>
-          <a href="{% url 'a:contact' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Contact</a>
-          <a href="{% url "a:profile"  user.id %}" class="block text-gray-700 dark:text-white hover:text-blue-600 transition">Profile</a>
-          <a href="{% url "a:edit_profile" user.id %}" class="block hover:text-blue-600 transition text-gray-700 dark:text-white">Settings</a>
+          <a href="{% url 'u:home' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Home</a>
+          <a href="{% url 'biolinkpage' user.id %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">My Biolink</a>
+          <a href="{% url 'preview' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Preview URL</a>
+          <a href="{% url 'a:about' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">About</a>
+          <a href="{% url 'a:contact' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Contact</a>
+          <div class="border-t border-gray-300 dark:border-gray-700 my-2"></div>
+          <a href="{% url 'a:profile' user.id %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Profile</a>
+          <a href="{% url 'a:edit_profile' user.id %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Settings</a>
           <div class="border-t border-gray-300 dark:border-gray-700 pt-2 text-sm text-gray-500 dark:text-gray-400">
             Hello, {{ user.username }}
           </div>
           <a href="{% url 'a:logout' %}" class="block text-center mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold hover:scale-105 transition">Logout</a>
         {% else %}
           <a href="{% url 'index' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Home</a>
-          <a href="{% url 'my_biolink_page' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Url.ly Page</a>
-          <a href="{% url 'preview' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">preview original</a>
-          <a href="{% url 'a:about' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold  transition">About</a>
+          <a href="{% url 'my_biolink_page' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Create Biolink</a>
+          <a href="{% url 'preview' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Preview URL</a>
+          <a href="{% url 'a:about' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">About</a>
           <a href="{% url 'a:contact' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Contact</a>
-          <a href="{% url "a:login" %}"
-              class="group relative bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 hover:from-blue-500 hover:via-blue-400 hover:to-cyan-400 transition-all duration-300 px-4 py-2 rounded-sm text-sm font-semibold shadow-2xl hover:shadow-blue-500/25 transform hover:-translate-y-1 hover:scale-105 overflow-hidden">
-            <span class="relative text-white">Get Started</span>
+          <div class="border-t border-gray-300 dark:border-gray-700 my-2"></div>
+          <a href="{% url 'a:login' %}"
+              class="block text-center px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 hover:from-blue-500 hover:via-blue-400 hover:to-cyan-400 text-white font-semibold hover:scale-105 transition">
+            Get Started
           </a>
         {% endif %}
       </div>
@@ -62,12 +65,12 @@
     <div class="hidden lg:flex items-center gap-6 text-gray-700 dark:text-gray-200 font-light italic">
       {% if user.is_authenticated %}
       <a href="{% url 'u:home' %}" class="block text-gray-700 dark:text-white font-semibold hover:text-blue-600 transition">Home</a>
-      <a href="{% url 'biolinkpage' user.id %}" class="block text-gray-700 dark:text-white font-semibold hover:text-blue-600 transition">URL.ly Page</a>
+      <a href="{% url 'biolinkpage' user.id %}" class="block text-gray-700 dark:text-white font-semibold hover:text-blue-600 transition">My Biolink</a>
       {% else %}
       <a href="{% url 'index' %}" class="block text-gray-700 dark:text-white font-semibold hover:text-blue-600 transition">Home</a>
-      <a href="{% url 'my_biolink_page' %}" class="block text-gray-700 dark:text-white font-semibold hover:text-blue-600 transition">URL.ly Page</a>
+      <a href="{% url 'my_biolink_page' %}" class="block text-gray-700 dark:text-white font-semibold hover:text-blue-600 transition">Create Biolink</a>
       {% endif %}
-      <a href="{% url 'preview' %}" class="hover:text-blue-600 font-semibold transition">Preview original</a>
+      <a href="{% url 'preview' %}" class="hover:text-blue-600 font-semibold transition">Preview URL</a>
       <a href="{% url 'a:about' %}" class="hover:text-blue-600 font-semibold transition">About</a>
       <a href="{% url 'a:contact' %}" class="hover:text-blue-600 font-semibold transition">Contact</a>
 

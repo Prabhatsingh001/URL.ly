@@ -38,6 +38,11 @@
                     Preview Original URL
                 </button>
             </form>
+            {% if user.is_authenticated %}
+                <a href="{% url "u:home" %}" class="bg-gradient-to-l from-blue-800 to-blue-600 text-white font-medium px-4 py-2 mt-2 rounded-lg hover:bg-blue-700 transition-all">Go Back</a>
+            {% else %}
+                <a href="{% url "index" %}" class="bg-gradient-to-l from-blue-800 to-blue-600 text-white font-medium px-4 py-2 mt-2 rounded-lg hover:bg-blue-700 transition-all">Go Back</a>
+            {% endif %}
 
             {% if original_url %}
                 <div class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg text-left">
