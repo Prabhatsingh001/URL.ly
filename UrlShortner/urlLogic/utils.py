@@ -214,7 +214,7 @@ def extract_visit_data(request):
     referrer = request.META.get("HTTP_REFERER", None)
 
     try:
-        geo = reader.city("38.183.101.34")
+        geo = reader.city(ip_address)
         country = geo.country.name
         region = geo.subdivisions.most_specific.name
         city = geo.city.name

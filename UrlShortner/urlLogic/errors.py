@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 
-def F404_page(request, excetipon):
+def F404_page(request, exception):
     """
     Handle 404 Not Found errors with a custom template.
 

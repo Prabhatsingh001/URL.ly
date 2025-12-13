@@ -175,7 +175,6 @@ def make_short_url(request):
             expires_at = local_dt.astimezone(dt_timezone.utc)
         else:
             expires_at = None
-        print(expires_at)
 
         try:
             with transaction.atomic():
@@ -261,7 +260,6 @@ def analytics_dashboard(request, id):
 
     visits = UrlVisit.objects.filter(url=url)
     has_data = visits.exists()
-    # has_data = False
 
     if has_data:
         visits_by_day = (
@@ -402,7 +400,6 @@ def update_url(request, id):
                     expiry_dt, timezone.get_current_timezone()
                 )
                 url.expires_at = aware_expiry.astimezone(dt_timezone.utc)
-                print(url.expires_at)
             except ValueError:
                 pass
         url.save()
