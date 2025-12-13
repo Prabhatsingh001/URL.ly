@@ -190,6 +190,7 @@ def editprofile(request, id):
     - Session-based name change tracking
     """
     profile, created = safe_get_or_create_profile(user=request.user)
+    link = Link.objects.filter(profile=profile).order_by("-created_at")
     name_changed = request.session.get("name_changed", False)
     if request.method == "POST":
         name = request.POST.get("display_name", "").strip()
@@ -222,7 +223,9 @@ def editprofile(request, id):
             messages.info(request, "No changes were made to your profile.")
         return redirect("editprofile", id=request.user.id)
     return render(
-        request, "mainpage.html", {"profile": profile, "name_changed": name_changed}
+        request,
+        "mainpage.html",
+        {"profile": profile, "links": link, "name_changed": name_changed},
     )
 
 

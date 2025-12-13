@@ -29,6 +29,7 @@ from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
 from django.views.generic import TemplateView
+from django.http import JsonResponse
 
 from .models import Contact, UserProfile
 from .tasks import (
@@ -40,6 +41,10 @@ from .tasks import (
 from .tokens import account_activation_token, password_reset_token
 
 User = get_user_model()
+
+
+def health(request):
+    return JsonResponse({"status": "ok"})
 
 
 class IndexView(View):

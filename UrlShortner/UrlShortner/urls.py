@@ -24,7 +24,7 @@ Note: Static file serving is only enabled in DEBUG mode. In production,
 static files should be served by the web server or a CDN.
 """
 
-from Auth.views import IndexView
+from Auth.views import IndexView, health
 from Biolink.views import (
     Addlink,
     Deletelink,
@@ -52,6 +52,7 @@ handler403 = "urlLogic.errors.custom_403_view"
 
 urlpatterns = [
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
+    path("health/", health, name="health"),
     path("admin/", admin.site.urls, name="admin"),
     path("auth/", include("social_django.urls", namespace="social")),
     path("", IndexView.as_view(), name="index"),
