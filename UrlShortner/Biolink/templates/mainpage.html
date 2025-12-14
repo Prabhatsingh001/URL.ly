@@ -7,17 +7,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     {% if user.biolinkprofile.display_name %}
         <title>{{ user.biolinkprofile.display_name }} | Bio Link - URL.ly</title>
     {% else %}
         <title>{{ user.username }} | Bio Link - URL.ly</title>
     {% endif %}
-    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     {% if debug %}
-      {% tailwind_css %}
+        {% tailwind_css %}
     {% else %}
-      <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+        <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
     {% endif %}
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black text-white overflow-x-hidden font-sans">

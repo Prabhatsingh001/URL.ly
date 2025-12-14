@@ -46,12 +46,52 @@ class UrlModelAdmin(admin.ModelAdmin):
     ordering = ("-created_at",)
 
 
+class UrlVisitAdmin(admin.ModelAdmin):
+    """
+    Admin interface for URL visit analytics.
+
+    Features:
+    - Displays visit details including timestamp and visitor IP
+    - Search functionality for visitor IP addresses
+    - Filtering by visit date
+    - Chronological ordering with newest visits first
+
+    This interface allows administrators to monitor URL access patterns
+    and analyze visitor data effectively.
+    """
+
+    list_display = ("url", "visited_at", "visitor_ip")
+    search_fields = ("visitor_ip",)
+    list_filter = ("visited_at",)
+    ordering = ("-visited_at",)
+
+
+class ShortUrlAnonymousAdmin(admin.ModelAdmin):
+    """
+    Admin interface for managing anonymous shortened URLs.
+
+    Features:
+    - Displays original URL, short code, IP address, and creation date
+    - Search functionality for original URLs and short codes
+    - Filtering by creation date
+    - Chronological ordering with newest entries first
+
+    This interface provides tools for administrators to oversee
+    and manage URLs created by anonymous users.
+    """
+
+    list_display = ("original_url", "short_code", "ip_address", "created_at")
+    search_fields = ("original_url", "short_code")
+    list_filter = ("created_at",)
+    ordering = ("-created_at",)
+
+
 # Register models with admin site
 # UrlModel with custom admin configuration for enhanced management
 admin.site.register(UrlModel, UrlModelAdmin)
 
 # UrlVisit for tracking URL access analytics
-admin.site.register(UrlVisit)
+admin.site.register(UrlVisit, UrlVisitAdmin)
 
 # ShortUrlAnonymous for managing anonymous user URL shortening
-admin.site.register(ShortUrlAnonymous)
+admin.site.register(ShortUrlAnonymous, ShortUrlAnonymousAdmin)

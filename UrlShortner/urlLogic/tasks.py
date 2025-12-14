@@ -62,3 +62,37 @@ def send_qr_email(user_id, filename, filebytes):
     email.attach_alternative(html_content, "text/html")
     email.attach(filename, filebytes, "image/png")
     email.send(fail_silently=True)
+
+
+@shared_task
+def save_url_visit_data(url_id, url_visit_data):
+    """
+    Save URL visit data asynchronously.
+
+    Args:
+        url_id: ID of the UrlModel instance
+        url_visit_data: Dictionary containing visit data such as
+                        ip_address, browser, os, device, is_bot,
+                        country, region, city, referrer
+
+    This task creates a UrlVisit record in the database with the
+    provided visit data.
+    """
+    from .models import UrlModel, UrlVisit
+    from django.utils.timezone import now
+
+    url = UrlModel.objects.get(id=url_id)
+
+    UrlVisit.objects.create(
+        url=url,
+        timestamp=now(),
+        ip_address=url_visit_data.get("ip_address"),
+        browser=url_visit_data.get("browser"),
+        os=url_visit_data.get("os"),
+        device=url_visit_data.get("device"),
+        is_bot=url_visit_data.get("is_bot"),
+        country=url_visit_data.get("country"),
+        region=url_visit_data.get("region"),
+        city=url_visit_data.get("city"),
+        referrer=url_visit_data.get("referrer"),
+    )

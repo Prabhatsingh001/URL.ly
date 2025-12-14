@@ -22,7 +22,6 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.timezone import now
 from django.views.decorators.http import require_POST
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
@@ -140,7 +139,6 @@ def make_short_url(request):
     - Custom short URL support
     - Automatic http:// prefix addition
     - Duplicate URL checking
-    - 7-day default expiration
     - Transaction-safe creation
     - Validation for URL format and uniqueness
 
@@ -235,21 +233,14 @@ def redirect_url(request, slug):
         return render(request, "url_expired.html")
     url.click_count += 1
     url.save()
-    response_data = extract_visit_data(request)
+    url_visit_data = extract_visit_data(request)
 
-    UrlVisit.objects.create(
-        url=url,
-        timestamp=now(),
-        ip_address=response_data.get("ip_address"),
-        browser=response_data.get("browser"),
-        os=response_data.get("os"),
-        device=response_data.get("device"),
-        is_bot=response_data.get("is_bot"),
-        country=response_data.get("country"),
-        region=response_data.get("region"),
-        city=response_data.get("city"),
-        referrer=response_data.get("referrer"),
+    from .tasks import save_url_visit_data
+
+    transaction.on_commit(
+        lambda: save_url_visit_data.delay(url.id, url_visit_data)  # type: ignore
     )
+
     return redirect(url.original_url)
 
 
