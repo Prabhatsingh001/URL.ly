@@ -53,12 +53,13 @@ class BioLinkProfile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="biolinkprofile"
     )
-    display_name = models.CharField(max_length=150, blank=True)
+    display_name = models.CharField(max_length=200, blank=True)
     bio = models.CharField(max_length=200, blank=True)
     profile_image = models.ImageField(
         upload_to="avatars/",
         blank=True,
         null=True,
+        max_length=500,
         validators=[
             FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png", "gif"])
         ],
