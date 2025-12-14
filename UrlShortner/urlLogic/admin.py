@@ -60,10 +60,10 @@ class UrlVisitAdmin(admin.ModelAdmin):
     and analyze visitor data effectively.
     """
 
-    list_display = ("url", "visited_at", "visitor_ip")
-    search_fields = ("visitor_ip",)
-    list_filter = ("visited_at",)
-    ordering = ("-visited_at",)
+    list_display = ("url", "timestamp", "ip_address")
+    search_fields = ("ip_address",)
+    list_filter = ("timestamp",)
+    ordering = ("-timestamp",)
 
 
 class ShortUrlAnonymousAdmin(admin.ModelAdmin):
