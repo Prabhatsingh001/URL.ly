@@ -1,0 +1,284 @@
+openapi: 3.0.3
+info:
+  title: URL.ly API
+  version: "1.0.0"
+  description: "OpenAPI surface for URL.ly — a Django URL shortener and biolink manager. Generated from project view handlers."
+servers:
+  - url: http://localhost:8000
+paths:
+  /:
+    get:
+      summary: Landing page
+      responses:
+        '200':
+          description: HTML landing page
+
+  /health/:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+  /s/:
+    get:
+      summary: Anonymous short URL form
+      responses:
+        '200':
+          description: HTML form
+    post:
+      summary: Create anonymous short URL
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                original_url:
+                  type: string
+                  format: uri
+      responses:
+        '302':
+          description: Redirect to index with created short_url in query
+
+  /s/{short_code}/:
+    get:
+      summary: Redirect anonymous short code to original URL
+      parameters:
+        - name: short_code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect to original URL
+        '404':
+          description: Not found
+
+  /a/signup/:
+    post:
+      summary: Create user account
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username: {type: string}
+                email: {type: string, format: email}
+                password: {type: string}
+                confirm-password: {type: string}
+      responses:
+        '302': {description: Redirect after signup}
+
+  /a/login/:
+    post:
+      summary: Login user
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email: {type: string}
+                password: {type: string}
+      responses:
+        '302': {description: Redirect on success}
+
+  /a/logout/:
+    get:
+      summary: Logout
+      responses:
+        '302': {description: Redirect to index}
+
+  /a/profile/{id}/:
+    get:
+      summary: Get user profile (HTML)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    responses:
+      '200': {description: Profile HTML}
+
+  /a/activate/{uidb64}/{token}/:
+    get:
+      summary: Activate user account via email link
+      parameters:
+        - name: uidb64
+          in: path
+          required: true
+          schema: {type: string}
+        - name: token
+          in: path
+          required: true
+          schema: {type: string}
+      responses:
+        '302': {description: Redirect to login}
+
+  /u/:
+    get:
+      summary: Authenticated dashboard listing user's URLs
+      security:
+        - sessionAuth: []
+      responses:
+        '200': {description: Dashboard HTML}
+
+  /u/shortenurl/:
+    post:
+      summary: Create a new shortened URL (authenticated)
+      security:
+        - sessionAuth: []
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                long_url: {type: string}
+                short_url: {type: string}
+                date: {type: string, format: date-time}
+      responses:
+        '302': {description: Redirect to dashboard}
+
+  /u/{slug}/:
+    get:
+      summary: Redirect authenticated slug to original URL with analytics
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '302': {description: Redirect to original URL}
+        '200': {description: HTML error pages (404/expired)}
+
+  /u/analytics/{id}/:
+    get:
+      summary: Analytics dashboard for a URL
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer}
+      security:
+        - sessionAuth: []
+      responses:
+        '200': {description: Analytics HTML}
+
+  /u/delete/{id}/:
+    post:
+      summary: Delete a URL
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer}
+      security:
+        - sessionAuth: []
+      responses:
+        '302': {description: Redirect to dashboard}
+
+  /u/updateurl/{id}/:
+    post:
+      summary: Update URL details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer}
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                long_url: {type: string}
+                expires_at: {type: string}
+      security:
+        - sessionAuth: []
+      responses:
+        '302': {description: Redirect to dashboard}
+
+  /u/generateqr/:
+    post:
+      summary: Generate QR code for a URL
+      security:
+        - sessionAuth: []
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id: {type: integer}
+      responses:
+        '302': {description: Redirect to dashboard}
+
+  /u/downloadqr/{id}/:
+    get:
+      summary: Download QR code image
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer}
+      security:
+        - sessionAuth: []
+      responses:
+        '200':
+          description: Binary image stream
+
+  /u/mailqr/{id}/:
+    post:
+      summary: Email QR code to owner
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer}
+      security:
+        - sessionAuth: []
+      responses:
+        '302': {description: Redirect to dashboard}
+
+components:
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+  schemas:
+    User:
+      type: object
+      properties:
+        id: {type: string}
+        username: {type: string}
+        email: {type: string}
+    ShortUrl:
+      type: object
+      properties:
+        id: {type: integer}
+        original_url: {type: string}
+        short_code: {type: string}
+        created_at: {type: string}
+    UrlModel:
+      type: object
+      properties:
+        id: {type: integer}
+        short_url: {type: string}
+        original_url: {type: string}
+        click_count: {type: integer}
