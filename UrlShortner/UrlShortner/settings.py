@@ -111,6 +111,7 @@ INSTALLED_APPS = [
     "urlLogic",
     "Biolink",
     "Brandlink",
+    "blog",
     "tailwind",
     "theme",
 ]
