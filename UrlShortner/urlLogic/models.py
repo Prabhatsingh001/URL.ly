@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from urllib.parse import urlparse
 from cloudinary_storage.storage import MediaCloudinaryStorage
-# from Brandlink.models import Domain
+from Brandlink.models import Domain
 
 User = get_user_model()
 
@@ -44,7 +44,7 @@ def validate_url_format_and_blacklist(value):
 
 
 class UrlModel(models.Model):
-    # domain = models.ForeignKey(Domain, on_delete=models.CASCADE, null=True, blank=True)
+    domain = models.ForeignKey(Domain, on_delete=models.CASCADE, null=True, blank=True)
     original_url = models.URLField(
         unique=True, validators=[validate_url_format_and_blacklist]
     )
@@ -59,8 +59,7 @@ class UrlModel(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
-
-    #     unique_together = ("domain", "short_url")
+        unique_together = ("domain", "short_url")
 
     def __str__(self):
         return f"{self.short_url}"
