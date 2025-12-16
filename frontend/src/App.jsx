@@ -1,10 +1,11 @@
 import { useState } from 'react'
+import Home from './components/Home.jsx'
 
 function App() {
 
   return (
     <>
-        <div className='bg-gray-400 p-4 m-2'> hello world </div>
+        <Home />
     </>
   )
 }
