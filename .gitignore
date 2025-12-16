@@ -11,3 +11,5 @@ __pycache__
 issues.txt
 media/
 logs
+node_modules/
+.DS_Store
