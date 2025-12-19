@@ -61,6 +61,7 @@ urlpatterns = [
     path("s/<str:short_code>/", redirect_to_original, name="redirect"),
     path("a/", include(("Auth.urls", "Auth"), namespace="a")),
     path("u/", include(("urlLogic.urls", "urlLogic"), namespace="u")),
+    path("blog/", include(("blog.urls", "blog"), namespace="blog")),
     path("my-bio-link-page/", my_biolink_page, name="my_biolink_page"),
     path("biolink-page/<uuid:id>/", Getlinks, name="biolinkpage"),
     path("addlink/<uuid:id>/", Addlink, name="addlink"),
