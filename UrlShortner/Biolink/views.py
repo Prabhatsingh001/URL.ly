@@ -190,42 +190,47 @@ def editprofile(request, id):
     - Session-based name change tracking
     """
     profile, created = safe_get_or_create_profile(user=request.user)
-    link = Link.objects.filter(profile=profile).order_by("-created_at")
+    links = Link.objects.filter(profile=profile).order_by("-created_at")
     name_changed = request.session.get("name_changed", False)
+
     if request.method == "POST":
-        name = request.POST.get("display_name", "").strip()
-        bio = request.POST.get("bio", "").strip()
-        profile_image = request.FILES.get("profile_image")
-
         changes_made = False
-        if name and name != profile.display_name:
-            profile.display_name = name
-            changes_made = True
-            request.session["name_changed"] = True
 
-        if bio != profile.bio:
-            profile.bio = bio
-            changes_made = True
+        if "display_name" in request.POST:
+            name = request.POST.get("display_name", "").strip()
+            if name and name != profile.display_name:
+                profile.display_name = name
+                changes_made = True
+                request.session["name_changed"] = True
 
-        if profile_image:
+        if "bio" in request.POST:
+            bio = request.POST.get("bio", "").strip()
+            if bio != profile.bio:
+                profile.bio = bio
+                changes_made = True
+
+        if "profile_image" in request.FILES:
             if profile.profile_image:
                 profile.profile_image.delete(save=False)
-            profile.profile_image = profile_image
+            profile.profile_image = request.FILES["profile_image"]
             changes_made = True
 
         if changes_made:
-            try:
-                profile.save()
-                messages.success(request, "Profile updated successfully!")
-            except Exception as e:
-                messages.error(request, f"Error updating profile: {str(e)}")
+            profile.save()
+            messages.success(request, "Profile updated successfully!")
         else:
             messages.info(request, "No changes were made to your profile.")
+
         return redirect("editprofile", id=request.user.id)
+
     return render(
         request,
         "mainpage.html",
-        {"profile": profile, "links": link, "name_changed": name_changed},
+        {
+            "profile": profile,
+            "links": links,
+            "name_changed": name_changed,
+        },
     )
 
 
