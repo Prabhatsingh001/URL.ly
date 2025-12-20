@@ -30,6 +30,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.views import View
 from django.views.generic import TemplateView
 from django.http import JsonResponse
+import logging
 
 from .models import Contact, UserProfile
 from .tasks import (
@@ -41,6 +42,8 @@ from .tasks import (
 from .tokens import account_activation_token, password_reset_token
 
 User = get_user_model()
+
+logger = logging.getLogger("Auth")
 
 
 def health(request):

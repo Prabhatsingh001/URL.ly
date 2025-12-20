@@ -27,8 +27,11 @@ from django.utils.text import slugify
 
 from .models import BioLinkProfile as Profile
 from .models import Link
+import logging
 
 User = get_user_model()
+
+logger = logging.getLogger("Biolink")
 
 
 @login_required

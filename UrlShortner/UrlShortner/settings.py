@@ -241,116 +241,102 @@ SOCIAL_AUTH_PIPELINE = (
     "Auth.pipelines.activate_google_user",
 )
 
-
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "handlers": {
-#         "file": {
-#             "class": "logging.FileHandler",
-#             "filename": config("DJANGO_LOG_FILE"),
-#             "level": config("DJANGO_LOG_LEVEL"),
-#             "formatter": "verbose",
-#         },
-#     },
-#     "loggers": {
-#         "": {  # root logger
-#             "level": "DEBUG",
-#             "handlers": ["file"],
-#         }
-#     },
-#     "formatters": {
-#         "simple": {
-#             "format": "{asctime} {levelname} {message}",
-#             "style": "{",
-#         },
-#         "verbose": {
-#             "format": "{asctime}:{levelname} - {name} {module}.py (line {lineno:d}). {message}",
-#             "style": "{",
-#         },
-#     },
-# }
-
-# ADMINS = [
-#     ("Prabhat", "prabhat.singh0012004@gmail.com"),
-# ]
+ADMINS = [
+    ("Prabhat", "prabhat.singh0012004@gmail.com"),
+]
 
 
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     # 🔹 FORMATTERS
-#     "formatters": {
-#         "simple": {
-#             "format": "[{asctime}] {levelname} [{name}] {message}",
-#             "style": "{",
-#         },
-#         "verbose": {
-#             "format": "{asctime}:{levelname} - {name} {module}.py (line {lineno:d}). {message}",
-#             "style": "{",
-#         },
-#     },
-#     # 🔹 HANDLERS
-#     "handlers": {
-#         # Console output for development
-#         "console": {
-#             "class": "logging.StreamHandler",
-#             "level": "DEBUG",
-#             "formatter": "simple",
-#         },
-#         # General log file
-#         "general_file": {
-#             "class": "logging.FileHandler",
-#             "filename": "logs/general.log",
-#             "level": "INFO",
-#             "formatter": "simple",
-#         },
-#         # App-specific file for urlLogic
-#         "urlLogic_file": {
-#             "class": "logging.handlers.RotatingFileHandler",
-#             "filename": "logs/urlLogic.log",
-#             "maxBytes": 1024 * 1024 * 5,  # 5MB
-#             "backupCount": 5,
-#             "level": "DEBUG",
-#             "formatter": "simple",
-#         },
-#         # Auth-specific file
-#         "auth_file": {
-#             "class": "logging.FileHandler",
-#             "filename": "logs/auth.log",
-#             "level": "INFO",
-#             "formatter": "simple",
-#         },
-#         "mail_admins": {
-#             "class": "django.utils.log.AdminEmailHandler",
-#             "level": "ERROR",
-#             "include_html": True,  # Include HTML-formatted error trace
-#         },
-#     },
-#     # 🔹 LOGGERS
-#     "loggers": {
-#         # Root logger — catches everything not matched below
-#         "": {
-#             "handlers": ["console", "general_file"],
-#             "level": "WARNING",
-#             "propagate": True,
-#         },
-#         # For your urlLogic app
-#         "urlLogic": {
-#             "handlers": ["console", "urlLogic_file"],
-#             "level": "DEBUG",
-#             "propagate": False,
-#         },
-#         # Django’s built-in auth app
-#         "django.contrib.auth": {
-#             "handlers": ["auth_file"],
-#             "level": "INFO",
-#             "propagate": False,
-#         },
-#         "django.request": {
-#             "handlers": ["mail_admins", "general_file"],
-#             "level": "ERROR",
-#             "propagate": False,
-#         },
-#     },
-# }
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            "format": "[{asctime}] {levelname} [{name}] {message}",
+            "style": "{",
+        },
+        "verbose": {
+            "format": "{asctime}:{levelname} - {name} {module}.py (line {lineno:d}). {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "simple",
+        },
+    },
+    "loggers": {
+        "": {
+            "handlers": ["console"],
+            "level": "WARNING",
+        },
+        "urlLogic": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "Auth": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "Biolink": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}
+
+if DEBUG:
+    LOG_DIR = os.path.join(BASE_DIR, "logs")
+    os.makedirs(LOG_DIR, exist_ok=True)
+
+    LOGGING["handlers"]["general_file"] = {
+        "class": "logging.FileHandler",
+        "filename": os.path.join(LOG_DIR, "general.log"),
+        "level": "INFO",
+        "formatter": "simple",
+    }
+    LOGGING["handlers"]["urlLogic_file"] = {
+        "class": "logging.handlers.RotatingFileHandler",
+        "filename": os.path.join(LOG_DIR, "urlLogic.log"),
+        "maxBytes": 1024 * 1024 * 5,
+        "backupCount": 5,
+        "level": "DEBUG",
+        "formatter": "simple",
+    }
+    LOGGING["handlers"]["Auth_file"] = {
+        "class": "logging.handlers.RotatingFileHandler",
+        "filename": os.path.join(LOG_DIR, "auth.log"),
+        "maxBytes": 1024 * 1024 * 5,
+        "backupCount": 5,
+        "level": "INFO",
+        "formatter": "simple",
+    }
+    LOGGING["handlers"]["Biolink_file"] = {
+        "class": "logging.handlers.RotatingFileHandler",
+        "filename": os.path.join(LOG_DIR, "biolink.log"),
+        "maxBytes": 1024 * 1024 * 5,
+        "backupCount": 5,
+        "level": "INFO",
+        "formatter": "simple",
+    }
+    LOGGING["loggers"][""]["handlers"].append("general_file")
+    LOGGING["loggers"]["urlLogic"]["handlers"].append("urlLogic_file")
+    LOGGING["loggers"]["Auth"]["handlers"].append("Auth_file")
+    LOGGING["loggers"]["Biolink"]["handlers"].append("Biolink_file")
+
+else:
+    LOGGING["handlers"]["mail_admins"] = {
+        "class": "django.utils.log.AdminEmailHandler",
+        "level": "ERROR",
+        "formatter": "verbose",
+    }
+    LOGGING["loggers"]["django.request"]["handlers"].append("mail_admins")

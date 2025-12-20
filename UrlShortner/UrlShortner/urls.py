@@ -1,27 +1,33 @@
-"""
-Root URL configuration for URL.ly project.
+"""Root URL configuration for URL.ly project.
 
 This module defines the main URL routing for the entire application, integrating
-all sub-applications and their URL patterns. The routing structure is organized as follows:
+all sub-applications and their URL patterns.
 
-Main Routes:
-- / : Main landing page (IndexView)
-- /s/ : URL shortening functionality
-- /a/ : Authentication and user management
-- /u/ : User dashboard and URL management
-- /p/ : Public biolink pages
-- /admin/ : Admin interface
+Routes:
+    /: Main landing page (IndexView).
+    /s/: URL shortening functionality.
+    /a/: Authentication and user management.
+    /u/: User dashboard and URL management.
+    /p/: Public biolink pages.
+    /admin/: Admin interface.
+
+Attributes:
+    handler404 (str): Custom 404 error handler path.
+    handler500 (str): Custom 500 error handler path.
+    handler403 (str): Custom 403 error handler path.
+    urlpatterns (list): List of URL patterns for the application.
 
 Features:
-- URL shortening with anonymous access
-- Social authentication integration
-- Biolink page management
-- Custom error handlers (404, 500, 403)
-- Static file serving in development
-- Browser reload support in debug mode
+    - URL shortening with anonymous access.
+    - Social authentication integration.
+    - Biolink page management.
+    - Custom error handlers (404, 500, 403).
+    - Static file serving in development.
+    - Browser reload support in debug mode.
 
-Note: Static file serving is only enabled in DEBUG mode. In production,
-static files should be served by the web server or a CDN.
+Note:
+    Static file serving is only enabled in DEBUG mode. In production,
+    static files should be served by the web server or a CDN.
 """
 
 from Auth.views import IndexView, health
