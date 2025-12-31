@@ -5,6 +5,17 @@ from .utils import generate_unique_slug
 User = get_user_model()
 
 
+class BlogProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True)
+    profile_picture = models.ImageField(
+        upload_to="blog/profiles/", null=True, blank=True
+    )
+    social_links = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class StatusUpdate(models.TextChoices):
     DRAFT = "DR", "Draft"
     PUBLISHED = "PB", "Published"
@@ -18,9 +29,7 @@ class BlogPost(models.Model):
     status = models.CharField(
         max_length=2, choices=StatusUpdate.choices, default=StatusUpdate.DRAFT
     )
-    author_id = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="authored_posts"
-    )
+    author = models.ForeignKey(BlogProfile, on_delete=models.CASCADE)
     cover_image = models.ImageField(upload_to="blog/covers/", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -52,7 +61,7 @@ class PostLikes(models.Model):
     post_id = models.ForeignKey(
         BlogPost, on_delete=models.CASCADE, related_name="likes"
     )
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(BlogProfile, on_delete=models.CASCADE)
     liked_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -66,7 +75,7 @@ class Comment(models.Model):
     post_id = models.ForeignKey(
         BlogPost, on_delete=models.CASCADE, related_name="comments"
     )
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(BlogProfile, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
