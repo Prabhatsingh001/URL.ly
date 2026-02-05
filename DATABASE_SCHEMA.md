@@ -4,7 +4,7 @@ This document provides a comprehensive overview of the database models and their
 
 ---
 
-## 📊 Entity Relationship Diagram
+## Entity Relationship Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────┐
@@ -72,7 +72,7 @@ This document provides a comprehensive overview of the database models and their
 
 ---
 
-## 📋 Relationships Summary
+## Relationships Summary
 
 | Relationship | From | To | Type | Description |
 |--------------|------|-----|------|-------------|
@@ -84,7 +84,7 @@ This document provides a comprehensive overview of the database models and their
 
 ---
 
-## 🗂️ Models by App
+## Models by App
 
 ### Auth App
 
@@ -205,7 +205,7 @@ Shortened URLs for non-authenticated users.
 
 ---
 
-## 🔒 Security Features
+## Security Features
 
 - **UUID Primary Keys**: Used across most models for enhanced security
 - **Email Verification**: Users must verify email before `is_active` is set
@@ -215,7 +215,7 @@ Shortened URLs for non-authenticated users.
 
 ---
 
-## 📝 Notes
+## Notes
 
 - All timestamps use `auto_now_add` for creation and `auto_now` for updates
 - Media files are stored in Cloudinary (production) or local `media/` folder (development)
