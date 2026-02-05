@@ -1,0 +1,149 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}{{ author.user.get_full_name|default:author.user.username }} - URL.ly{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-stone-100">
+    
+    <!-- Clean Author Header -->
+    <header class="border-b border-stone-200 bg-stone-50">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 py-16">
+            <div class="flex flex-col items-center text-center">
+                <!-- Minimal Profile Picture -->
+                <div class="mb-6">
+                    {% if author.profile_picture %}
+                    <img src="{{ author.profile_picture.url }}" 
+                        class="w-24 h-24 rounded-full object-cover border border-stone-200">
+                    {% else %}
+                    <div class="w-24 h-24 rounded-full bg-stone-700 flex items-center justify-center">
+                        <span class="text-3xl font-light text-white">{{ author.user.username|slice:":1"|upper }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Name & Handle -->
+                <h1 class="text-2xl font-semibold text-stone-800 mb-1">
+                    {{ author.user.get_full_name|default:author.user.username }}
+                </h1>
+                <p class="text-stone-400 text-sm mb-5">@{{ author.user.username }}</p>
+                
+                <!-- Bio -->
+                {% if author.bio %}
+                <p class="text-stone-600 max-w-md leading-relaxed mb-6">{{ author.bio }}</p>
+                {% endif %}
+
+                <!-- Compact Stats Row -->
+                <div class="flex items-center gap-6 text-sm">
+                    <span class="text-stone-500">
+                        <span class="font-medium text-stone-800">{{ posts.paginator.count }}</span> 
+                        article{{ posts.paginator.count|pluralize }}
+                    </span>
+                    <span class="text-stone-300">·</span>
+                    <span class="text-stone-500">
+                        <span class="font-medium text-stone-800">{{ total_likes }}</span> 
+                        like{{ total_likes|pluralize }}
+                    </span>
+                    {% if author.website %}
+                    <span class="text-stone-300">·</span>
+                    <a href="{{ author.website }}" target="_blank" rel="noopener" 
+                        class="text-stone-700 hover:underline underline-offset-4">
+                        Website ↗
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Posts Section -->
+    <main class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+        
+        {% if posts %}
+        <div class="divide-y divide-stone-200">
+            {% for post in posts %}
+            <article class="py-8 first:pt-0 last:pb-0">
+                <a href="{% url 'blog:blog_post_detail' post.slug %}" class="group block">
+                    <div class="flex gap-6">
+                        <!-- Text Content -->
+                        <div class="flex-1 min-w-0">
+                            <time class="text-xs text-stone-400 uppercase tracking-wide">
+                                {{ post.published_at|date:"M d, Y" }}
+                            </time>
+                            
+                            <h2 class="text-xl font-semibold text-stone-800 mt-2 mb-2 group-hover:text-stone-600 transition-colors leading-tight">
+                                {{ post.title }}
+                            </h2>
+                            
+                            <p class="text-stone-500 text-sm line-clamp-2 leading-relaxed">
+                                {{ post.content|striptags|truncatewords:25 }}
+                            </p>
+
+                            <div class="flex items-center gap-4 mt-4 text-xs text-stone-400">
+                                <span>{{ post.read_time }}</span>
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                    {{ post.likes.count }}
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                    </svg>
+                                    {{ post.comments.count }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Thumbnail -->
+                        {% if post.cover_image %}
+                        <div class="hidden sm:block flex-shrink-0">
+                            <div class="w-28 h-28 rounded-lg overflow-hidden bg-stone-200">
+                                <img src="{{ post.cover_image.url }}" alt=""
+                                    class="w-full h-full object-cover group-hover:opacity-90 transition-opacity">
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </a>
+            </article>
+            {% endfor %}
+        </div>
+
+        <!-- Minimal Pagination -->
+        {% if posts.has_other_pages %}
+        <nav class="flex items-center justify-between pt-8 mt-8 border-t border-stone-200">
+            <div>
+                {% if posts.has_previous %}
+                <a href="?page={{ posts.previous_page_number }}"
+                    class="text-sm text-stone-600 hover:text-stone-800 transition-colors">
+                    ← Previous
+                </a>
+                {% endif %}
+            </div>
+            
+            <span class="text-xs text-stone-400">
+                {{ posts.number }} / {{ posts.paginator.num_pages }}
+            </span>
+            
+            <div>
+                {% if posts.has_next %}
+                <a href="?page={{ posts.next_page_number }}"
+                    class="text-sm text-stone-600 hover:text-stone-800 transition-colors">
+                    Next →
+                </a>
+                {% endif %}
+            </div>
+        </nav>
+        {% endif %}
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-20">
+            <p class="text-stone-400 text-sm">No published stories yet.</p>
+        </div>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}

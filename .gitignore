@@ -13,3 +13,6 @@ media/
 logs
 node_modules/
 .DS_Store
+.txt
+staticfiles_build/
+covers/

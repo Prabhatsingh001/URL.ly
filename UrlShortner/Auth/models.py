@@ -184,6 +184,9 @@ class UserProfile(models.Model):
     def __repr__(self):
         return f"this profile belongs to {self.user.email}"
 
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 class Contact(models.Model):
     """

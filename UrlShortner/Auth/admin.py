@@ -15,6 +15,10 @@ from django.contrib.auth.admin import UserAdmin
 
 from .models import Contact, CustomUser, UserProfile
 
+admin.site.site_header = "URL.ly Administration"
+admin.site.site_title = "URL.ly Admin Portal"
+admin.site.index_title = "Welcome to the URL.ly Admin Portal"
+
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):

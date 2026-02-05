@@ -93,7 +93,7 @@ if DEBUG:
 else:
     SITE_DOMAIN = "url-ly.onrender.com"
     PROTOCOL = "https"
-    ALLOWED_HOSTS = [".onrender.com"]
+    ALLOWED_HOSTS = config("ALLOWED_HOSTS", default=".onrender.com").split(",")  # type: ignore
 
 
 APPEND_SLASH = True
@@ -111,11 +111,14 @@ INSTALLED_APPS = [
     "urlLogic",
     "Biolink",
     "Brandlink",
+    "blog",
     "tailwind",
     "theme",
 ]
 
-if DEBUG:
+ENABLE_DEV_TOOLS = DEBUG and not config("DISABLE_DEV_TOOLS", cast=bool, default=False)
+
+if ENABLE_DEV_TOOLS:
     INSTALLED_APPS += [
         "django_browser_reload",
         "django_extensions",
@@ -133,7 +136,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-if DEBUG:
+if ENABLE_DEV_TOOLS:
     MIDDLEWARE.insert(0, "django_browser_reload.middleware.BrowserReloadMiddleware")
 
 ROOT_URLCONF = "UrlShortner.urls"
@@ -240,117 +243,3 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.user.user_details",
     "Auth.pipelines.activate_google_user",
 )
-
-
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "handlers": {
-#         "file": {
-#             "class": "logging.FileHandler",
-#             "filename": config("DJANGO_LOG_FILE"),
-#             "level": config("DJANGO_LOG_LEVEL"),
-#             "formatter": "verbose",
-#         },
-#     },
-#     "loggers": {
-#         "": {  # root logger
-#             "level": "DEBUG",
-#             "handlers": ["file"],
-#         }
-#     },
-#     "formatters": {
-#         "simple": {
-#             "format": "{asctime} {levelname} {message}",
-#             "style": "{",
-#         },
-#         "verbose": {
-#             "format": "{asctime}:{levelname} - {name} {module}.py (line {lineno:d}). {message}",
-#             "style": "{",
-#         },
-#     },
-# }
-
-# ADMINS = [
-#     ("Prabhat", "prabhat.singh0012004@gmail.com"),
-# ]
-
-
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     # 🔹 FORMATTERS
-#     "formatters": {
-#         "simple": {
-#             "format": "[{asctime}] {levelname} [{name}] {message}",
-#             "style": "{",
-#         },
-#         "verbose": {
-#             "format": "{asctime}:{levelname} - {name} {module}.py (line {lineno:d}). {message}",
-#             "style": "{",
-#         },
-#     },
-#     # 🔹 HANDLERS
-#     "handlers": {
-#         # Console output for development
-#         "console": {
-#             "class": "logging.StreamHandler",
-#             "level": "DEBUG",
-#             "formatter": "simple",
-#         },
-#         # General log file
-#         "general_file": {
-#             "class": "logging.FileHandler",
-#             "filename": "logs/general.log",
-#             "level": "INFO",
-#             "formatter": "simple",
-#         },
-#         # App-specific file for urlLogic
-#         "urlLogic_file": {
-#             "class": "logging.handlers.RotatingFileHandler",
-#             "filename": "logs/urlLogic.log",
-#             "maxBytes": 1024 * 1024 * 5,  # 5MB
-#             "backupCount": 5,
-#             "level": "DEBUG",
-#             "formatter": "simple",
-#         },
-#         # Auth-specific file
-#         "auth_file": {
-#             "class": "logging.FileHandler",
-#             "filename": "logs/auth.log",
-#             "level": "INFO",
-#             "formatter": "simple",
-#         },
-#         "mail_admins": {
-#             "class": "django.utils.log.AdminEmailHandler",
-#             "level": "ERROR",
-#             "include_html": True,  # Include HTML-formatted error trace
-#         },
-#     },
-#     # 🔹 LOGGERS
-#     "loggers": {
-#         # Root logger — catches everything not matched below
-#         "": {
-#             "handlers": ["console", "general_file"],
-#             "level": "WARNING",
-#             "propagate": True,
-#         },
-#         # For your urlLogic app
-#         "urlLogic": {
-#             "handlers": ["console", "urlLogic_file"],
-#             "level": "DEBUG",
-#             "propagate": False,
-#         },
-#         # Django’s built-in auth app
-#         "django.contrib.auth": {
-#             "handlers": ["auth_file"],
-#             "level": "INFO",
-#             "propagate": False,
-#         },
-#         "django.request": {
-#             "handlers": ["mail_admins", "general_file"],
-#             "level": "ERROR",
-#             "propagate": False,
-#         },
-#     },
-# }
