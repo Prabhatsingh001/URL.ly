@@ -1,0 +1,215 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Blog - URL.ly{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-stone-100">
+    
+    <!-- Hero Section -->
+    <div class="relative bg-gradient-to-br from-stone-700 via-stone-600 to-stone-700 overflow-hidden">
+        <div class="absolute inset-0 bg-black/10"></div>
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIyIi8+PC9nPjwvZz48L3N2Zz4=')] opacity-20"></div>
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+                Discover Stories
+            </h1>
+            <p class="text-xl text-white/80 max-w-2xl mx-auto mb-10">
+                Insights, tutorials, and stories from the URL.ly community
+            </p>
+            
+            <!-- Search Bar -->
+            <form method="get" action="" class="max-w-xl mx-auto">
+                <div class="relative">
+                    <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search articles..."
+                        class="w-full px-6 py-4 rounded-full text-stone-800 placeholder-stone-400 bg-white shadow-xl focus:outline-none focus:ring-4 focus:ring-white/30">
+                    <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 p-3 bg-stone-700 text-white rounded-full hover:bg-stone-800 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Featured Post (if exists) -->
+        {% if featured_post %}
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-stone-800 mb-6">Featured Story</h2>
+            <a href="{% url 'blog:blog_post_detail' featured_post.slug %}" class="group block">
+                <div class="relative bg-stone-50 rounded-3xl shadow-lg overflow-hidden flex flex-col lg:flex-row border border-stone-200">
+                    <div class="lg:w-1/2 h-64 lg:h-96">
+                        {% if featured_post.cover_image %}
+                        <img src="{{ featured_post.cover_image.url }}" alt="{{ featured_post.title }}"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        {% else %}
+                        <div class="w-full h-full bg-gradient-to-br from-stone-400 to-stone-500 flex items-center justify-center">
+                            <svg class="w-20 h-20 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                            </svg>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
+                        <div class="flex items-center gap-4 mb-4">
+                            {% if featured_post.author.profile_picture %}
+                            <img src="{{ featured_post.author.profile_picture.url }}" class="w-10 h-10 rounded-full">
+                            {% else %}
+                            <div class="w-10 h-10 rounded-full bg-stone-300 flex items-center justify-center text-stone-600">{{ featured_post.author.user.username|slice:":1"|upper }}</div>
+                            {% endif %}
+                            <div>
+                                <p class="font-medium text-stone-800">{{ featured_post.author.user.get_full_name|default:featured_post.author.user.username }}</p>
+                                <p class="text-sm text-stone-500">{{ featured_post.published_at|date:"M d, Y" }} • {{ featured_post.read_time }}</p>
+                            </div>
+                        </div>
+                        <h3 class="text-3xl font-bold text-stone-800 mb-4 group-hover:text-stone-600 transition-colors">
+                            {{ featured_post.title }}
+                        </h3>
+                        <p class="text-stone-600 text-lg line-clamp-3 mb-6">
+                            {{ featured_post.content|striptags|truncatewords:40 }}
+                        </p>
+                        <div class="flex items-center gap-6 text-sm text-stone-500">
+                            <span class="flex items-center gap-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                </svg>
+                                {{ featured_post.likes.count }}
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                </svg>
+                                {{ featured_post.comments.count }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </section>
+        {% endif %}
+
+        <!-- All Posts Grid -->
+        <section>
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold text-stone-800">
+                    {% if query %}Results for "{{ query }}"{% else %}Latest Stories{% endif %}
+                </h2>
+                <div class="flex items-center gap-2">
+                    <span class="text-stone-500">Sort:</span>
+                    <select onchange="window.location.href=this.value" class="border-0 bg-transparent font-medium text-stone-800 focus:ring-0 cursor-pointer">
+                        <option value="?sort=recent" {% if sort == 'recent' %}selected{% endif %}>Most Recent</option>
+                        <option value="?sort=popular" {% if sort == 'popular' %}selected{% endif %}>Most Popular</option>
+                    </select>
+                </div>
+            </div>
+
+            {% if posts %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for post in posts %}
+                <article class="group bg-stone-50 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col border border-stone-200">
+                    <a href="{% url 'blog:blog_post_detail' post.slug %}" class="block">
+                        <div class="h-52 relative overflow-hidden">
+                            {% if post.cover_image %}
+                            <img src="{{ post.cover_image.url }}" alt="{{ post.title }}"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            {% else %}
+                            <div class="w-full h-full bg-gradient-to-br from-stone-300 to-stone-400 flex items-center justify-center">
+                                <svg class="w-12 h-12 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                                </svg>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </a>
+                    
+                    <div class="p-6 flex flex-col flex-grow">
+                        <!-- Author -->
+                        <a href="{% url 'blog:author_profile' post.author.user.username %}" class="flex items-center gap-3 mb-4 group/author">
+                            {% if post.author.profile_picture %}
+                            <img src="{{ post.author.profile_picture.url }}" class="w-8 h-8 rounded-full">
+                            {% else %}
+                            <div class="w-8 h-8 rounded-full bg-stone-300 flex items-center justify-center text-sm text-stone-600">{{ post.author.user.username|slice:":1"|upper }}</div>
+                            {% endif %}
+                            <span class="text-sm font-medium text-stone-600 group-hover/author:text-stone-800">
+                                {{ post.author.user.get_full_name|default:post.author.user.username }}
+                            </span>
+                        </a>
+
+                        <a href="{% url 'blog:blog_post_detail' post.slug %}" class="block flex-grow">
+                            <h3 class="text-xl font-bold text-stone-800 mb-2 group-hover:text-stone-600 transition-colors line-clamp-2">
+                                {{ post.title }}
+                            </h3>
+                            <p class="text-stone-600 line-clamp-3 mb-4">
+                                {{ post.content|striptags|truncatewords:25 }}
+                            </p>
+                        </a>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-stone-200 mt-auto">
+                            <span class="text-sm text-stone-500">{{ post.published_at|date:"M d" }} • {{ post.read_time }}</span>
+                            <div class="flex items-center gap-3 text-stone-400 text-sm">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                    {{ post.likes.count }}
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                    </svg>
+                                    {{ post.comments.count }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if posts.has_other_pages %}
+            <div class="flex justify-center mt-12">
+                <nav class="flex items-center gap-2">
+                    {% if posts.has_previous %}
+                    <a href="?page={{ posts.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
+                        class="px-4 py-2 rounded-lg bg-stone-50 border border-stone-200 text-stone-700 hover:bg-stone-100 transition-colors">
+                        Previous
+                    </a>
+                    {% endif %}
+                    
+                    <span class="px-4 py-2 text-stone-600">
+                        Page {{ posts.number }} of {{ posts.paginator.num_pages }}
+                    </span>
+                    
+                    {% if posts.has_next %}
+                    <a href="?page={{ posts.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
+                        class="px-4 py-2 rounded-lg bg-stone-50 border border-stone-200 text-stone-700 hover:bg-stone-100 transition-colors">
+                        Next
+                    </a>
+                    {% endif %}
+                </nav>
+            </div>
+            {% endif %}
+
+            {% else %}
+            <div class="text-center py-20">
+                <svg class="w-20 h-20 text-stone-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                </svg>
+                {% if query %}
+                <h3 class="text-xl font-semibold text-stone-800 mb-2">No results found</h3>
+                <p class="text-stone-600">Try a different search term</p>
+                {% else %}
+                <h3 class="text-xl font-semibold text-stone-800 mb-2">No stories yet</h3>
+                <p class="text-stone-600">Check back soon for new content</p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}

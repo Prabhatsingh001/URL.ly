@@ -50,7 +50,7 @@
                 {% else %}
                 <a href="{% url 'index' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Home</a>
                 <a href="{% url 'my_biolink_page' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Create Biolink</a>
-                <a href="{% url 'blog:blog_home' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Blog</a>
+                <a href="{% url 'blog:blog_list' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Blog</a>
                 <a href="{% url 'preview' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Preview URL</a>
                 <a href="{% url 'a:about' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">About</a>
                 <a href="{% url 'a:contact' %}" class="block text-gray-700 dark:text-white hover:text-blue-600 font-semibold transition">Contact</a>
@@ -68,12 +68,13 @@
             {% if user.is_authenticated %}
             <a href="{% url 'u:home' %}" class="block text-gray-700 dark:text-white font-semibold hover:text-blue-600 transition">Home</a>
             <a href="{% url 'biolinkpage' user.id %}" class="block text-gray-700 dark:text-white font-semibold hover:text-blue-600 transition">My Biolink</a>
+            <a href="{% url 'blog:blog_home' %}" class="hover:text-blue-600 font-semibold transition">My Blog</a>
             {% else %}
             <a href="{% url 'index' %}" class="block text-gray-700 dark:text-white font-semibold hover:text-blue-600 transition">Home</a>
             <a href="{% url 'my_biolink_page' %}" class="block text-gray-700 dark:text-white font-semibold hover:text-blue-600 transition">Create Biolink</a>
             {% endif %}
             <a href="{% url 'preview' %}" class="hover:text-blue-600 font-semibold transition">Preview URL</a>
-            <a href="{% url 'blog:blog_home' %}" class="hover:text-blue-600 font-semibold transition">Create Blog</a>
+            <a href="{% url 'blog:blog_list' %}" class="hover:text-blue-600 font-semibold transition">Blog</a>
             <a href="{% url 'a:about' %}" class="hover:text-blue-600 font-semibold transition">About</a>
             <a href="{% url 'a:contact' %}" class="hover:text-blue-600 font-semibold transition">Contact</a>
 

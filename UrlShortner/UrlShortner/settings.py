@@ -93,7 +93,7 @@ if DEBUG:
 else:
     SITE_DOMAIN = "url-ly.onrender.com"
     PROTOCOL = "https"
-    ALLOWED_HOSTS = [".onrender.com"]
+    ALLOWED_HOSTS = config("ALLOWED_HOSTS", default=".onrender.com").split(",")  # type: ignore
 
 
 APPEND_SLASH = True
@@ -116,7 +116,9 @@ INSTALLED_APPS = [
     "theme",
 ]
 
-if DEBUG:
+ENABLE_DEV_TOOLS = DEBUG and not config("DISABLE_DEV_TOOLS", cast=bool, default=False)
+
+if ENABLE_DEV_TOOLS:
     INSTALLED_APPS += [
         "django_browser_reload",
         "django_extensions",
@@ -134,7 +136,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-if DEBUG:
+if ENABLE_DEV_TOOLS:
     MIDDLEWARE.insert(0, "django_browser_reload.middleware.BrowserReloadMiddleware")
 
 ROOT_URLCONF = "UrlShortner.urls"

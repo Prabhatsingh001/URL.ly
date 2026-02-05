@@ -1,0 +1,304 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}{% if post %}Edit{% else %}Create{% endif %} Blog Post - URL.ly{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-stone-100">
+    <!-- Header -->
+    <div class="bg-stone-50 border-b border-stone-200 sticky top-16 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-4">
+                    <a href="{% url 'blog:blog_home' %}" class="text-stone-500 hover:text-stone-700 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </a>
+                    <span class="text-stone-800 font-semibold">{% if post %}Edit Story{% else %}Write a Story{% endif %}</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="saveStatus" class="text-sm text-stone-400 hidden">
+                        <svg class="w-4 h-4 inline-block animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        Saving...
+                    </span>
+                    <button type="button" onclick="saveDraft()" class="px-4 py-2 text-stone-700 bg-stone-200 hover:bg-stone-300 rounded-lg font-medium transition-colors">
+                        Save Draft
+                    </button>
+                    <button type="button" onclick="publishPost()" class="px-4 py-2 text-white bg-stone-700 hover:bg-stone-800 rounded-lg font-medium transition-colors">
+                        {% if post %}Update{% else %}Publish{% endif %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="blogForm" method="post" enctype="multipart/form-data" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% csrf_token %}
+        <input type="hidden" name="status" id="postStatus" value="{% if post %}{{ post.status }}{% else %}DR{% endif %}">
+
+        <!-- Cover Image Upload -->
+        <div class="mb-8">
+            <div id="coverImageContainer" class="relative w-full h-64 bg-stone-200 rounded-2xl overflow-hidden border-2 border-dashed border-stone-300 hover:border-stone-400 transition-colors cursor-pointer group"
+                onclick="document.getElementById('cover_image').click()">
+                
+                <img id="coverPreview" src="{% if post and post.cover_image %}{{ post.cover_image.url }}{% endif %}" 
+                    class="w-full h-full object-cover {% if not post or not post.cover_image %}hidden{% endif %}">
+                
+                <div id="coverPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center {% if post and post.cover_image %}hidden{% endif %}">
+                    <svg class="w-12 h-12 text-stone-400 group-hover:text-stone-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <p class="mt-2 text-sm text-stone-500 group-hover:text-stone-600">Click to add a cover image</p>
+                    <p class="text-xs text-stone-400 mt-1">Recommended: 1200 x 630px</p>
+                </div>
+
+                <button type="button" id="removeCover" onclick="event.stopPropagation(); removeCoverImage()" 
+                    class="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity {% if not post or not post.cover_image %}hidden{% endif %}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <input type="file" name="cover_image" id="cover_image" accept="image/*" class="hidden" onchange="previewCover(this)">
+        </div>
+
+        <!-- Title -->
+        <div class="mb-6">
+            <input type="text" name="title" id="title" required placeholder="Your story title..."
+                value="{% if post %}{{ post.title }}{% endif %}"
+                class="w-full text-4xl md:text-5xl font-bold text-stone-800 placeholder-stone-300 border-0 focus:ring-0 bg-transparent p-0 focus:outline-none"
+                oninput="autoResize(this)">
+        </div>
+
+        <!-- Content Editor -->
+        <div class="mb-8">
+            <div class="bg-stone-50 rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+                <!-- Toolbar -->
+                <div class="flex items-center gap-1 p-3 border-b border-stone-200 bg-stone-100 flex-wrap">
+                    <button type="button" onclick="formatText('bold')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Bold (Ctrl+B)">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"></path>
+                        </svg>
+                    </button>
+                    <button type="button" onclick="formatText('italic')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Italic (Ctrl+I)">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 4h4m-2 0v16m4 0h-4"></path>
+                        </svg>
+                    </button>
+                    <button type="button" onclick="formatText('underline')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Underline (Ctrl+U)">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v7a5 5 0 0010 0V4M5 21h14"></path>
+                        </svg>
+                    </button>
+                    <div class="w-px h-6 bg-stone-300 mx-2"></div>
+                    <button type="button" onclick="formatText('h2')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Heading">
+                        <span class="font-bold text-sm">H2</span>
+                    </button>
+                    <button type="button" onclick="formatText('h3')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Subheading">
+                        <span class="font-bold text-sm">H3</span>
+                    </button>
+                    <div class="w-px h-6 bg-stone-300 mx-2"></div>
+                    <button type="button" onclick="formatText('ul')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Bullet List">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <button type="button" onclick="formatText('ol')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Numbered List">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path>
+                        </svg>
+                    </button>
+                    <div class="w-px h-6 bg-stone-300 mx-2"></div>
+                    <button type="button" onclick="formatText('link')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Add Link">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                        </svg>
+                    </button>
+                    <button type="button" onclick="formatText('quote')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Quote">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                        </svg>
+                    </button>
+                    <button type="button" onclick="formatText('code')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Code Block">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Editor Area -->
+                <div id="editor" contenteditable="true" 
+                    class="min-h-[400px] p-6 prose prose-lg max-w-none focus:outline-none"
+                    data-placeholder="Tell your story...">{% if post %}{{ post.content|safe }}{% endif %}</div>
+                <textarea name="content" id="contentHidden" class="hidden">{% if post %}{{ post.content }}{% endif %}</textarea>
+            </div>
+        </div>
+
+        <!-- Word Count and Read Time -->
+        <div class="flex items-center justify-between text-sm text-stone-500 mb-8">
+            <div class="flex items-center gap-4">
+                <span id="wordCount">0 words</span>
+                <span>•</span>
+                <span id="readTime">0 min read</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-stone-300" id="statusDot"></span>
+                <span id="currentStatus">{% if post %}{{ post.get_status_display }}{% else %}Draft{% endif %}</span>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+#editor:empty:before {
+    content: attr(data-placeholder);
+    color: #9CA3AF;
+    pointer-events: none;
+}
+#editor:focus:empty:before {
+    content: '';
+}
+</style>
+
+<script>
+// Cover Image Preview
+function previewCover(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('coverPreview').src = e.target.result;
+            document.getElementById('coverPreview').classList.remove('hidden');
+            document.getElementById('coverPlaceholder').classList.add('hidden');
+            document.getElementById('removeCover').classList.remove('hidden');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function removeCoverImage() {
+    document.getElementById('cover_image').value = '';
+    document.getElementById('coverPreview').src = '';
+    document.getElementById('coverPreview').classList.add('hidden');
+    document.getElementById('coverPlaceholder').classList.remove('hidden');
+    document.getElementById('removeCover').classList.add('hidden');
+}
+
+// Auto-resize title input
+function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+}
+
+// Rich text formatting
+function formatText(cmd) {
+    const editor = document.getElementById('editor');
+    editor.focus();
+    
+    switch(cmd) {
+        case 'bold':
+            document.execCommand('bold', false, null);
+            break;
+        case 'italic':
+            document.execCommand('italic', false, null);
+            break;
+        case 'underline':
+            document.execCommand('underline', false, null);
+            break;
+        case 'h2':
+            document.execCommand('formatBlock', false, '<h2>');
+            break;
+        case 'h3':
+            document.execCommand('formatBlock', false, '<h3>');
+            break;
+        case 'ul':
+            document.execCommand('insertUnorderedList', false, null);
+            break;
+        case 'ol':
+            document.execCommand('insertOrderedList', false, null);
+            break;
+        case 'link':
+            const url = prompt('Enter URL:');
+            if (url) document.execCommand('createLink', false, url);
+            break;
+        case 'quote':
+            document.execCommand('formatBlock', false, '<blockquote>');
+            break;
+        case 'code':
+            document.execCommand('formatBlock', false, '<pre>');
+            break;
+    }
+    updateWordCount();
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey || e.metaKey) {
+        switch(e.key.toLowerCase()) {
+            case 'b':
+                e.preventDefault();
+                formatText('bold');
+                break;
+            case 'i':
+                e.preventDefault();
+                formatText('italic');
+                break;
+            case 'u':
+                e.preventDefault();
+                formatText('underline');
+                break;
+            case 's':
+                e.preventDefault();
+                saveDraft();
+                break;
+        }
+    }
+});
+
+// Word count and read time
+function updateWordCount() {
+    const editor = document.getElementById('editor');
+    const text = editor.innerText || '';
+    const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+    const readTime = Math.max(1, Math.ceil(words / 200));
+    
+    document.getElementById('wordCount').textContent = words + ' words';
+    document.getElementById('readTime').textContent = readTime + ' min read';
+}
+
+document.getElementById('editor').addEventListener('input', updateWordCount);
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    updateWordCount();
+    autoResize(document.getElementById('title'));
+});
+
+// Save Functions
+function saveDraft() {
+    document.getElementById('postStatus').value = 'DR';
+    submitForm();
+}
+
+function publishPost() {
+    document.getElementById('postStatus').value = 'PB';
+    submitForm();
+}
+
+function submitForm() {
+    // Copy editor content to hidden textarea
+    const editor = document.getElementById('editor');
+    document.getElementById('contentHidden').value = editor.innerHTML;
+    
+    // Show saving status
+    document.getElementById('saveStatus').classList.remove('hidden');
+    
+    // Submit the form
+    document.getElementById('blogForm').submit();
+}
+</script>
+{% endblock %}

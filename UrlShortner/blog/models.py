@@ -62,3 +62,35 @@ class Blog(models.Model):
             self.archived_at = timezone.now()
 
         super().save(*args, **kwargs)
+
+    @property
+    def read_time(self):
+        words = len(self.content.split())
+        minutes = words // 200
+        if minutes == 0:
+            return "1 min read"
+        return f"{minutes} min read"
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name="comments")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_approved = models.BooleanField(default=True)
+    is_spam = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Comment by {self.user.email} on {self.post.title}"
+
+
+class Like(models.Model):
+    post = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name="likes")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ("post", "user")
+
+    def __str__(self):
+        return f"Like by {self.user.email} on {self.post.title}"

@@ -1,0 +1,143 @@
+<article
+    class="group relative bg-stone-50 rounded-2xl border border-stone-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out overflow-hidden flex flex-col h-full">
+    <!-- Image -->
+    <div class="h-48 bg-stone-200 overflow-hidden relative">
+        {% if post.cover_image %}
+        <img src="{{ post.cover_image.url }}" alt="{{ post.title }}"
+            class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+        {% else %}
+        <div
+            class="w-full h-full bg-gradient-to-br from-stone-400 to-stone-500 flex items-center justify-center text-white text-4xl">
+            📝
+        </div>
+        {% endif %}
+
+        <!-- Status Badge overlay -->
+        <div class="absolute top-3 right-3">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/90 backdrop-blur-md shadow-sm 
+                {% if post.status == 'PB' %} text-stone-700
+                {% elif post.status == 'AR' %} text-stone-500
+                {% else %} text-stone-600 {% endif %}">
+                {% if post.status == 'PB' %}
+                <span class="w-1.5 h-1.5 bg-stone-600 rounded-full mr-1.5"></span> Published
+                {% elif post.status == 'AR' %}
+                <span class="w-1.5 h-1.5 bg-stone-400 rounded-full mr-1.5"></span> Archived
+                {% else %}
+                <span class="w-1.5 h-1.5 bg-stone-500 rounded-full mr-1.5"></span> Draft
+                {% endif %}
+            </span>
+        </div>
+
+        <!-- Quick Actions Menu -->
+        <div class="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div class="flex items-center gap-2">
+                <a href="{% url 'blog:edit_blog_post' post.slug %}" 
+                    class="p-2 bg-white/90 backdrop-blur rounded-full shadow-sm hover:bg-stone-100 text-stone-600 hover:text-stone-800 transition-colors"
+                    title="Edit">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                </a>
+                <button onclick="event.stopPropagation(); deletePost('{{ post.slug }}')" 
+                    class="p-2 bg-white/90 backdrop-blur rounded-full shadow-sm hover:bg-red-50 text-stone-600 hover:text-red-600 transition-colors"
+                    title="Delete">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="p-6 flex flex-col flex-grow">
+        <div class="flex items-center text-xs text-stone-500 mb-3 space-x-2">
+            <span>{{ post.updated_at|date:"M d, Y" }}</span>
+            <span>•</span>
+            <span>{{ post.read_time }}</span>
+        </div>
+
+        <h3
+            class="text-lg font-bold text-stone-800 mb-2 line-clamp-2 leading-tight group-hover:text-stone-600 transition-colors">
+            <a href="{% url 'blog:blog_post_detail' post.slug %}" class="focus:outline-none">
+                <span class="absolute inset-0"></span>
+                {{ post.title }}
+            </a>
+        </h3>
+
+        <p class="text-stone-600 text-sm line-clamp-3 mb-4 flex-grow">
+            {{ post.content|striptags|truncatewords:20 }}
+        </p>
+
+        <!-- Footer Actions -->
+        <div class="pt-4 mt-auto border-t border-stone-200 flex items-center justify-between text-sm relative z-10">
+            <!-- Stats -->
+            <div class="flex items-center space-x-4 text-stone-400">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                        </path>
+                    </svg>
+                    <span>{{ post.likes.count }}</span>
+                </div>
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                        </path>
+                    </svg>
+                    <span>{{ post.comments.count }}</span>
+                </div>
+            </div>
+
+            <!-- View & Status Actions -->
+            <div class="flex items-center gap-2">
+                <select onchange="updateStatus('{{ post.slug }}', this.value)" 
+                    class="text-xs border-0 bg-stone-200 rounded-md px-2 py-1 focus:ring-1 focus:ring-stone-400 cursor-pointer">
+                    <option value="DR" {% if post.status == 'DR' %}selected{% endif %}>Draft</option>
+                    <option value="PB" {% if post.status == 'PB' %}selected{% endif %}>Published</option>
+                    <option value="AR" {% if post.status == 'AR' %}selected{% endif %}>Archived</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</article>
+
+<script>
+function updateStatus(slug, status) {
+    fetch(`/blog/post/${slug}/status/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: `status=${status}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.error || 'Failed to update status');
+        }
+    });
+}
+
+function deletePost(slug) {
+    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) return;
+    
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/blog/delete/${slug}/`;
+    
+    const csrf = document.createElement('input');
+    csrf.type = 'hidden';
+    csrf.name = 'csrfmiddlewaretoken';
+    csrf.value = '{{ csrf_token }}';
+    form.appendChild(csrf);
+    
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>

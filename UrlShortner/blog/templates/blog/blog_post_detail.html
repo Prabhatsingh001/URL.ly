@@ -2,217 +2,378 @@
 {% load static %}
 
 {% block content %}
-<div class="min-h-screen bg-slate-50">
-    <!-- Breadcrumb -->
-    <div class="bg-white border-b border-gray-200">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div class="flex items-center gap-2 text-sm text-gray-600">
-                <a href="{% url 'blog:blog_home' %}" class="text-blue-600 hover:text-blue-700">Blog</a>
+<!-- Reading Progress Bar -->
+<div class="fixed top-0 left-0 h-1 bg-gradient-to-r from-stone-500 to-stone-600 z-50 transition-all duration-100"
+    id="readingProgress" style="width: 0%"></div>
+
+<article class="min-h-screen bg-stone-50 font-serif text-lg leading-relaxed text-stone-700">
+
+    <!-- Immersive Header -->
+    <header class="relative w-full h-[60vh] min-h-[400px] flex flex-col justify-end overflow-hidden group">
+        {% if post.cover_image %}
+        <div class="absolute inset-0">
+            <img src="{{ post.cover_image.url }}" alt="{{ post.title }}"
+                class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[2s]">
+            <div class="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent opacity-90">
+            </div>
+        </div>
+        {% else %}
+        <div class="absolute inset-0 bg-gradient-to-br from-stone-700 to-stone-800"></div>
+        {% endif %}
+
+        <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 w-full text-white">
+            <!-- Breadcrumb -->
+            <div class="flex items-center gap-2 text-sm text-white/70 mb-6 font-sans">
+                <a href="{% url 'blog:blog_home' %}" class="hover:text-white transition-colors">Blog</a>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
-                <span class="text-gray-900 truncate">{{ post.title|truncatewords:5 }}</span>
+                <span class="truncate max-w-[200px]">{{ post.title }}</span>
             </div>
-        </div>
-    </div>
 
-    <!-- Article Header -->
-    <div class="bg-white border-b border-gray-200 py-12">
-        <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Meta Info -->
-            <div class="flex items-center justify-between mb-6 pb-6 border-b border-gray-200">
-                <div class="flex items-center gap-4">
-                    <img src="{{ post.author_id.profile.profile_image.url }}" alt="{{ post.author_id.get_full_name }}" class="w-12 h-12 rounded-full object-cover">
-                    <div>
-                        <p class="font-semibold text-gray-900">{{ post.author_id.get_full_name }}</p>
-                        <p class="text-sm text-gray-500">{{ post.published_at|date:"F d, Y" }}</p>
-                    </div>
-                </div>
-                
-                <!-- Share Buttons -->
-                <div class="hidden sm:flex items-center gap-3">
-                    <button onclick="shareArticle('twitter')" class="p-2 text-gray-500 hover:text-blue-400 hover:bg-blue-50 rounded-lg transition-colors">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg>
-                    </button>
-                    <button onclick="shareArticle('linkedin')" class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.475-2.236-1.986-2.236-1.081 0-1.722.721-2.004 1.418-.103.249-.129.597-.129.946v5.441h-3.554s.05-8.81 0-9.728h3.554v1.375c.427-.659 1.191-1.599 2.897-1.599 2.117 0 3.704 1.385 3.704 4.362v5.59zM5.337 9.433c-1.144 0-1.915-.758-1.915-1.706 0-.956.767-1.708 1.958-1.708 1.191 0 1.915.757 1.915 1.708 0 .948-.722 1.706-1.958 1.706zm1.946 11.019H3.391V9.724h3.892v10.728zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"></path></svg>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Title -->
-            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight font-sans">
                 {{ post.title }}
             </h1>
-            
-            <!-- Featured Image -->
-            {% if post.cover_image %}
-            <div class="mb-8 rounded-lg overflow-hidden shadow-lg">
-                <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" class="w-full h-96 object-cover">
-            </div>
-            {% endif %}
-        </article>
-    </div>
 
-    <!-- Article Content -->
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Main Content -->
-                <div class="lg:col-span-2">
-                    <div class="prose prose-lg max-w-none">
-                        <div class="bg-white rounded-lg p-8 shadow-sm">
-                            {{ post.content|safe }}
-                        </div>
+            <div class="flex items-center gap-6 font-sans">
+                <!-- Author -->
+                <div class="flex items-center gap-3">
+                    {% if post.author.profile_picture %}
+                    <img src="{{ post.author.profile_picture.url }}"
+                        class="w-12 h-12 rounded-full border-2 border-white/20">
+                    {% else %}
+                    <div
+                        class="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+                        <span class="text-xl text-white">{{ post.author.user.username|slice:":1"|upper }}</span>
                     </div>
-                    
-                    <!-- Post Meta Info -->
-                    <div class="mt-12 pt-8 border-t border-gray-200">
-                        <div class="grid grid-cols-3 gap-4 mb-8">
-                            <div class="bg-white p-4 rounded-lg text-center shadow-sm">
-                                <p class="text-sm text-gray-600 mb-1">Likes</p>
-                                <p class="text-2xl font-bold text-red-500">{{ post.likes.count }}</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-lg text-center shadow-sm">
-                                <p class="text-sm text-gray-600 mb-1">Comments</p>
-                                <p class="text-2xl font-bold text-blue-500">{{ post.comments.count }}</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-lg text-center shadow-sm">
-                                <p class="text-sm text-gray-600 mb-1">Published</p>
-                                <p class="text-lg font-bold text-gray-900">{{ post.published_at|date:"M d" }}</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Like Button -->
-                        <button onclick="toggleLike({{ post.id }})" class="w-full bg-red-50 hover:bg-red-100 border-2 border-red-200 text-red-600 py-3 px-6 rounded-lg font-semibold transition-colors duration-200">
-                            ♥ Like This Article
-                        </button>
-                    </div>
-
-                    <!-- Comments Section -->
-                    <div class="mt-12 pt-8 border-t border-gray-200">
-                        <h2 class="text-3xl font-bold text-gray-900 mb-8">Comments</h2>
-                        
-                        {% if post.comments.count > 0 %}
-                        <div class="space-y-6 mb-8">
-                            {% for comment in post.comments.all %}
-                                {% if comment.is_approved and not comment.is_spam %}
-                                <div class="bg-white rounded-lg p-6 shadow-sm">
-                                    <div class="flex items-start gap-4">
-                                        <img src="{{ comment.user_id.profile.profile_image.url }}" alt="{{ comment.user_id.get_full_name }}" class="w-10 h-10 rounded-full object-cover flex-shrink-0">
-                                        <div class="flex-grow">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <p class="font-semibold text-gray-900">{{ comment.user_id.get_full_name }}</p>
-                                                <span class="text-sm text-gray-500">{{ comment.created_at|date:"M d, Y" }}</span>
-                                            </div>
-                                            <p class="text-gray-700">{{ comment.content }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        {% else %}
-                        <p class="text-gray-600 mb-8">No comments yet. Be the first to comment!</p>
-                        {% endif %}
-                        
-                        <!-- Add Comment Form -->
-                        <div class="bg-white rounded-lg p-6 shadow-sm">
-                            <h3 class="text-xl font-bold text-gray-900 mb-4">Leave a Comment</h3>
-                            <p class="text-sm text-gray-600 mb-4">Please log in to leave a comment</p>
-                            <a href="{% url 'a:login' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold transition-colors">
-                                Login to Comment
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sidebar -->
-                <div class="lg:col-span-1">
-                    <!-- About Author -->
-                    <div class="bg-white rounded-lg p-6 shadow-sm mb-8 sticky top-20">
-                        <h3 class="text-xl font-bold text-gray-900 mb-4">About Author</h3>
-                        <div class="text-center">
-                            <img src="{{ post.author_id.profile.profile_image.url }}" alt="{{ post.author_id.get_full_name }}" class="w-20 h-20 rounded-full object-cover mx-auto mb-4">
-                            <h4 class="font-bold text-gray-900 mb-2">{{ post.author_id.get_full_name }}</h4>
-                            <p class="text-sm text-gray-600 mb-4">
-                                {% if post.author_id.profile.bio %}
-                                    {{ post.author_id.profile.bio|truncatewords:15 }}
-                                {% else %}
-                                    Content creator and enthusiast
-                                {% endif %}
-                            </p>
-                            <a href="#" class="inline-block text-blue-600 hover:text-blue-700 font-semibold text-sm">
-                                View Profile
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Related Posts -->
-                    <div class="bg-white rounded-lg p-6 shadow-sm">
-                        <h3 class="text-xl font-bold text-gray-900 mb-4">Related Articles</h3>
-                        <div class="space-y-4">
-                            {% for related_post in related_posts %}
-                            <a href="{% url 'blog_post_detail' related_post.slug %}" class="block hover:bg-gray-50 p-3 rounded-lg transition-colors">
-                                <h4 class="font-semibold text-gray-900 text-sm line-clamp-2 mb-1">
-                                    {{ related_post.title }}
-                                </h4>
-                                <p class="text-xs text-gray-500">{{ related_post.published_at|date:"M d, Y" }}</p>
-                            </a>
-                            {% empty %}
-                            <p class="text-gray-600 text-sm">No related articles found.</p>
-                            {% endfor %}
+                    {% endif %}
+                    <div>
+                        <p class="font-bold text-base">{{ post.author.user.get_full_name |default:post.author.user.username }}</p>
+                        <div class="flex items-center gap-2 text-sm text-white/70">
+                            <span>{{ post.published_at|date:"M d, Y" }}</span>
+                            <span>•</span>
+                            <span>{{ post.read_time }}</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </header>
+
+    <!-- Content Layout -->
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 px-4 sm:px-6 lg:px-8 py-16">
+
+        <!-- Social Sidebar (Desktop) -->
+        <aside class="hidden lg:block w-16 pt-2">
+            <div class="sticky top-24 flex flex-col gap-6 items-center">
+                <button onclick="toggleLike('{{ post.id }}')" id="likeBtn-desk"
+                    class="group flex flex-col items-center gap-1">
+                    <div id="likeIcon-desk"
+                        class="p-3 rounded-full transition-all shadow-sm border border-stone-200 {% if user_has_liked %}bg-red-50 text-red-500{% else %}bg-stone-100 text-stone-400 group-hover:bg-red-50 group-hover:text-red-500{% endif %}">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs font-sans font-medium text-stone-500" id="likeCount-desk">{{ post.likes.count }}</span>
+                </button>
+
+                <div class="w-8 h-px bg-stone-200"></div>
+
+                <button onclick="copyLink()"
+                    class="p-3 rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-700 transition-all shadow-sm border border-stone-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Article -->
+        <main class="flex-1 max-w-3xl">
+            <!-- Article Body -->
+            <div
+                class="prose prose-lg prose-stone max-w-none 
+                        prose-headings:font-sans prose-headings:font-bold prose-h1:text-4xl prose-h2:text-3xl
+                        prose-a:text-stone-700 prose-a:no-underline hover:prose-a:underline
+                        prose-img:rounded-3xl prose-img:shadow-xl
+                        first-letter:text-7xl first-letter:font-bold first-letter:text-stone-800 first-letter:mr-3 first-letter:float-left">
+                {{ post.content|safe }}
+            </div>
+
+            <!-- Mobile Interactions (Bottom) -->
+            <div
+                class="lg:hidden fixed bottom-0 left-0 right-0 bg-stone-50/90 backdrop-blur border-t border-stone-200 p-4 flex justify-between items-center z-40">
+                <button onclick="toggleLike('{{ post.id }}')" id="likeBtn-mobile"
+                    class="flex items-center gap-2 px-4 py-2 rounded-full font-bold {% if user_has_liked %}bg-red-100 text-red-600{% else %}bg-red-50 text-red-600{% endif %}">
+                    <span id="likeIcon-mobile">{% if user_has_liked %}❤{% else %}♥{% endif %}</span>
+                    <span id="likeCount-mobile">{{ post.likes.count }}</span>
+                </button>
+                <div class="flex gap-2">
+                    <button onclick="copyLink()" class="p-2 text-stone-500 hover:bg-stone-200 rounded-full">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="mt-16 pt-10 border-t border-stone-200 font-sans">
+                <h3 class="text-2xl font-bold mb-8 text-stone-800">Responses ({{ post.comments.count }})</h3>
+
+                <!-- Comment Form -->
+                {% if user.is_authenticated %}
+                <div class="flex gap-4 mb-10">
+                    <div class="flex-shrink-0">
+                        {% if user.blogprofile.profile_picture %}
+                        <img src="{{ user.blogprofile.profile_picture.url }}" class="w-10 h-10 rounded-full">
+                        {% else %}
+                        <img src="{% static "profile_image.png" %}" class="w-10 h-10 rounded-full">
+                        {% endif %}
+                    </div>
+                    <form id="commentForm" class="flex-grow" onsubmit="submitComment(event)">
+                        <textarea id="commentContent" name="content" rows="3"
+                            class="w-full p-4 rounded-xl border border-stone-200 focus:border-stone-400 focus:ring-1 focus:ring-stone-400 transition-all resize-none text-stone-700 placeholder-stone-400 bg-stone-50"
+                            placeholder="What are your thoughts?" required></textarea>
+                        <div class="flex justify-end mt-2">
+                            <button type="submit"
+                                class="px-5 py-2 rounded-full bg-stone-700 text-white font-medium hover:bg-stone-800 transition">Respond</button>
+                        </div>
+                    </form>
+                </div>
+                {% else %}
+                <div class="bg-stone-100 p-8 rounded-2xl text-center mb-10">
+                    <p class="text-stone-600">Want to join the discussion?</p>
+                    <a href="{% url 'a:login' %}"
+                        class="inline-block mt-4 px-6 py-2 bg-stone-700 text-white rounded-full font-medium hover:bg-stone-800">Log In</a>
+                </div>
+                {% endif %}
+
+                <!-- Comments List -->
+                <div id="commentsList" class="space-y-8">
+                    {% for comment in post.comments.all %}
+                    {% if comment.is_approved %}
+                    <div class="flex gap-4 comment-item" data-comment-id="{{ comment.id }}">
+                        <div class="flex-shrink-0">
+                            {% if comment.user.blogprofile.profile_picture %}
+                            <img src="{{ comment.user.blogprofile.profile_picture.url }}"
+                                class="w-10 h-10 rounded-full object-cover">
+                            {% else %}
+                            <div
+                                class="w-10 h-10 rounded-full bg-stone-300 flex items-center justify-center text-stone-500">
+                                {{ comment.user.username|slice:":1"|upper }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-stone-800">{{ comment.user.get_full_name|default:comment.user.username }}</span>
+                                    <span class="text-xs text-stone-500">{{ comment.created_at|timesince }} ago</span>
+                                </div>
+                                {% if user == comment.user or user == post.author.user %}
+                                <button onclick="deleteComment({{ comment.id }})" class="text-red-500 hover:text-red-700 text-sm">
+                                    Delete
+                                </button>
+                                {% endif %}
+                            </div>
+                            <p class="text-stone-600 leading-relaxed">{{ comment.content }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar (Desktop) -->
+        <aside class="hidden lg:block w-80 font-sans">
+            <div class="sticky top-24">
+                <!-- Author Card -->
+                <div class="bg-stone-100 p-6 rounded-2xl mb-6">
+                    <div class="flex items-center gap-3 mb-3">
+                        {% if post.author.profile_picture %}
+                        <img src="{{ post.author.profile_picture.url }}" class="w-12 h-12 rounded-full object-cover">
+                        {% endif %}
+                        <div>
+                            <h4 class="font-bold text-stone-800">{{ post.author.user.get_full_name }}</h4>
+                            <p class="text-xs text-stone-500">Author</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-stone-600 mb-4">{{ post.author.bio|truncatewords:20 }}</p>
+                    <button
+                        class="w-full py-2 bg-stone-700 text-white rounded-full text-sm font-medium hover:bg-stone-800 transition">Follow</button>
+                </div>
+
+                <!-- Recommended -->
+                <h4 class="font-bold text-stone-800 mb-4 px-1">More from URL.ly</h4>
+                <div class="space-y-4">
+                    {% for rel in related_posts %}
+                    <a href="{% url 'blog:blog_post_detail' rel.slug %}" class="block group">
+                        <div class="flex gap-4 items-start">
+                            {% if rel.cover_image %}
+                            <div class="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-stone-200">
+                                <img src="{{ rel.cover_image.url }}"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                            </div>
+                            {% endif %}
+                            <div>
+                                <h5
+                                    class="font-bold text-sm text-stone-800 leading-snug group-hover:text-stone-600 transition-colors">
+                                    {{ rel.title }}</h5>
+                                <p class="text-xs text-stone-500 mt-1">{{ rel.published_at|date:"M d" }}</p>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </aside>
+
     </div>
-</div>
+</article>
 
 <script>
-function toggleLike(postId) {
-    // Implement like functionality via AJAX
-    fetch(`/blog/posts/${postId}/like/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken')
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        }
-    });
-}
+    // Reading Progress
+    window.onscroll = function () {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("readingProgress").style.width = scrolled + "%";
+    };
 
-function shareArticle(platform) {
-    const url = window.location.href;
-    const title = document.querySelector('h1').textContent;
-    
-    if (platform === 'twitter') {
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`);
-    } else if (platform === 'linkedin') {
-        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`);
-    }
-}
-
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+    // Keep existing ToggleLike logic
+    function toggleLike(postId) {
+        fetch(`/blog/posts/${postId}/like/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
             }
-        }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update counters without reload
+                    const count = data.count;
+                    const mC = document.getElementById('likeCount-mobile');
+                    const dC = document.getElementById('likeCount-desk');
+                    if (mC) mC.innerText = count;
+                    if (dC) dC.innerText = count;
+
+                    // Update visual state
+                    const deskIcon = document.getElementById('likeIcon-desk');
+                    const mobileIcon = document.getElementById('likeIcon-mobile');
+                    const mobileBtn = document.getElementById('likeBtn-mobile');
+
+                    if (data.liked) {
+                        if (deskIcon) {
+                            deskIcon.classList.remove('bg-stone-100', 'text-stone-400');
+                            deskIcon.classList.add('bg-red-50', 'text-red-500');
+                        }
+                        if (mobileIcon) mobileIcon.innerText = '❤';
+                        if (mobileBtn) {
+                            mobileBtn.classList.remove('bg-red-50');
+                            mobileBtn.classList.add('bg-red-100');
+                        }
+                    } else {
+                        if (deskIcon) {
+                            deskIcon.classList.remove('bg-red-50', 'text-red-500');
+                            deskIcon.classList.add('bg-stone-100', 'text-stone-400');
+                        }
+                        if (mobileIcon) mobileIcon.innerText = '♥';
+                        if (mobileBtn) {
+                            mobileBtn.classList.remove('bg-red-100');
+                            mobileBtn.classList.add('bg-red-50');
+                        }
+                    }
+                }
+            });
     }
-    return cookieValue;
-}
+
+    function copyLink() {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('Link copied to clipboard!');
+        });
+    }
+
+    // Comment Functions
+    function submitComment(event) {
+        event.preventDefault();
+        const content = document.getElementById('commentContent').value.trim();
+        if (!content) return;
+
+        fetch(`/blog/posts/{{ post.id }}/comment/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: `content=${encodeURIComponent(content)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Add new comment to list
+                const commentsList = document.getElementById('commentsList');
+                const newComment = document.createElement('div');
+                newComment.className = 'flex gap-4 comment-item';
+                newComment.dataset.commentId = data.comment.id;
+                newComment.innerHTML = `
+                    <div class="flex-shrink-0">
+                        ${data.comment.profile_picture 
+                            ? `<img src="${data.comment.profile_picture}" class="w-10 h-10 rounded-full object-cover">`
+                            : `<div class="w-10 h-10 rounded-full bg-stone-300 flex items-center justify-center text-stone-500">${data.comment.user.charAt(0).toUpperCase()}</div>`
+                        }
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-stone-800">${data.comment.user}</span>
+                                <span class="text-xs text-stone-500">Just now</span>
+                            </div>
+                            <button onclick="deleteComment(${data.comment.id})" class="text-red-500 hover:text-red-700 text-sm">
+                                Delete
+                            </button>
+                        </div>
+                        <p class="text-stone-600 leading-relaxed">${data.comment.content}</p>
+                    </div>
+                `;
+                commentsList.insertBefore(newComment, commentsList.firstChild);
+
+                // Clear form and update count
+                document.getElementById('commentContent').value = '';
+                document.querySelector('h3').textContent = `Responses (${data.count})`;
+            } else {
+                alert(data.error || 'Failed to add comment');
+            }
+        });
+    }
+
+    function deleteComment(commentId) {
+        if (!confirm('Are you sure you want to delete this comment?')) return;
+
+        fetch(`/blog/comments/${commentId}/delete/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const comment = document.querySelector(`[data-comment-id="${commentId}"]`);
+                if (comment) comment.remove();
+                document.querySelector('h3').textContent = `Responses (${data.count})`;
+            } else {
+                alert(data.error || 'Failed to delete comment');
+            }
+        });
+    }
 </script>
 
 {% endblock %}

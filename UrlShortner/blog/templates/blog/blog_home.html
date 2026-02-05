@@ -1,183 +1,409 @@
 {% extends "layout.html" %}
 {% load static %}
 
+{% block title %}My Blog Dashboard - URL.ly{% endblock %}
+
 {% block content %}
-<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+<div class="min-h-screen bg-stone-100">
 
-    <!-- ================= HERO ================= -->
-    <div class="relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-16 sm:py-24">
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute -top-40 -right-40 w-80 h-80 bg-white opacity-10 rounded-full"></div>
-            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-white opacity-10 rounded-full"></div>
-        </div>
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r py-10 from-stone-700 via-stone-600 to-stone-700 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black/5"></div>
+        {% comment %} <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-30"></div> {% endcomment %}
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div class="flex items-center gap-5">
+                    <!-- Profile Avatar -->
+                    <div class="relative">
+                        {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}"
+                            class="w-20 h-20 rounded-2xl object-cover ring-4 ring-white/20 shadow-xl">
+                        {% else %}
+                        <div class="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center ring-4 ring-white/20 shadow-xl">
+                            <span class="text-3xl text-white">{{ request.user.username|slice:":1"|upper }}</span>
+                        </div>
+                        {% endif %}
+                        <span class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 border-2 border-white rounded-full"></span>
+                    </div>
+                    
+                    <div class="text-white">
+                        <h1 class="text-2xl md:text-3xl font-bold">
+                            Welcome back, {{ profile.user.get_full_name|default:request.user.username }}!
+                        </h1>
+                        <p class="text-white/70 text-sm md:text-base mt-1">
+                            Ready to share your next story with the world?
+                        </p>
+                    </div>
+                </div>
 
-        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4">
-                Insights & Stories
-            </h1>
-            <p class="text-xl text-blue-100 mb-8">
-                Explore thoughtful articles written by our community
-            </p>
-
-            <!-- Search -->
-            <form method="get" class="max-w-md mx-auto relative">
-                <input
-                    type="text"
-                    name="search"
-                    value="{{ request.GET.search }}"
-                    placeholder="Search articles..."
-                    class="w-full px-6 py-3 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                />
-                <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                    🔍
-                </button>
-            </form>
+                <a href="{% url 'blog:create_blog_post' %}"
+                    class="group inline-flex items-center px-6 py-3 bg-white text-stone-700 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
+                    <svg class="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Write New Story
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- ================= CONTENT ================= -->
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-
-        {% if posts %}
-
-            <!-- ========== FEATURED POST ========== -->
-            {% with featured=posts.0 %}
-            <div class="mb-16 bg-white rounded-xl shadow-lg overflow-hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2">
-
-                    <!-- Image -->
-                    <div class="h-64 md:h-auto bg-gray-200">
-                        {% if featured.cover_image %}
-                            <img src="{{ featured.cover_image.url }}"
-                                 alt="{{ featured.title }}"
-                                 class="w-full h-full object-cover">
-                        {% else %}
-                            <div class="w-full h-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-5xl">
-                                📝
-                            </div>
-                        {% endif %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10">
+        
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-stone-50 rounded-2xl p-5 shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-stone-200 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
                     </div>
-
-                    <!-- Content -->
-                    <div class="p-8 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center gap-4 mb-4">
-                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
-                                    Featured
-                                </span>
-                                <span class="text-sm text-gray-500">
-                                    {{ featured.published_at|date:"M d, Y" }}
-                                </span>
-                            </div>
-
-                            <h2 class="text-3xl font-bold mb-4">
-                                {{ featured.title }}
-                            </h2>
-
-                            <p class="text-gray-600 mb-6">
-                                {{ featured.content|truncatewords:30 }}
-                            </p>
-                        </div>
-
-                        <div class="flex items-center justify-between">
-                            <!-- Author -->
-                            <div class="flex items-center gap-3">
-                                {% if featured.author.profile_picture %}
-                                    <img src="{{ featured.author.profile_picture.url }}"
-                                         class="w-10 h-10 rounded-full object-cover">
-                                {% else %}
-                                    <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
-                                        👤
-                                    </div>
-                                {% endif %}
-
-                                <div>
-                                    <p class="font-semibold">
-                                        {{ featured.author.user.get_full_name|default:featured.author.user.username }}
-                                    </p>
-                                    <p class="text-sm text-gray-500">Author</p>
-                                </div>
-                            </div>
-
-                            <a href="{% url 'blog_post_detail' featured.slug %}"
-                               class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">
-                                Read More →
-                            </a>
-                        </div>
+                    <div>
+                        <p class="text-2xl font-bold text-stone-800">{{ published_blogs|length }}</p>
+                        <p class="text-sm text-stone-500">Published</p>
                     </div>
                 </div>
             </div>
-            {% endwith %}
-
-            <!-- ========== RECENT POSTS ========== -->
-            {% if posts|length > 1 %}
-            <h3 class="text-3xl font-bold mb-8">Recent Articles</h3>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {% for post in posts|slice:"1:" %}
-                <article class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
-
-                    <!-- Image -->
-                    <div class="h-48 bg-gray-200">
-                        {% if post.cover_image %}
-                            <img src="{{ post.cover_image.url }}"
-                                 class="w-full h-full object-cover">
-                        {% else %}
-                            <div class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-600 flex items-center justify-center text-white text-4xl">
-                                📄
-                            </div>
-                        {% endif %}
+            
+            <div class="bg-stone-50 rounded-2xl p-5 shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-stone-200 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
                     </div>
+                    <div>
+                        <p class="text-2xl font-bold text-stone-800">{{ draft_blogs|length }}</p>
+                        <p class="text-sm text-stone-500">Drafts</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-stone-50 rounded-2xl p-5 shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-stone-200 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-stone-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-stone-800">{{ total_likes }}</p>
+                        <p class="text-sm text-stone-500">Total Likes</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-stone-50 rounded-2xl p-5 shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-stone-200 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-stone-800">{{ total_comments }}</p>
+                        <p class="text-sm text-stone-500">Comments</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                    <!-- Content -->
-                    <div class="p-6 flex flex-col h-full">
-                        <p class="text-sm text-gray-500 mb-2">
-                            {{ post.published_at|date:"M d, Y" }}
-                        </p>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 pb-12">
 
-                        <h4 class="text-xl font-bold mb-3">
-                            {{ post.title }}
-                        </h4>
-
-                        <p class="text-gray-600 text-sm mb-4">
-                            {{ post.content|truncatewords:20 }}
-                        </p>
-
-                        <div class="mt-auto border-t pt-4 flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                {% if post.author.profile_picture %}
-                                    <img src="{{ post.author.profile_picture.url }}"
-                                         class="w-8 h-8 rounded-full object-cover">
-                                {% else %}
-                                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-                                        👤
-                                    </div>
-                                {% endif %}
-                                <span class="text-sm font-semibold">
-                                    {{ post.author.user.get_full_name|default:post.author.user.username }}
-                                </span>
+            <!-- LEFT SIDEBAR -->
+            <aside class="lg:col-span-1 space-y-6">
+                
+                <!-- Quick Actions -->
+                <div class="bg-stone-50 rounded-2xl shadow-sm border border-stone-200 p-6">
+                    <h3 class="font-bold text-stone-800 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a href="{% url 'blog:create_blog_post' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-stone-100 text-stone-600 hover:text-stone-800 transition-colors group">
+                            <div class="w-10 h-10 rounded-lg bg-stone-200 flex items-center justify-center group-hover:bg-stone-300 transition-colors">
+                                <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
                             </div>
+                            <span class="font-medium">New Story</span>
+                        </a>
+                        {% if draft_blogs %}
+                        <a href="#" onclick="switchTab('drafts'); return false;" class="flex items-center gap-3 p-3 rounded-xl hover:bg-stone-100 text-stone-600 hover:text-stone-800 transition-colors group">
+                            <div class="w-10 h-10 rounded-lg bg-stone-200 flex items-center justify-center group-hover:bg-stone-300 transition-colors">
+                                <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-medium">Continue Draft</span>
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'blog:author_profile' request.user.username %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-stone-100 text-stone-600 hover:text-stone-800 transition-colors group">
+                            <div class="w-10 h-10 rounded-lg bg-stone-200 flex items-center justify-center group-hover:bg-stone-300 transition-colors">
+                                <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-medium">View Public Profile</span>
+                        </a>
+                        <a href="{% url 'blog:blog_list' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-stone-100 text-stone-600 hover:text-stone-800 transition-colors group">
+                            <div class="w-10 h-10 rounded-lg bg-stone-200 flex items-center justify-center group-hover:bg-stone-300 transition-colors">
+                                <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-medium">Explore Blog</span>
+                        </a>
+                    </div>
+                </div>
 
-                            <a href="{% url 'blog_post_detail' post.slug %}"
-                               class="text-blue-600 hover:text-blue-700 font-semibold text-sm">
-                                Read →
-                            </a>
+                <!-- Profile Summary -->
+                <div class="bg-stone-50 rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+                    <div class="h-20 bg-gradient-to-r from-stone-500 to-stone-600"></div>
+                    <div class="px-6 pb-6 text-center">
+                        <div class="relative -mt-10 mb-3">
+                            {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}"
+                                class="w-20 h-20 rounded-full border-4 border-white shadow-md mx-auto object-cover bg-white">
+                            {% else %}
+                            <div class="w-20 h-20 rounded-full border-4 border-white shadow-md mx-auto bg-gradient-to-br from-stone-400 to-stone-500 flex items-center justify-center text-2xl text-white">
+                                {{ request.user.username|slice:":1"|upper }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <h2 class="text-lg font-bold text-stone-800">{{ profile.user.get_full_name|default:request.user.username }}</h2>
+                        <p class="text-sm text-stone-500 mb-3">@{{ request.user.username }}</p>
+
+                        {% if profile.bio %}
+                        <p class="text-sm text-stone-600 mb-4 line-clamp-2">{{ profile.bio }}</p>
+                        {% else %}
+                        <p class="text-sm text-stone-400 italic mb-4">Add a bio to let readers know about you</p>
+                        {% endif %}
+
+                        <a href="{% url 'blog:edit_profile' %}" class="inline-flex items-center gap-2 text-sm text-stone-600 hover:text-stone-800 font-medium">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            Edit Profile
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Writing Tips (for new users) -->
+                {% if not published_blogs and not draft_blogs %}
+                <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-200">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-amber-800 mb-2">Getting Started</h4>
+                            <ul class="text-sm text-amber-700 space-y-1">
+                                <li>Write your first story</li>
+                                <li>Add a catchy title & cover</li>
+                                <li>Share with the world!</li>
+                            </ul>
                         </div>
                     </div>
-                </article>
-                {% endfor %}
-            </div>
-            {% endif %}
+                </div>
+                {% endif %}
+            </aside>
 
-        {% else %}
-            <!-- EMPTY STATE -->
-            <div class="text-center py-20">
-                <div class="text-6xl mb-4">🕊️</div>
-                <h3 class="text-2xl font-bold mb-2">No Articles Yet</h3>
-                <p class="text-gray-600 mb-2">Be the first one to write!</p>
-                <a href="{% url 'blog:create_blog_post' %}" class="mt-4 p-2 rounded-2xl bg-gray-700 text-white">Write your own blog</a>
-            </div>
-        {% endif %}
+            <!-- MAIN CONTENT -->
+            <main class="lg:col-span-3">
+
+                <!-- Tab Controls -->
+                <div class="bg-stone-50 rounded-2xl shadow-sm border border-stone-200 p-4 mb-6">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="flex bg-stone-200 p-1 rounded-xl w-full sm:w-auto">
+                            <button onclick="switchTab('published')" id="tab-published"
+                                class="tab-btn flex-1 sm:flex-none px-5 py-2.5 rounded-lg text-sm font-medium transition-all bg-white text-stone-700 shadow-sm">
+                                <span class="flex items-center justify-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-stone-500"></span>
+                                    Published ({{ published_blogs|length }})
+                                </span>
+                            </button>
+                            <button onclick="switchTab('drafts')" id="tab-drafts"
+                                class="tab-btn flex-1 sm:flex-none px-5 py-2.5 rounded-lg text-sm font-medium text-stone-500 hover:text-stone-700 transition-all">
+                                <span class="flex items-center justify-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-stone-400"></span>
+                                    Drafts ({{ draft_blogs|length }})
+                                </span>
+                            </button>
+                            <button onclick="switchTab('archived')" id="tab-archived"
+                                class="tab-btn flex-1 sm:flex-none px-5 py-2.5 rounded-lg text-sm font-medium text-stone-500 hover:text-stone-700 transition-all">
+                                <span class="flex items-center justify-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-stone-300"></span>
+                                    Archived ({{ archived_blogs|length }})
+                                </span>
+                            </button>
+                        </div>
+
+                        <!-- Search -->
+                        <div class="relative w-full sm:w-auto">
+                            <input type="text" id="searchInput" placeholder="Search your stories..."
+                                class="pl-10 pr-4 py-2.5 bg-stone-100 border-0 rounded-xl text-sm focus:ring-2 focus:ring-stone-400 focus:bg-white outline-none w-full sm:w-64 transition-all">
+                            <svg class="w-5 h-5 absolute left-3 top-2.5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Published Panel -->
+                <div id="panel-published" class="tab-panel">
+                    {% if published_blogs %}
+                    <div class="grid gap-6 md:grid-cols-2">
+                        {% for post in published_blogs %}
+                        {% include "blog/components/dashboard_card.html" with post=post %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="bg-stone-50 rounded-2xl border-2 border-dashed border-stone-300 p-12 text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-stone-200 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-stone-800 mb-2">No Published Stories Yet</h3>
+                        <p class="text-stone-500 mb-6">Your published stories will appear here for the world to see.</p>
+                        <a href="{% url 'blog:create_blog_post' %}" class="inline-flex items-center px-5 py-2.5 bg-stone-700 text-white font-medium rounded-xl hover:bg-stone-800 transition-colors">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Write Your First Story
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Drafts Panel -->
+                <div id="panel-drafts" class="tab-panel hidden">
+                    {% if draft_blogs %}
+                    <div class="grid gap-6 md:grid-cols-2">
+                        {% for post in draft_blogs %}
+                        {% include "blog/components/dashboard_card.html" with post=post %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="bg-stone-50 rounded-2xl border-2 border-dashed border-stone-300 p-12 text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-stone-200 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-stone-800 mb-2">No Drafts</h3>
+                        <p class="text-stone-500 mb-6">Start writing and save drafts to continue later.</p>
+                        <a href="{% url 'blog:create_blog_post' %}" class="inline-flex items-center px-5 py-2.5 bg-stone-600 text-white font-medium rounded-xl hover:bg-stone-700 transition-colors">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Start Writing
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Archived Panel -->
+                <div id="panel-archived" class="tab-panel hidden">
+                    {% if archived_blogs %}
+                    <div class="grid gap-6 md:grid-cols-2">
+                        {% for post in archived_blogs %}
+                        {% include "blog/components/dashboard_card.html" with post=post %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="bg-stone-50 rounded-2xl border-2 border-dashed border-stone-300 p-12 text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-stone-200 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-stone-800 mb-2">No Archived Stories</h3>
+                        <p class="text-stone-500">Stories you archive will appear here.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Recent Activity (if user has content) -->
+                {% if recent_comments %}
+                <div class="mt-8 bg-stone-50 rounded-2xl shadow-sm border border-stone-200 p-6">
+                    <h3 class="font-bold text-stone-800 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        Recent Comments on Your Stories
+                    </h3>
+                    <div class="space-y-4">
+                        {% for comment in recent_comments %}
+                        <div class="flex gap-3 p-3 rounded-xl bg-stone-100 hover:bg-stone-200 transition-colors">
+                            <div class="w-10 h-10 rounded-full bg-stone-300 flex items-center justify-center flex-shrink-0">
+                                <span class="text-stone-600 font-medium">{{ comment.user.username|slice:":1"|upper }}</span>
+                            </div>
+                            <div class="flex-grow min-w-0">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="font-medium text-stone-800">{{ comment.user.get_full_name|default:comment.user.username }}</span>
+                                    <span class="text-xs text-stone-400">{{ comment.created_at|timesince }} ago</span>
+                                </div>
+                                <p class="text-sm text-stone-600 truncate">{{ comment.content }}</p>
+                                <a href="{% url 'blog:blog_post_detail' comment.post.slug %}" class="text-xs text-stone-600 hover:underline">
+                                    on "{{ comment.post.title|truncatechars:30 }}"
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </main>
+        </div>
     </div>
 </div>
+
+<script>
+    function switchTab(tabName) {
+        // Hide all panels
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+        document.getElementById('panel-' + tabName).classList.remove('hidden');
+
+        // Update button styles
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('bg-white', 'shadow-sm', 'text-stone-700');
+            btn.classList.add('text-stone-500');
+        });
+        const activeBtn = document.getElementById('tab-' + tabName);
+        activeBtn.classList.remove('text-stone-500');
+        activeBtn.classList.add('bg-white', 'shadow-sm', 'text-stone-700');
+    }
+
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('keyup', function(e) {
+        const term = e.target.value.toLowerCase();
+        const panel = document.querySelector('.tab-panel:not(.hidden)');
+        if (!panel) return;
+
+        panel.querySelectorAll('article').forEach(art => {
+            if (art.innerText.toLowerCase().includes(term)) {
+                art.style.display = '';
+            } else {
+                art.style.display = 'none';
+            }
+        });
+    });
+
+    // Handle hash in URL for direct tab navigation
+    document.addEventListener('DOMContentLoaded', function() {
+        const hash = window.location.hash.replace('#', '');
+        if (['published', 'drafts', 'archived'].includes(hash)) {
+            switchTab(hash);
+        }
+    });
+</script>
 {% endblock %}
