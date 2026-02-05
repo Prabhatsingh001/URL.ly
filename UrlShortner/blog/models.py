@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary_storage.storage import MediaCloudinaryStorage
 from django.contrib.auth import get_user_model
 from .utils import generate_unique_slug
 from django.utils import timezone
@@ -10,7 +11,10 @@ class BlogProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
     profile_picture = models.ImageField(
-        upload_to="blog/profiles/", null=True, blank=True
+        upload_to="blog/profiles/",
+        null=True,
+        blank=True,
+        storage=MediaCloudinaryStorage(),
     )
     website = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -34,7 +38,12 @@ class Blog(models.Model):
     status = models.CharField(
         max_length=2, choices=StatusUpdate.choices, default=StatusUpdate.DRAFT
     )
-    cover_image = models.ImageField(upload_to="blog/covers/", null=True, blank=True)
+    cover_image = models.ImageField(
+        upload_to="blog/covers/",
+        null=True,
+        blank=True,
+        storage=MediaCloudinaryStorage(),
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     published_at = models.DateTimeField(null=True, blank=True)
@@ -88,7 +97,7 @@ class Like(models.Model):
     post = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name="likes")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         unique_together = ("post", "user")
 
