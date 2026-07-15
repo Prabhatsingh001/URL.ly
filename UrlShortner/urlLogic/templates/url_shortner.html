@@ -3,11 +3,11 @@
 {% block title %}Add Url | URL.ly{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 
-  <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+  <div class="max-w-md w-full space-y-8 bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-200">
     <div class="text-center">
-      <h2 class="text-3xl font-extrabold text-gray-900">🔗 Shorten Your URL</h2>
+      <h2 class="text-3xl font-extrabold text-gray-800">🔗 Shorten Your URL</h2>
       <p class="mt-2 text-sm text-gray-600">Paste a long URL and get a short one instantly</p>
     </div>
 
@@ -20,27 +20,27 @@
           <label for="long_url" class="block text-sm font-medium text-gray-700">Original URL</label>
           <input type="text" name="long_url" id="long_url" placeholder="https://example.com/long-link"
             required
-            class="mt-1 block w-full px-4 py-2 rounded-xl border border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+            class="mt-1 block w-full px-4 py-2 rounded-xl border border-gray-300 bg-gray-100 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition" />
         </div>
 
         <!-- Short URL -->
         <div>
           <label for="short_url" class="block text-sm font-medium text-gray-700">Custom short name (optional)</label>
           <input type="text" name="short_url" id="short_url" placeholder="e.g. mylink123"
-            class="mt-1 block w-full px-4 py-2 rounded-xl border border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition" />
+            class="mt-1 block w-full px-4 py-2 rounded-xl border border-gray-300 bg-gray-100 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition" />
         </div>
 
         <div>
           <label for="date" class="block text-sm font-medium text-gray-700">Date upto which url will be valid (optional)</label>
           <input type="datetime-local" name="date" id="date" placeholder="leave empty for no expiry"
-            class="mt-1 block w-full px-4 py-2 rounded-xl border border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition" />
+            class="mt-1 block w-full px-4 py-2 rounded-xl border border-gray-300 bg-gray-100 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition" />
         </div>
       </div>
 
       <!-- Submit button -->
       <div>
         <button type="submit"
-          class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-green-300 hover:bg-green-700 shadow-sm transition-colors duration-300">
+          class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-semibold rounded-lg text-gray-50 bg-green-200 hover:bg-green-500 shadow-sm transition-colors duration-300">
             Shorten URL
         </button>
       </div>
@@ -49,7 +49,7 @@
     <!-- Back Button -->
     <div class="pt-6">
       <a href="{% url 'u:home' %}"
-        class="w-full block text-center py-2 px-4 font-medium text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-300">
+        class="w-full block text-center py-2 px-4 font-medium text-sm text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors duration-300">
         ← Go Back to Dashboard
       </a>
     </div>

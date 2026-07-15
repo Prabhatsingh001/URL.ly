@@ -9,11 +9,11 @@
     <title>Server Error | URL.ly</title>
     {% tailwind_css %}
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center text-gray-900 relative overflow-x-hidden" style="background-image: radial-gradient(circle, #e5e7eb 1px, transparent 1px); background-size: 24px 24px;">
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center text-gray-800 relative overflow-x-hidden" style="background-image: radial-gradient(circle, #e5e7eb 1px, transparent 1px); background-size: 24px 24px;">
   
   <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 flex-1 flex items-center justify-center">
     
-    <div class="w-full bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="w-full bg-gray-50 rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
       <div class="p-8 lg:p-16 space-y-10">
         
         <!-- Top Section: Error Code & Icon -->
@@ -21,7 +21,7 @@
           <!-- Icon Container -->
           <div class="flex-shrink-0">
             <div class="relative flex items-center justify-center w-24 h-24 sm:w-32 sm:h-32 bg-red-50 rounded-2xl border border-red-50">
-              <svg class="w-12 sm:w-16 h-12 sm:h-16 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-12 sm:w-16 h-12 sm:h-16 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4v2m0 4v2M7 5h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2zm0 0h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2m6 11a1 1 0 11-2 0 1 1 0 012 0z"/>
               </svg>
             </div>
@@ -31,13 +31,13 @@
           <div class="flex-1 space-y-4">
             <div>
               <p class="text-sm font-bold text-gray-500 tracking-widest uppercase mb-1">Error Code</p>
-              <div class="text-6xl sm:text-7xl lg:text-8xl font-black text-red-400 leading-none">
+              <div class="text-6xl sm:text-7xl lg:text-8xl font-black text-red-300 leading-none">
                 500
               </div>
             </div>
 
             <div class="space-y-2">
-              <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+              <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 leading-tight">
                 Server Error
               </h1>
               <p class="text-lg text-gray-600">
@@ -47,13 +47,13 @@
           </div>
         </div>
 
-        <div class="h-px bg-gray-200"></div>
+        <div class="h-px bg-gray-300"></div>
 
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-4">
           {% if user.is_authenticated %}
           <a href="{% url "u:home" %}" 
-             class="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors duration-200">
+             class="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gray-900 hover:bg-black text-gray-50 font-semibold rounded-xl transition-colors duration-200">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
             </svg>
@@ -61,7 +61,7 @@
           </a>
           {% else %}
           <a href="{% url "index" %}" 
-             class="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors duration-200">
+             class="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gray-900 hover:bg-black text-gray-50 font-semibold rounded-xl transition-colors duration-200">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
             </svg>
@@ -70,7 +70,7 @@
           {% endif %}
           
           <button onclick="window.location.reload()" 
-                  class="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-xl transition-colors duration-200">
+                  class="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-xl transition-colors duration-200">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
             </svg>

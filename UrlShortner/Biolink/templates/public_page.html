@@ -24,13 +24,13 @@
         <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
     {% endif %}
 </head>
-<body class="min-h-screen text-gray-900 overflow-x-hidden font-sans antialiased bg-gray-50">
+<body class="min-h-screen text-gray-800 overflow-x-hidden font-sans antialiased bg-gray-100">
 
   <div class="relative z-10 flex flex-col items-center px-4 py-12 sm:py-20 min-h-screen justify-center">
 
     <!-- Main Card -->
     <div class="w-full max-w-md mx-auto transform transition-all duration-700 ease-out" id="mainCard">
-      <div class="bg-white rounded-3xl p-8 sm:p-12 shadow-sm border border-gray-200 transition-all duration-300">
+      <div class="bg-gray-50 rounded-3xl p-8 sm:p-12 shadow-sm border border-gray-200 transition-all duration-300">
         
         <!-- Profile Section -->
         <div class="text-center">
@@ -38,7 +38,7 @@
           <!-- Profile Image -->
           <div class="relative inline-block mb-4 group">
             <div class="relative w-28 h-28 sm:w-35 sm:h-35 mx-auto">
-              <div class="relative p-1 rounded-full w-full h-full border-2 border-gray-200 bg-white">
+              <div class="relative p-1 rounded-full w-full h-full border-2 border-gray-200 bg-gray-50">
                 {% if owner.biolinkprofile.profile_image %}
                   <img src="{{ owner.biolinkprofile.profile_image.url }}"
                     alt="{{ owner.username }}"
@@ -53,7 +53,7 @@
           </div>
 
           <!-- Name -->
-          <h1 class="text-3xl md:text-4xl font-bold mb-3 tracking-tight text-gray-900 leading-tight">
+          <h1 class="text-3xl md:text-4xl font-bold mb-3 tracking-tight text-gray-800 leading-tight">
             {{ profile.display_name|default:owner.username }}
           </h1>
 
@@ -76,38 +76,38 @@
           {% if links %}
             <!-- Section Divider -->
             <div class="flex items-center gap-4 mb-8">
-              <div class="flex-1 h-px bg-gray-200"></div>
+              <div class="flex-1 h-px bg-gray-300"></div>
               <span class="text-xs font-bold text-gray-500 uppercase tracking-widest px-3">My Links</span>
-              <div class="flex-1 h-px bg-gray-200"></div>
+              <div class="flex-1 h-px bg-gray-300"></div>
             </div>
           {% endif %}
 
           {% for link in links %}
             <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer"
-               class="group relative flex items-center gap-4 bg-gray-50 border border-gray-200 py-5 px-6 rounded-2xl font-medium shadow-sm hover:border-blue-500 transition-all duration-300"
+               class="group relative flex items-center gap-4 bg-gray-100 border border-gray-200 py-5 px-6 rounded-2xl font-medium shadow-sm hover:border-gray-900 transition-all duration-300"
                data-link>
               
               <!-- Link dot indicator -->
-              <div class="w-3.5 h-3.5 bg-blue-500 rounded-full flex-shrink-0 transition-transform duration-300 group-hover:scale-125"></div>
+              <div class="w-3.5 h-3.5 bg-gray-900 rounded-full flex-shrink-0 transition-transform duration-300 group-hover:scale-125"></div>
               
               <!-- Link title -->
-              <span class="flex-1 text-gray-900 group-hover:text-blue-500 transition-colors duration-300 truncate font-medium">{{ link.title }}</span>
+              <span class="flex-1 text-gray-800 group-hover:text-black transition-colors duration-300 truncate font-medium">{{ link.title }}</span>
               
               <!-- Arrow icon -->
-              <div class="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center transition-all duration-300 flex-shrink-0">
-                <svg class="w-5 h-5 text-gray-500 group-hover:text-blue-500 transform group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <div class="w-10 h-10 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-center transition-all duration-300 flex-shrink-0">
+                <svg class="w-5 h-5 text-gray-500 group-hover:text-black transform group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </div>
             </a>
           {% empty %}
             <div class="text-center py-20">
-              <div class="w-28 h-28 mx-auto mb-8 bg-blue-50 rounded-3xl flex items-center justify-center border border-blue-100">
-                <svg class="w-14 h-14 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <div class="w-28 h-28 mx-auto mb-8 bg-gray-200 rounded-3xl flex items-center justify-center border border-gray-200">
+                <svg class="w-14 h-14 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                 </svg>
               </div>
-              <h3 class="text-2xl font-bold text-gray-900 mb-3">No Links Yet</h3>
+              <h3 class="text-2xl font-bold text-gray-800 mb-3">No Links Yet</h3>
               <p class="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">This bio page is coming to life. Check back soon!</p>
             </div>
           {% endfor %}
@@ -116,7 +116,7 @@
 
       <!-- Footer -->
       <footer class="mt-12 text-center" id="footer">
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 transition-all duration-300">
+        <div class="bg-gray-50 rounded-2xl p-6 shadow-sm border border-gray-200 transition-all duration-300">
           <div class="flex items-center justify-center gap-2 text-gray-500 text-sm">
             <span class="font-semibold text-gray-700">{{ profile.display_name|default:owner.username }}</span>
             <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
@@ -125,7 +125,7 @@
           
           <!-- Powered by indicator -->
           <div class="mt-4 pt-4 border-t border-gray-200">
-            <a href="/" class="group inline-flex items-center justify-center gap-2.5 text-gray-600 hover:text-blue-500 transition-colors duration-300">
+            <a href="/" class="group inline-flex items-center justify-center gap-2.5 text-gray-600 hover:text-black transition-colors duration-300">
               <img src="{% static 'logo.png' %}" alt="URL.ly" class="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity duration-300">
               <span class="text-xs font-medium">Powered by URL.ly</span>
             </a>
@@ -136,7 +136,7 @@
 
     <!-- Back to top button -->
     <button id="backToTop" 
-            class="fixed bottom-8 right-8 w-12 h-12 bg-blue-500 hover:bg-blue-600 rounded-xl shadow-sm transition-all duration-300 opacity-0 pointer-events-none z-20 flex items-center justify-center text-white">
+            class="fixed bottom-8 right-8 w-12 h-12 bg-gray-900 hover:bg-black rounded-xl shadow-sm transition-all duration-300 opacity-0 pointer-events-none z-20 flex items-center justify-center text-gray-50">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
       </svg>

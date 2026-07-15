@@ -8,5 +8,6 @@
   * the scope of this path.
   */
 @source "../../../templates/**/*.html";
-@source "../../../**/templates/**/*.html";
-@source "../../../static/src/**/*.{js,ts,jsx,tsx}";
+@source "../../../Auth/templates/**/*.html";
+@source "../../../Biolink/templates/**/*.html";
+@source "../../../urlLogic/templates/**/*.html";

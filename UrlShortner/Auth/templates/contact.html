@@ -7,32 +7,32 @@
 <div class="w-full flex flex-col items-center pt-24 pb-24 px-4 min-h-[calc(100vh-100px)]">
     <div class="my-auto flex flex-col w-full max-w-3xl">
         <div class="text-center mb-10">
-            <h1 class="text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Get in <span class="text-blue-600">Touch</span></h1>
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-gray-800 mb-4">Get in <span class="text-gray-700">Touch</span></h1>
             <p class="text-lg text-gray-600 max-w-xl mx-auto">
                 Have questions or feedback? We'd love to hear from you. Fill out the form below and we'll get back to you soon!
             </p>
         </div>
 
-        <div class="bg-white p-8 sm:p-12 rounded-2xl shadow-md border border-gray-100 w-full">
+        <div class="bg-gray-50 p-8 sm:p-12 rounded-2xl shadow-md border border-gray-100 w-full">
             <form method="post" class="space-y-6">
                 {% csrf_token %}
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Name</label>
-                    <input type="text" name="name" required class="bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg py-3 px-4 block w-full appearance-none transition" placeholder="John Doe" />
+                    <input type="text" name="name" required class="bg-gray-50 text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 border border-gray-300 rounded-lg py-3 px-4 block w-full appearance-none transition" placeholder="John Doe" />
                 </div>
 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
-                    <input type="email" name="email" required class="bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg py-3 px-4 block w-full appearance-none transition" placeholder="john@example.com" />
+                    <input type="email" name="email" required class="bg-gray-50 text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 border border-gray-300 rounded-lg py-3 px-4 block w-full appearance-none transition" placeholder="john@example.com" />
                 </div>
 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Message</label>
-                    <textarea name="message" rows="5" required class="bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg py-3 px-4 block w-full appearance-none transition resize-none" placeholder="How can we help you?"></textarea>
+                    <textarea name="message" rows="5" required class="bg-gray-50 text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 border border-gray-300 rounded-lg py-3 px-4 block w-full appearance-none transition resize-none" placeholder="How can we help you?"></textarea>
                 </div>
 
                 <div class="mt-8">
-                    <button type="submit" class="w-full tracking-wide font-semibold bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition shadow-sm flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <button type="submit" class="w-full tracking-wide font-semibold bg-gray-900 text-gray-50 py-3 rounded-lg hover:bg-black transition shadow-sm flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2">
                         Send Message
                     </button>
                 </div>
@@ -40,7 +40,7 @@
         </div>
         
         <div class="text-center mt-10 text-sm font-light text-gray-500">
-            Or reach us directly at <a href="mailto:prabhatsingh1112004@gmail.com" class="font-medium text-blue-600 hover:underline">support@url.ly</a>
+            Or reach us directly at <a href="mailto:prabhatsingh1112004@gmail.com" class="font-medium text-gray-700 hover:underline">support@url.ly</a>
         </div>
     </div>
 </div>

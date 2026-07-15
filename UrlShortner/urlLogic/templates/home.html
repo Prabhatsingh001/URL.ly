@@ -5,15 +5,15 @@
 {% block title %}Home | URL.LY{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-gray-100">
   <!-- Hero Section -->
   <div class="relative overflow-hidden pt-16 pb-8">
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Page Heading -->
       <div class="text-center">
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
-          <span class="text-blue-500">URLs</span>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-800 leading-tight">
+          <span class="text-gray-800">URLs</span>
         </h1>
         <p class="mt-6 text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
           All your shortened links in one beautifully organized place.
@@ -23,8 +23,8 @@
       <!-- CTA Button -->
       <div class="flex justify-center mt-12 mb-16">
         <a href="{% url 'u:make_short_url' %}"
-           class="inline-flex items-center gap-2 px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <svg class="w-5 h-5 text-white opacity-80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+           class="inline-flex items-center gap-2 px-8 py-3 bg-gray-900 hover:bg-black text-gray-50 font-semibold rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900">
+          <svg class="w-5 h-5 text-gray-50 opacity-80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
           {% if urls %}Create New URL{% else %}Get Started{% endif %}
         </a>
       </div>
@@ -44,7 +44,7 @@
       </div>
       <!-- Stats or Additional Info -->
       <div class="mt-16 text-center">
-        <div class="inline-flex items-center px-6 py-3 bg-white rounded-full border border-gray-200 shadow-sm">
+        <div class="inline-flex items-center px-6 py-3 bg-gray-50 rounded-full border border-gray-200 shadow-sm">
           <span class="text-sm font-medium text-gray-700">
             Managing {{ urls|length }} shortened link{{ urls|length|pluralize }}
           </span>
@@ -53,15 +53,15 @@
     {% else %}
       <!-- Empty State -->
       <div class="max-w-md mx-auto text-center">
-        <div class="bg-white rounded-xl p-12 shadow-sm border border-gray-200">
+        <div class="bg-gray-50 rounded-xl p-12 shadow-sm border border-gray-200">
           <!-- Icon -->
-          <div class="w-20 h-20 mx-auto mb-6 bg-blue-50 rounded-full flex items-center justify-center">
-            <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-20 h-20 mx-auto mb-6 bg-gray-200 rounded-full flex items-center justify-center">
+            <svg class="w-10 h-10 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
             </svg>
           </div>
           <!-- Content -->
-          <h3 class="text-2xl font-bold text-gray-900 mb-4 tracking-tight">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4 tracking-tight">
             Ready to get started?
           </h3>
           <p class="text-gray-600 mb-2 leading-relaxed">
@@ -73,19 +73,19 @@
           <!-- Features Preview -->
           <div class="mt-8 space-y-3">
             <div class="flex items-center justify-center space-x-2 text-sm text-gray-500">
-              <svg class="w-4 h-4 text-green-300" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
               </svg>
               <span>Custom short URLs</span>
             </div>
             <div class="flex items-center justify-center space-x-2 text-sm text-gray-500">
-              <svg class="w-4 h-4 text-green-300" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
               </svg>
               <span>Click analytics</span>
             </div>
             <div class="flex items-center justify-center space-x-2 text-sm text-gray-500">
-              <svg class="w-4 h-4 text-green-300" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
               </svg>
               <span>Easy management</span>
