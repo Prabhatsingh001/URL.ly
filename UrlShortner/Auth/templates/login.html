@@ -4,76 +4,95 @@
 {% block title %}Login | URL.ly{% endblock %}
 
 {% block content %}
-<div class="py-16 px-4 md:px-0 bg-gradient-to-br from-blue-100 via-white to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 mt-8">
-    <div class="flex bg-white rounded-lg shadow-3xl overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
-        <div class="hidden lg:block lg:w-1/2 bg-contain bg-center bg-no-repeat"
+<div class="w-full flex flex-col items-center pt-24 pb-24 px-4 min-h-[calc(100vh-100px)]">
+    <div
+        class="flex bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden w-full mx-auto max-w-sm lg:max-w-4xl m-4 md:m-10">
+        <div class="hidden lg:block lg:w-1/2 bg-contain bg-center bg-no-repeat bg-white"
             style="background-image:url('{% static 'signin-image.webp' %}')">
         </div>
-        <div class="w-full p-8 lg:w-1/2 bg-blue-200">
-            <h2 class="text-2xl font-semibold text-gray-700 text-center">
-              <a href="{% url "index" %}" class="flex items-center justify-center mb-4 text-2xl font-semibold text-gray-900">
-                    <img class="w-8 h-8 mr-2" src="{%static "logo.png" %}" alt="logo">URL.LY    
-              </a>
+        <div class="w-full p-6 sm:p-12 lg:w-1/2 bg-gray-50">
+            <h2 class="text-2xl font-semibold text-gray-900 text-center">
+                <a href="{% url 'index' %}"
+                    class="flex items-center justify-center mb-4 text-3xl font-bold text-gray-900">
+                    <img class="w-10 h-10 mr-2" src="{% static 'logo.png' %}" alt="logo">URL.LY
+                </a>
             </h2>
             <p class="text-xl text-gray-600 text-center justify-center font-bold">Welcome back!</p>
-            <a href="{% url 'social:begin' 'google-oauth2' %}" class="flex items-center mt-2 text-white rounded-lg shadow-md bg-white hover:bg-gray-200">
-                <div class="px-4 py-3">
-                    <svg class="h-6 w-6" viewBox="0 0 40 40">
-                        <path
-                            d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.045 27.2142 24.3525 30 20 30C14.4775 30 10 25.5225 10 20C10 14.4775 14.4775 9.99999 20 9.99999C22.5492 9.99999 24.8683 10.9617 26.6342 12.5325L31.3483 7.81833C28.3717 5.04416 24.39 3.33333 20 3.33333C10.7958 3.33333 3.33335 10.7958 3.33335 20C3.33335 29.2042 10.7958 36.6667 20 36.6667C29.2042 36.6667 36.6667 29.2042 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
-                            fill="#FFC107" />
-                        <path
-                            d="M5.25497 12.2425L10.7308 16.2583C12.2125 12.59 15.8008 9.99999 20 9.99999C22.5491 9.99999 24.8683 10.9617 26.6341 12.5325L31.3483 7.81833C28.3716 5.04416 24.39 3.33333 20 3.33333C13.5983 3.33333 8.04663 6.94749 5.25497 12.2425Z"
-                            fill="#FF3D00" />
-                        <path
-                            d="M20 36.6667C24.305 36.6667 28.2167 35.0192 31.1742 32.34L26.0159 27.975C24.3425 29.2425 22.2625 30 20 30C15.665 30 11.9842 27.2359 10.5975 23.3784L5.16254 27.5659C7.92087 32.9634 13.5225 36.6667 20 36.6667Z"
-                            fill="#4CAF50" />
-                        <path
-                            d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.7592 25.1975 27.56 26.805 26.0133 27.9758C26.0142 27.975 26.015 27.975 26.0158 27.9742L31.1742 32.3392C30.8092 32.6708 36.6667 28.3333 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
-                            fill="#1976D2" />
-                    </svg>
+
+            <div class="mt-6 flex flex-col items-center">
+                <button
+                    class="w-full font-bold shadow-sm border border-gray-200 rounded-lg py-3 bg-white text-gray-900 flex items-center justify-center transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="bg-white p-2 rounded-full">
+                        <svg class="w-4" viewBox="0 0 533.5 544.3">
+                            <path
+                                d="M533.5 278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1 33.8-25.7 63.7-54.4 82.7v68h87.7c51.5-47.4 81.1-117.4 81.1-200.2z"
+                                fill="#4285f4" />
+                            <path
+                                d="M272.1 544.3c73.4 0 135.3-24.1 180.4-65.7l-87.7-68c-24.4 16.6-55.9 26-92.6 26-71 0-131.2-47.9-152.8-112.3H28.9v70.1c46.2 91.9 140.3 149.9 243.2 149.9z"
+                                fill="#34a853" />
+                            <path
+                                d="M119.3 324.3c-11.4-33.8-11.4-70.4 0-104.2V150H28.9c-38.6 76.9-38.6 167.5 0 244.4l90.4-70.1z"
+                                fill="#fbbc04" />
+                            <path
+                                d="M272.1 107.7c38.8-.6 76.3 14 104.4 40.8l77.7-77.7C405 24.6 339.7-.8 272.1 0 169.2 0 75.1 58 28.9 150l90.4 70.1c21.5-64.5 81.8-112.4 152.8-112.4z"
+                                fill="#ea4335" />
+                        </svg>
+                    </div>
+                    <a href="{% url 'social:begin' 'google-oauth2' %}" class="ml-4">
+                        Sign In with Google
+                    </a>
+                </button>
+            </div>
+
+            <div class="mt-6 mb-6 border-b border-gray-300 text-center">
+                <div
+                    class="leading-none px-2 inline-block text-sm text-gray-500 tracking-wide font-medium bg-gray-50 transform translate-y-1/2">
+                    Or login with email
                 </div>
-                <h1 class="px-4 py-3 w-5/6 text-center text-gray-600 font-bold">Sign in with Google</h1>
-            </a>
-            <div class="mt-4 flex items-center justify-between">
-                <span class="border-b w-1/5 lg:w-1/4"></span>
-                <a href="#" class="text-xs text-center text-gray-500 uppercase">or login with email</a>
-                <span class="border-b w-1/5 lg:w-1/4"></span>
             </div>
 
             <form method="post">
                 {% csrf_token %}
-                    
+
                 {% if next %}
-                    <input type="hidden" name="next" value="{{ next }}">
+                <input type="hidden" name="next" value="{{ next }}">
                 {% endif %}
-                
+
                 <div class="mt-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
-                    <input class="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="email" name="email" id="email" placeholder="Email"/>
+                    <input
+                        class="bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg py-3 px-4 block w-full appearance-none transition"
+                        type="email" name="email" id="email" placeholder="Email" />
                 </div>
                 <div class="mt-4">
                     <div class="flex justify-between">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                        <a href="{% url 'a:forgot_password' %}" class="text-xs text-gray-500">Forgot Password?</a>
+                        <a href="{% url 'a:forgot_password' %}" class="text-xs text-gray-500 hover:text-blue-500">Forgot
+                            Password?</a>
                     </div>
                     <div class="relative">
-                    <input class="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="password" name="password" id="password" placeholder="Password"/>
-                    <span class="absolute inset-y-0 right-4 flex items-center cursor-pointer mt-2 mb-2" onclick="togglePasswordVisibility('password', this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                    </svg>
-                    </span>
+                        <input
+                            class="bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg py-3 px-4 block w-full appearance-none transition"
+                            type="password" name="password" id="password" placeholder="Password" />
+                        <span class="absolute inset-y-0 right-4 flex items-center cursor-pointer mt-0"
+                            onclick="togglePasswordVisibility('password', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="gray" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+                        </span>
                     </div>
                 </div>
                 <div class="mt-8">
-                    <button class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Login</button>
+                    <button
+                        class="w-full tracking-wide font-semibold bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition shadow-sm flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Login</button>
                 </div>
-                <div class="mt-4 flex items-center justify-between">
-                    <span class="border-b w-1/5 md:w-1/3"></span>
-                    <a href="{% url 'a:signup' %}" class="text-xs text-gray-500 uppercase">Sign Up</a>
-                    <span class="border-b w-1/5 md:w-1/3"></span>
+                <div class="mt-6 text-sm font-light text-gray-500 text-center">
+                    Don't have an account? <a href="{% url 'a:signup' %}"
+                        class="font-medium text-blue-600 hover:underline">Sign Up</a>
                 </div>
             </form>
         </div>
@@ -81,6 +100,6 @@
 </div>
 
 {% block scripts %}
-<script src="{% static "main/js/password_visibility.js" %}"></script>
+<script src="{% static 'main/js/password_visibility.js' %}"></script>
 {% endblock %}
 {% endblock %}

@@ -2,20 +2,20 @@
 {% load static %}
 
 {% block profile_content %}
-  <div class="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-lg space-y-6">
-    <div class="flex flex-wrap mt-2 md:mt-0 items-center space-x-6 bg-gray-100 p-6 rounded-lg transition-all duration-300 hover:shadow-md">
+  <div class="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-sm border border-gray-200 space-y-6">
+    <div class="flex flex-wrap mt-2 md:mt-0 items-center space-x-6 bg-gray-50 p-6 rounded-xl border border-gray-100">
       <div class="relative group mx-auto sm:mx-0 sm:p-4">
         {% if profile.profile_image %}
           <img src="{{ profile.profile_image.url }}" alt="Profile Avatar"
-               class="w-24 h-24 rounded-full object-cover border-2 border-gray-200 shadow-md group-hover:scale-110 transition-transform duration-300">
+               class="w-24 h-24 rounded-full object-cover border-2 border-gray-200">
         {% else %}
           <img src="{% static 'profile_image.png' %}" alt="Default Avatar"
-               class="w-24 h-24 rounded-full object-cover border-2 border-gray-200 shadow-md group-hover:scale-110 transition-transform duration-300">
+               class="w-24 h-24 rounded-full object-cover border-2 border-gray-200">
         {% endif %}
       </div>
       <div class="mx-auto mt-2 sm:mx-0 sm:mt-0">
-        <h2 class="text-sm md:text-xl lg:text-2xl font-semibold text-gray-900 italic">{{ user_obj.email }}</h2>
-        <p class="text-gray-500 text-sm italic">@{{ user_obj.username }}</p>
+        <h2 class="text-sm md:text-xl lg:text-2xl font-semibold text-gray-900">{{ user_obj.email }}</h2>
+        <p class="text-gray-500 text-sm">@{{ user_obj.username }}</p>
       </div>
     </div>
 
@@ -25,13 +25,13 @@
         <label for="full_name" class="block text-sm font-medium text-gray-900 mb-2">Full Name</label>
         <input type="text" id="full_name"
                value="{% if profile.first_name %}{{ profile.first_name }} {{ profile.last_name }}{% else %}Jhon Doe{% endif %}" readonly
-               class="w-full border border-gray-300 rounded-lg p-3 bg-gray-100 text-gray-900 shadow-sm cursor-not-allowed" />
+               class="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 text-gray-900 cursor-not-allowed focus:outline-none" />
       </div>
 
       <div>
         <label for="email" class="block text-sm font-medium text-gray-900 mb-2">Email</label>
         <input type="email" id="email" value="{{ user_obj.email }}" readonly
-               class="w-full border border-gray-300 rounded-lg p-3 bg-gray-100 text-gray-900 shadow-sm cursor-not-allowed" />
+               class="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 text-gray-900 cursor-not-allowed focus:outline-none" />
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -39,18 +39,18 @@
           <label for="gender" class="block text-sm font-medium text-gray-900 mb-2">Gender</label>
           <input type="text" id="gender"
                  value="{% if profile.gender %}{{ profile.gender }}{% else %}Male{% endif %}" readonly
-                 class="w-full border border-gray-300 rounded-lg p-3 bg-gray-100 text-gray-900 shadow-sm cursor-not-allowed" />
+                 class="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 text-gray-900 cursor-not-allowed focus:outline-none" />
         </div>
 
         <div>
           <label for="phone_number" class="block text-sm font-medium text-gray-900 mb-2">Phone Number</label>
           <input type="tel" id="phone_number"
                  value="{% if profile.phone_number %}{{ profile.phone_number }}{% else %}+91 1234567891{% endif %}" readonly
-                 class="w-full border border-gray-300 rounded-lg p-3 bg-gray-100 text-gray-900 shadow-sm cursor-not-allowed" />
+                 class="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 text-gray-900 cursor-not-allowed focus:outline-none" />
         </div>
       </div>
 
-      <div class="text-sm text-gray-500 space-y-1 bg-gray-100 p-4 rounded-lg">
+      <div class="text-sm text-gray-500 space-y-1 bg-gray-50 p-4 rounded-xl border border-gray-100">
         <p>Created: <span class="font-medium">{{ profile.created_at }}</span></p>
         <p>Updated: <span class="font-medium">{{ profile.updated_at }}</span></p>
       </div>

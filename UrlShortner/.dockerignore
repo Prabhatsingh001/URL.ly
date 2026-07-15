@@ -20,3 +20,5 @@ coverage.xml
 db.sqlite3
 media/
 .env
+theme/static_src/node_modules/
+staticfiles_build/

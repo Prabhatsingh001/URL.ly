@@ -15,52 +15,36 @@
         <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
     {% endif %}
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-gray-100 relative overflow-hidden">
-    <main class="flex flex-col md:flex-row items-center justify-center text-center md:text-left px-6 py-16 animate-fadeIn gap-12 md:gap-20 w-full max-w-6xl mx-auto">
-        <div class="flex flex-col items-center space-y-6 flex-1 transform transition-transform duration-300">
-            <h1 class="font-black tracking-tight bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent"
+<body class="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-gray-900 relative overflow-hidden" style="background-image: radial-gradient(circle, #e5e7eb 1px, transparent 1px); background-size: 24px 24px;">
+    <main class="flex flex-col md:flex-row items-center justify-center text-center md:text-left px-6 py-16 gap-12 md:gap-20 w-full max-w-6xl mx-auto">
+        <div class="flex flex-col items-center md:items-start space-y-6 flex-1">
+            <h1 class="font-black tracking-tight text-blue-500"
                 style="font-size: clamp(3rem, 6vw, 5rem);">
                 404
             </h1>
 
-            <h2 class="font-semibold text-gray-200"
+            <h2 class="font-semibold text-gray-800"
                 style="font-size: clamp(1.25rem, 2.5vw, 2rem);">
                 Oops! Page not found
             </h2>
 
-            <p class="text-gray-400 leading-relaxed max-w-md"
+            <p class="text-gray-600 leading-relaxed max-w-md"
             style="font-size: clamp(0.9rem, 1.5vw, 1.1rem);">
                 The page you’re trying to reach doesn’t exist or has been moved.<br>
-                <span class="text-center">Let’s get you back on track.</span>
+                <span>Let’s get you back on track.</span>
             </p>
 
             <a href="/" 
-            class="inline-block bg-gradient-to-r from-blue-500 to-blue-400 text-white font-semibold px-8 py-3 rounded-full shadow-md hover:opacity-90 hover:shadow-lg transition-all duration-300"
+            class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-3 rounded-xl shadow-sm transition-colors duration-200"
             style="font-size: clamp(0.9rem, 1.3vw, 1.05rem);">
                 Return Home
             </a>
         </div>
-        <div class="flex-1 flex justify-center md:justify-end transform transition-transform duration-300">
+        <div class="flex-1 flex justify-center md:justify-end">
             <img src="{% static '404_not_found.svg' %}" 
                 alt="404 Illustration" 
-                class="drop-shadow-2xl animate-float w-[60vw] md:w-[40vw] lg:w-[30vw] max-w-sm md:max-w-md lg:max-w-lg object-contain">
+                class="w-[60vw] md:w-[40vw] lg:w-[30vw] max-w-sm md:max-w-md lg:max-w-lg object-contain">
         </div>
     </main>
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        .animate-fadeIn {
-            animation: fadeIn 0.8s ease-out;
-        }
-        .animate-float {
-            animation: float 4s ease-in-out infinite;
-        }
-    </style>
 </body>
 </html>

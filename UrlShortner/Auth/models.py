@@ -13,27 +13,10 @@ import uuid
 
 from cloudinary_storage.storage import MediaCloudinaryStorage
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
-
-
-def validate_file_size(value):
-    """
-    Validate that uploaded files don't exceed the size limit.
-
-    Args:
-        value: The uploaded file object to validate
-
-    Raises:
-        ValidationError: If file size exceeds 2 MiB
-
-    This validator is used primarily for profile image uploads.
-    """
-    limit = 2 * 1024 * 1024  # 2 MB
-    if value.size > limit:
-        raise ValidationError("File too large. Size should not exceed 2 MiB.")
+from .utils import validate_file_size
 
 
 class CustomUserManager(BaseUserManager):

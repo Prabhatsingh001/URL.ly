@@ -4,122 +4,122 @@
 {% block title %}Signup | URL.ly{% endblock %}
 
 {% block content %}
-<!-- source:https://codepen.io/owaiswiz/pen/jOPvEPB -->
-<div class="w-full bg-gradient-to-br from-blue-100 via-white to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex justify-center items-center py-5 pt-10 mt-2">
-    <div class="max-w-screen-lg m-10 md:m-4 bg-blue-200 shadow sm:rounded-lg flex justify-center flex-1">
-        <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
-            <div class="my-1">
-                <a href="{% url "index" %}" class="flex items-center justify-center mb-4 text-3xl font-bold text-gray-900">
-                    <img class="w-10 h-10 mr-2" src="{%static "logo.png" %}" alt="logo">URL.LY    
+<div class="w-full flex flex-col items-center pt-24 pb-24 px-4 min-h-[calc(100vh-100px)]">
+    <div
+        class="flex my-auto bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden w-full mx-auto max-w-sm lg:max-w-4xl">
+        <div class="w-full p-6 sm:p-12 lg:w-1/2 bg-gray-50">
+            <h2 class="text-2xl font-semibold text-gray-900 text-center">
+                <a href="{% url 'index' %}"
+                    class="flex items-center justify-center mb-4 text-3xl font-bold text-gray-900">
+                    <img class="w-10 h-10 mr-2" src="{% static 'logo.png' %}" alt="logo">URL.LY
                 </a>
+            </h2>
+            <p class="text-xl text-gray-600 text-center justify-center font-bold">Create an account</p>
+
+            <div class="mt-6 flex flex-col items-center">
+                <button
+                    class="w-full font-bold shadow-sm border border-gray-200 rounded-lg py-3 bg-white text-gray-900 flex items-center justify-center transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="bg-white p-2 rounded-full">
+                        <svg class="w-4" viewBox="0 0 533.5 544.3">
+                            <path
+                                d="M533.5 278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1 33.8-25.7 63.7-54.4 82.7v68h87.7c51.5-47.4 81.1-117.4 81.1-200.2z"
+                                fill="#4285f4" />
+                            <path
+                                d="M272.1 544.3c73.4 0 135.3-24.1 180.4-65.7l-87.7-68c-24.4 16.6-55.9 26-92.6 26-71 0-131.2-47.9-152.8-112.3H28.9v70.1c46.2 91.9 140.3 149.9 243.2 149.9z"
+                                fill="#34a853" />
+                            <path
+                                d="M119.3 324.3c-11.4-33.8-11.4-70.4 0-104.2V150H28.9c-38.6 76.9-38.6 167.5 0 244.4l90.4-70.1z"
+                                fill="#fbbc04" />
+                            <path
+                                d="M272.1 107.7c38.8-.6 76.3 14 104.4 40.8l77.7-77.7C405 24.6 339.7-.8 272.1 0 169.2 0 75.1 58 28.9 150l90.4 70.1c21.5-64.5 81.8-112.4 152.8-112.4z"
+                                fill="#ea4335" />
+                        </svg>
+                    </div>
+                    <a href="{% url 'social:begin' 'google-oauth2' %}" class="ml-4">
+                        Sign Up with Google
+                    </a>
+                </button>
             </div>
-            <div class="mt-2 flex flex-col items-center">
-                <div class="w-full flex-1">
-                    <div class="flex flex-col items-center">
-                        <button
-                            class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
-                            <div class="bg-white p-2 rounded-full">
-                                <svg class="w-4" viewBox="0 0 533.5 544.3">
-                                    <path
-                                        d="M533.5 278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1 33.8-25.7 63.7-54.4 82.7v68h87.7c51.5-47.4 81.1-117.4 81.1-200.2z"
-                                        fill="#4285f4" />
-                                    <path
-                                        d="M272.1 544.3c73.4 0 135.3-24.1 180.4-65.7l-87.7-68c-24.4 16.6-55.9 26-92.6 26-71 0-131.2-47.9-152.8-112.3H28.9v70.1c46.2 91.9 140.3 149.9 243.2 149.9z"
-                                        fill="#34a853" />
-                                    <path
-                                        d="M119.3 324.3c-11.4-33.8-11.4-70.4 0-104.2V150H28.9c-38.6 76.9-38.6 167.5 0 244.4l90.4-70.1z"
-                                        fill="#fbbc04" />
-                                    <path
-                                        d="M272.1 107.7c38.8-.6 76.3 14 104.4 40.8l77.7-77.7C405 24.6 339.7-.8 272.1 0 169.2 0 75.1 58 28.9 150l90.4 70.1c21.5-64.5 81.8-112.4 152.8-112.4z"
-                                        fill="#ea4335" />
-                                </svg>
-                            </div>
-                            <a href="{% url 'social:begin' 'google-oauth2' %}" class="ml-4">
-                                Sign Up with Google
-                            </a>
-                        </button>
-                    </div>
 
-                    <div class="mt-2 mb-6 border-b text-center">
-                        <div
-                            class="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-blue-200 transform translate-y-1/2">
-                            Or sign up with e-mail
-                        </div>
-                    </div>
-
-                    <form class="mx-auto max-w-xs" method="post">
-                        {% csrf_token %}
-                        <input
-                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                            type="text" placeholder="Username" name="username"/>
-                        <input
-                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-2"
-                            type="email" placeholder="Email" name="email" />
-
-                        {% comment %} password fields {% endcomment %}
-                        <div class="relative">
-                            <input
-                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-2"
-                            type="password" placeholder="Password" name="password" id="password"/>
-                            <span class="absolute inset-y-0 right-4 flex items-center cursor-pointer mt-2" onclick="togglePasswordVisibility('password', this)">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                </svg>
-                            </span>
-                        </div>
-
-                        <div class="relative">
-                            <input
-                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-2"
-                            type="password" placeholder="Confirm Password" name="confirm-password" id="confirm-password" />
-                            <span class="absolute inset-y-0 right-4 flex items-center cursor-pointer mt-2" onclick="togglePasswordVisibility('confirm-password', this)">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                </svg>
-                            </span>
-                        </div>
-
-                        {% comment %} password field ends {% endcomment %}
-                        <button
-                            class="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
-                            <svg class="w-6 h-6 -ml-2" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                                <circle cx="8.5" cy="7" r="4" />
-                                <path d="M20 8v6M23 11h-6" />
-                            </svg>
-                            <span class="ml-3">
-                                Sign Up
-                            </span>
-                        </button>
-                        <p class="text-sm font-light text-gray-500 dark:text-gray-400 mt-2 text-center">
-                            Already have an account? <a href="{% url "a:login" %}" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>
-                        </p>
-                        <p class="mt-2 text-xs text-gray-600 text-center">
-                            I agree to abide by URLly's
-                            <a href="{% url "a:about" %}" class="border-b border-gray-500 border-dotted">
-                                Terms of Service
-                            </a>
-                            and its
-                            <a href="{% url "a:about" %}" class="border-b border-gray-500 border-dotted">
-                                Privacy Policy
-                            </a>
-                        </p>
-                    </form>
+            <div class="mt-6 mb-6 border-b border-gray-300 text-center">
+                <div
+                    class="leading-none px-2 inline-block text-sm text-gray-500 tracking-wide font-medium bg-gray-50 transform translate-y-1/2">
+                    Or sign up with email
                 </div>
             </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mt-4">
+                    <input
+                        class="bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg py-3 px-4 block w-full appearance-none transition"
+                        type="text" placeholder="Username" name="username" />
+                </div>
+                <div class="mt-4">
+                    <input
+                        class="bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg py-3 px-4 block w-full appearance-none transition"
+                        type="email" placeholder="Email" name="email" />
+                </div>
+
+                <div class="mt-4 relative">
+                    <input
+                        class="bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg py-3 px-4 block w-full appearance-none transition"
+                        type="password" placeholder="Password" name="password" id="password" />
+                    <span class="absolute inset-y-0 right-4 flex items-center cursor-pointer mt-0"
+                        onclick="togglePasswordVisibility('password', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="gray" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        </svg>
+                    </span>
+                </div>
+
+                <div class="mt-4 relative">
+                    <input
+                        class="bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg py-3 px-4 block w-full appearance-none transition"
+                        type="password" placeholder="Confirm Password" name="confirm-password" id="confirm-password" />
+                    <span class="absolute inset-y-0 right-4 flex items-center cursor-pointer mt-0"
+                        onclick="togglePasswordVisibility('confirm-password', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="gray" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        </svg>
+                    </span>
+                </div>
+
+                <div class="mt-6">
+                    <button
+                        class="w-full tracking-wide font-semibold bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition shadow-sm flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Sign
+                        Up</button>
+                </div>
+
+                <div class="mt-6 text-sm font-light text-gray-500 text-center">
+                    Already have an account? <a href="{% url 'a:login' %}"
+                        class="font-medium text-blue-600 hover:underline">Login here</a>
+                </div>
+                <p class="mt-4 text-xs text-gray-500 text-center">
+                    I agree to abide by URLly's
+                    <a href="{% url 'a:about' %}" class="border-b border-gray-400 hover:text-gray-700">Terms of
+                        Service</a>
+                    and
+                    <a href="{% url 'a:about' %}" class="border-b border-gray-400 hover:text-gray-700">Privacy
+                        Policy</a>
+                </p>
+            </form>
         </div>
-        <div class="flex-1 bg-white text-center hidden lg:flex roounded-xl">
-            <div class="m-10 xl:m-10 w-full bg-contain bg-center bg-no-repeat sm:rounded-xl"
-                style="background-image: url('{% static "signup.jpg" %}');">
-            </div>
+        <div class="hidden lg:block lg:w-1/2 bg-contain bg-center bg-no-repeat bg-white"
+            style="background-image:url('{% static 'signup.jpg' %}')">
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static "main/js/password_visibility.js" %}"></script>
+<script src="{% static 'main/js/password_visibility.js' %}"></script>
 {% endblock %}

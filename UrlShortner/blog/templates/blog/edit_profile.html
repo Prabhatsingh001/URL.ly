@@ -4,18 +4,18 @@
 {% block title %}Edit Blog Profile - URL.ly{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-stone-100">
+<div class="min-h-screen bg-gray-100">
     <!-- Header -->
-    <div class="bg-stone-50 border-b border-stone-200">
+    <div class="bg-gray-50 border-b border-gray-200">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-4">
-                    <a href="{% url 'blog:blog_home' %}" class="text-stone-500 hover:text-stone-700 transition-colors">
+                    <a href="{% url 'blog:blog_home' %}" class="text-gray-500 hover:text-gray-700 transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
                     </a>
-                    <h1 class="text-lg font-semibold text-stone-800">Edit Blog Profile</h1>
+                    <h1 class="text-lg font-semibold text-gray-800">Edit Blog Profile</h1>
                 </div>
             </div>
         </div>
@@ -26,24 +26,24 @@
             {% csrf_token %}
 
             <!-- Profile Picture Section -->
-            <div class="bg-stone-50 rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
-                <div class="h-32 bg-gradient-to-r from-stone-500 to-stone-600"></div>
+            <div class="bg-gray-50 rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="h-32 bg-gray-50"></div>
                 <div class="px-6 pb-6">
                     <div class="relative -mt-16 mb-4 flex justify-center">
                         <div class="relative group">
                             {% if profile.profile_picture %}
                             <img id="profilePreview" src="{{ profile.profile_picture.url }}"
-                                class="w-32 h-32 rounded-full border-4 border-white shadow-xl object-cover bg-white">
+                                class="w-32 h-32 rounded-full border-4 border-white shadow-sm object-cover bg-white">
                             {% else %}
-                            <div id="profilePlaceholder" class="w-32 h-32 rounded-full border-4 border-white shadow-xl bg-gradient-to-br from-stone-400 to-stone-500 flex items-center justify-center">
-                                <span class="text-4xl text-white">{{ request.user.username|slice:":1"|upper }}</span>
+                            <div id="profilePlaceholder" class="w-32 h-32 rounded-full border-4 border-white shadow-sm bg-gray-200 flex items-center justify-center">
+                                <span class="text-4xl text-gray-900">{{ request.user.username|slice:":1"|upper }}</span>
                             </div>
-                            <img id="profilePreview" src="" class="hidden w-32 h-32 rounded-full border-4 border-white shadow-xl object-cover bg-white">
+                            <img id="profilePreview" src="" class="hidden w-32 h-32 rounded-full border-4 border-white shadow-sm object-cover bg-white">
                             {% endif %}
                             
                             <!-- Upload overlay -->
                             <label for="profile_picture" class="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-8 h-8 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 </svg>
@@ -51,53 +51,53 @@
                             <input type="file" name="profile_picture" id="profile_picture" accept="image/*" class="hidden" onchange="previewProfile(this)">
                         </div>
                     </div>
-                    <p class="text-center text-sm text-stone-500">Click on the image to change your profile picture</p>
+                    <p class="text-center text-sm text-gray-500">Click on the image to change your profile picture</p>
                 </div>
             </div>
 
             <!-- Profile Info -->
-            <div class="bg-stone-50 rounded-2xl shadow-sm border border-stone-200 p-6 space-y-6">
+            <div class="bg-gray-50 rounded-2xl shadow-sm border border-gray-200 p-6 space-y-6">
                 <div>
-                    <label for="bio" class="block text-sm font-medium text-stone-700 mb-2">Bio</label>
+                    <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">Bio</label>
                     <textarea name="bio" id="bio" rows="4" 
-                        class="w-full px-4 py-3 border border-stone-200 rounded-xl focus:ring-2 focus:ring-stone-400 focus:border-stone-400 transition-all resize-none bg-white"
+                        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-400 focus:border-gray-400 transition-all resize-none bg-white"
                         placeholder="Tell readers a bit about yourself...">{{ profile.bio }}</textarea>
-                    <p class="mt-2 text-sm text-stone-500">Brief description for your profile. URLs are hyperlinked.</p>
+                    <p class="mt-2 text-sm text-gray-500">Brief description for your profile. URLs are hyperlinked.</p>
                 </div>
 
                 <div>
-                    <label for="website" class="block text-sm font-medium text-stone-700 mb-2">Website</label>
+                    <label for="website" class="block text-sm font-medium text-gray-700 mb-2">Website</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
                             </svg>
                         </div>
                         <input type="url" name="website" id="website" value="{{ profile.website }}"
-                            class="w-full pl-12 pr-4 py-3 border border-stone-200 rounded-xl focus:ring-2 focus:ring-stone-400 focus:border-stone-400 transition-all bg-white"
+                            class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-400 focus:border-gray-400 transition-all bg-white"
                             placeholder="https://yourwebsite.com">
                     </div>
                 </div>
 
                 <!-- Display Only Fields -->
-                <div class="pt-6 border-t border-stone-200">
-                    <h3 class="text-sm font-medium text-stone-500 mb-4">Account Info (from your URL.ly profile)</h3>
+                <div class="pt-6 border-t border-gray-200">
+                    <h3 class="text-sm font-medium text-gray-500 mb-4">Account Info (from your URL.ly profile)</h3>
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
-                            <label class="block text-xs text-stone-400 mb-1">Username</label>
-                            <p class="text-stone-800 font-medium">@{{ request.user.username }}</p>
+                            <label class="block text-xs text-gray-500 mb-1">Username</label>
+                            <p class="text-gray-800 font-medium">@{{ request.user.username }}</p>
                         </div>
                         <div>
-                            <label class="block text-xs text-stone-400 mb-1">Email</label>
-                            <p class="text-stone-800 font-medium">{{ request.user.email }}</p>
+                            <label class="block text-xs text-gray-500 mb-1">Email</label>
+                            <p class="text-gray-800 font-medium">{{ request.user.email }}</p>
                         </div>
                         <div>
-                            <label class="block text-xs text-stone-400 mb-1">Name</label>
-                            <p class="text-stone-800 font-medium">{{ request.user.get_full_name|default:"Not set" }}</p>
+                            <label class="block text-xs text-gray-500 mb-1">Name</label>
+                            <p class="text-gray-800 font-medium">{{ request.user.get_full_name|default:"Not set" }}</p>
                         </div>
                         <div>
-                            <label class="block text-xs text-stone-400 mb-1">Joined</label>
-                            <p class="text-stone-800 font-medium">{{ profile.created_at|date:"M d, Y" }}</p>
+                            <label class="block text-xs text-gray-500 mb-1">Joined</label>
+                            <p class="text-gray-800 font-medium">{{ profile.created_at|date:"M d, Y" }}</p>
                         </div>
                     </div>
                 </div>
@@ -105,10 +105,10 @@
 
             <!-- Actions -->
             <div class="flex items-center justify-end gap-4">
-                <a href="{% url 'blog:blog_home' %}" class="px-6 py-3 text-stone-600 font-medium hover:text-stone-800 transition-colors">
+                <a href="{% url 'blog:blog_home' %}" class="px-6 py-3 text-gray-600 font-medium hover:text-gray-800 transition-colors">
                     Cancel
                 </a>
-                <button type="submit" class="px-6 py-3 bg-stone-700 text-white font-medium rounded-xl hover:bg-stone-800 transition-colors shadow-sm">
+                <button type="submit" class="px-6 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors shadow-sm">
                     Save Changes
                 </button>
             </div>

@@ -4,31 +4,31 @@
 {% block title %}{% if post %}Edit{% else %}Create{% endif %} Blog Post - URL.ly{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-stone-100">
+<div class="min-h-screen bg-gray-100">
     <!-- Header -->
-    <div class="bg-stone-50 border-b border-stone-200 sticky top-16 z-30">
+    <div class="bg-gray-50 border-b border-gray-200 sticky top-16 z-30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-4">
-                    <a href="{% url 'blog:blog_home' %}" class="text-stone-500 hover:text-stone-700 transition-colors">
+                    <a href="{% url 'blog:blog_home' %}" class="text-gray-500 hover:text-gray-700 transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
                     </a>
-                    <span class="text-stone-800 font-semibold">{% if post %}Edit Story{% else %}Write a Story{% endif %}</span>
+                    <span class="text-gray-800 font-semibold">{% if post %}Edit Story{% else %}Write a Story{% endif %}</span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span id="saveStatus" class="text-sm text-stone-400 hidden">
+                    <span id="saveStatus" class="text-sm text-gray-500 hidden">
                         <svg class="w-4 h-4 inline-block animate-spin" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                         </svg>
                         Saving...
                     </span>
-                    <button type="button" onclick="saveDraft()" class="px-4 py-2 text-stone-700 bg-stone-200 hover:bg-stone-300 rounded-lg font-medium transition-colors">
+                    <button type="button" onclick="saveDraft()" class="px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium transition-colors">
                         Save Draft
                     </button>
-                    <button type="button" onclick="publishPost()" class="px-4 py-2 text-white bg-stone-700 hover:bg-stone-800 rounded-lg font-medium transition-colors">
+                    <button type="button" onclick="publishPost()" class="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors">
                         {% if post %}Update{% else %}Publish{% endif %}
                     </button>
                 </div>
@@ -42,22 +42,22 @@
 
         <!-- Cover Image Upload -->
         <div class="mb-8">
-            <div id="coverImageContainer" class="relative w-full h-64 bg-stone-200 rounded-2xl overflow-hidden border-2 border-dashed border-stone-300 hover:border-stone-400 transition-colors cursor-pointer group"
+            <div id="coverImageContainer" class="relative w-full h-64 bg-gray-200 rounded-2xl overflow-hidden border-2 border-dashed border-gray-300 hover:border-gray-400 transition-colors cursor-pointer group"
                 onclick="document.getElementById('cover_image').click()">
                 
                 <img id="coverPreview" src="{% if post and post.cover_image %}{{ post.cover_image.url }}{% endif %}" 
                     class="w-full h-full object-cover {% if not post or not post.cover_image %}hidden{% endif %}">
                 
                 <div id="coverPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center {% if post and post.cover_image %}hidden{% endif %}">
-                    <svg class="w-12 h-12 text-stone-400 group-hover:text-stone-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-12 h-12 text-gray-500 group-hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
-                    <p class="mt-2 text-sm text-stone-500 group-hover:text-stone-600">Click to add a cover image</p>
-                    <p class="text-xs text-stone-400 mt-1">Recommended: 1200 x 630px</p>
+                    <p class="mt-2 text-sm text-gray-500 group-hover:text-gray-600">Click to add a cover image</p>
+                    <p class="text-xs text-gray-500 mt-1">Recommended: 1200 x 630px</p>
                 </div>
 
                 <button type="button" id="removeCover" onclick="event.stopPropagation(); removeCoverImage()" 
-                    class="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity {% if not post or not post.cover_image %}hidden{% endif %}">
+                    class="absolute top-4 right-4 p-2 bg-red-400 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity {% if not post or not post.cover_image %}hidden{% endif %}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
@@ -70,61 +70,61 @@
         <div class="mb-6">
             <input type="text" name="title" id="title" required placeholder="Your story title..."
                 value="{% if post %}{{ post.title }}{% endif %}"
-                class="w-full text-4xl md:text-5xl font-bold text-stone-800 placeholder-stone-300 border-0 focus:ring-0 bg-transparent p-0 focus:outline-none"
+                class="w-full text-4xl md:text-5xl font-bold text-gray-800 placeholder-gray-300 border-0 focus:ring-0 bg-transparent p-0 focus:outline-none"
                 oninput="autoResize(this)">
         </div>
 
         <!-- Content Editor -->
         <div class="mb-8">
-            <div class="bg-stone-50 rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+            <div class="bg-gray-50 rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                 <!-- Toolbar -->
-                <div class="flex items-center gap-1 p-3 border-b border-stone-200 bg-stone-100 flex-wrap">
-                    <button type="button" onclick="formatText('bold')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Bold (Ctrl+B)">
+                <div class="flex items-center gap-1 p-3 border-b border-gray-200 bg-gray-100 flex-wrap">
+                    <button type="button" onclick="formatText('bold')" class="p-2 rounded hover:bg-gray-200 transition-colors" title="Bold (Ctrl+B)">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"></path>
                         </svg>
                     </button>
-                    <button type="button" onclick="formatText('italic')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Italic (Ctrl+I)">
+                    <button type="button" onclick="formatText('italic')" class="p-2 rounded hover:bg-gray-200 transition-colors" title="Italic (Ctrl+I)">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 4h4m-2 0v16m4 0h-4"></path>
                         </svg>
                     </button>
-                    <button type="button" onclick="formatText('underline')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Underline (Ctrl+U)">
+                    <button type="button" onclick="formatText('underline')" class="p-2 rounded hover:bg-gray-200 transition-colors" title="Underline (Ctrl+U)">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v7a5 5 0 0010 0V4M5 21h14"></path>
                         </svg>
                     </button>
-                    <div class="w-px h-6 bg-stone-300 mx-2"></div>
-                    <button type="button" onclick="formatText('h2')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Heading">
+                    <div class="w-px h-6 bg-gray-300 mx-2"></div>
+                    <button type="button" onclick="formatText('h2')" class="p-2 rounded hover:bg-gray-200 transition-colors" title="Heading">
                         <span class="font-bold text-sm">H2</span>
                     </button>
-                    <button type="button" onclick="formatText('h3')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Subheading">
+                    <button type="button" onclick="formatText('h3')" class="p-2 rounded hover:bg-gray-200 transition-colors" title="Subheading">
                         <span class="font-bold text-sm">H3</span>
                     </button>
-                    <div class="w-px h-6 bg-stone-300 mx-2"></div>
-                    <button type="button" onclick="formatText('ul')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Bullet List">
+                    <div class="w-px h-6 bg-gray-300 mx-2"></div>
+                    <button type="button" onclick="formatText('ul')" class="p-2 rounded hover:bg-gray-200 transition-colors" title="Bullet List">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
-                    <button type="button" onclick="formatText('ol')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Numbered List">
+                    <button type="button" onclick="formatText('ol')" class="p-2 rounded hover:bg-gray-200 transition-colors" title="Numbered List">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path>
                         </svg>
                     </button>
-                    <div class="w-px h-6 bg-stone-300 mx-2"></div>
-                    <button type="button" onclick="formatText('link')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Add Link">
+                    <div class="w-px h-6 bg-gray-300 mx-2"></div>
+                    <button type="button" onclick="formatText('link')" class="p-2 rounded hover:bg-gray-200 transition-colors" title="Add Link">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
                         </svg>
                     </button>
-                    <button type="button" onclick="formatText('quote')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Quote">
+                    <button type="button" onclick="formatText('quote')" class="p-2 rounded hover:bg-gray-200 transition-colors" title="Quote">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                         </svg>
                     </button>
-                    <button type="button" onclick="formatText('code')" class="p-2 rounded hover:bg-stone-200 transition-colors" title="Code Block">
+                    <button type="button" onclick="formatText('code')" class="p-2 rounded hover:bg-gray-200 transition-colors" title="Code Block">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                         </svg>
@@ -140,14 +140,14 @@
         </div>
 
         <!-- Word Count and Read Time -->
-        <div class="flex items-center justify-between text-sm text-stone-500 mb-8">
+        <div class="flex items-center justify-between text-sm text-gray-500 mb-8">
             <div class="flex items-center gap-4">
                 <span id="wordCount">0 words</span>
                 <span>•</span>
                 <span id="readTime">0 min read</span>
             </div>
             <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-stone-300" id="statusDot"></span>
+                <span class="w-2 h-2 rounded-full bg-gray-300" id="statusDot"></span>
                 <span id="currentStatus">{% if post %}{{ post.get_status_display }}{% else %}Draft{% endif %}</span>
             </div>
         </div>
